@@ -1,84 +1,30 @@
-const int sensorIn = A0;
+//#include "SensoresCorrente.h"
+//#include "ACS712.h"
+#include "SensoresCorrente.h"
 
-// use 100 for 20A Module and 185 for 5A Module
-const auto mVperAmp = 66; //saída proporcional
-const auto ACSoffset = 2500;
+SensoresCorrente::ACS712 currentSensor = SensoresCorrente::ACS712(SensoresCorrente::ModuleType::_30A);
+const int sensorIn = A0;
+const int greenLed = 13;
 
 void setup()
 {
-	pinMode(13, OUTPUT);
-	digitalWrite(13, HIGH);
+	pinMode(greenLed, OUTPUT);
+	digitalWrite(greenLed, HIGH);
 
 	pinMode(sensorIn, INPUT);
 
 	Serial.begin(9600);
 }
 
-double lerCorrentDireta()
+float computePower(float amps, float voltage)
 {
-	auto rawValue = analogRead(sensorIn);
-	auto tensao = rawValue / 1024.0 * 5000; // Gets you mV
-	auto amps = (tensao - ACSoffset) / mVperAmp;
-
-	auto watts = amps * (tensao * 1000);
-	Serial.print("watts: ");
-	Serial.println(watts);
-
-	return amps;
-}
-
-float getVPP()
-{
-	auto maxValue = 0;          // store max value here
-	auto minValue = 1024;          // store min value here
-
-	uint32_t start_time = millis();
-	while ((millis() - start_time) < 1000) //sample for 1 Sec
-	{
-		auto readValue = analogRead(sensorIn);
-		/*	Serial.print("readValue: ");
-		Serial.println(readValue);*/
-		// see if you have a new maxValue
-		if (readValue > maxValue)
-		{
-			/*record the maximum sensor value*/
-			maxValue = readValue;
-		}
-		if (readValue < minValue)
-		{
-			/*record the maximum sensor value*/
-			minValue = readValue;
-		}
-	}
-
-	// Subtract min from max
-	float result = ((maxValue - minValue) * 5.0) / 1024.0;
-	return result;
-}
-
-float lerCorrentAlternada()
-{
-	auto tensao = getVPP();
-	Serial.print("voltage: ");
-	Serial.println(tensao);
-
-	auto VRMS = (tensao / 2.0) * 0.707;
-
-	Serial.print("VRMS: ");
-	Serial.println(VRMS);
-
-	auto ampsRms = (VRMS * 1000) / mVperAmp;
-
-	auto watts = ampsRms * (tensao * 1000);
-	Serial.print("watts: ");
-	Serial.println(watts);
-
-	return ampsRms;
+	return amps * (voltage * 1000);
 }
 
 void loop()
 {
-	auto leitura = lerCorrentAlternada();
-	Serial.print("Amps RMS: ");
-	Serial.println(leitura);
+	auto leitura = currentSensor.readAC(sensorIn);
+	auto potencia = computePower(leitura.amps, leitura.voltage);
+	Serial.print("potencia: ");
+	Serial.println(potencia);
 }

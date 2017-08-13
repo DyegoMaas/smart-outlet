@@ -10,7 +10,7 @@ void setup()
 	digitalWrite(13, HIGH);
 
 	pinMode(sensorIn, INPUT);
-	
+
 	Serial.begin(9600);
 }
 
@@ -19,6 +19,11 @@ double lerCorrentDireta()
 	auto rawValue = analogRead(sensorIn);
 	auto tensao = rawValue / 1024.0 * 5000; // Gets you mV
 	auto amps = (tensao - ACSoffset) / mVperAmp;
+
+	auto watts = amps * (tensao * 1000);
+	Serial.print("watts: ");
+	Serial.println(watts);
+
 	return amps;
 }
 
@@ -31,7 +36,7 @@ float getVPP()
 	while ((millis() - start_time) < 1000) //sample for 1 Sec
 	{
 		auto readValue = analogRead(sensorIn);
-	/*	Serial.print("readValue: ");
+		/*	Serial.print("readValue: ");
 		Serial.println(readValue);*/
 		// see if you have a new maxValue
 		if (readValue > maxValue)
@@ -53,16 +58,21 @@ float getVPP()
 
 float lerCorrentAlternada()
 {
-	auto voltage = getVPP();
-	Serial.print("voltage: "); 
-	Serial.println(voltage);
+	auto tensao = getVPP();
+	Serial.print("voltage: ");
+	Serial.println(tensao);
 
-	auto VRMS = (voltage / 2.0) * 0.707;
+	auto VRMS = (tensao / 2.0) * 0.707;
 
 	Serial.print("VRMS: ");
 	Serial.println(VRMS);
 
 	auto ampsRms = (VRMS * 1000) / mVperAmp;
+
+	auto watts = ampsRms * (tensao * 1000);
+	Serial.print("watts: ");
+	Serial.println(watts);
+
 	return ampsRms;
 }
 

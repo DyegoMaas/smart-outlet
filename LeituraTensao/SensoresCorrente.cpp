@@ -1,9 +1,6 @@
 #include "SensoresCorrente.h"
+#include "Utils.h"
 using namespace SensoresCorrente;
-
-	//class ACS712;
-	/*struct DCReading;
-	struct ACReading;*/
 
 ACS712Class::ACS712Class(ModuleType moduleType)
 {
@@ -21,8 +18,8 @@ DCReading ACS712Class::readDC(int analogInPin) const
 	auto rawValue = analogRead(analogInPin);
 	auto voltage = rawValue / 1024.0 * 5000; // Gets you mV
 	auto amps = (voltage - ACSoffset) / mVperAmp;
-		
-	return DCReading(amps, voltage);
+	auto power = Utils::computePower(amps, voltage);
+	return DCReading(amps, voltage, power);
 }
 
 float getVPP(int analogInPin)
@@ -55,11 +52,11 @@ float getVPP(int analogInPin)
 
 ACReading ACS712Class::readAC(int analogInPin) const
 {
-	auto current = getVPP(analogInPin);
-	auto VRMS = (current / 2.0) * 0.707;
-	auto ampsRms = (VRMS * 1000) / mVperAmp;
-		
-	return ACReading(ampsRms, VRMS);
-}
+	auto voltageAmplitude = getVPP(analogInPin);
+	auto VRMS = Utils::computeVrms(voltageAmplitude);
+	auto vrmsVolts = VRMS * 1000;
+	auto ampsRms = vrmsVolts / mVperAmp;
+	auto power = Utils::computePower(ampsRms, vrmsVolts);
 
-	
+	return ACReading(ampsRms, vrmsVolts, power);
+}

@@ -81,10 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SensoresCorrente.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="__vm\.LeituraTensao.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SensoresCorrente.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <PropertyGroup>
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>

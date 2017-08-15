@@ -20,16 +20,18 @@ namespace SensoresCorrente
 	{
 		float amps;
 		float voltage;
-		ACReading(float current, float voltage) 
-			: amps(current), voltage(voltage) {}
+		float power;
+		ACReading(float current, float voltage, float power)
+			: amps(current), voltage(voltage), power(power) {}
 	};
 
 	struct DCReading
 	{
 		float amps;
 		float voltage;
-		DCReading(float current, float voltage) 
-			: amps(current), voltage(voltage) {}
+		float power;
+		DCReading(float current, float voltage, float power)
+			: amps(current), voltage(voltage), power(power) {}
 	};
 
 	class ACS712Class

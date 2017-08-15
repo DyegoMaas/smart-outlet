@@ -80,12 +80,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ACS712.h" />
     <ClInclude Include="SensoresCorrente.h" />
     <ClInclude Include="__vm\.LeituraTensao.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ACS712.cpp" />
     <ClCompile Include="SensoresCorrente.cpp" />
   </ItemGroup>
   <PropertyGroup>

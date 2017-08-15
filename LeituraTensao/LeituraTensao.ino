@@ -1,8 +1,7 @@
-//#include "SensoresCorrente.h"
-//#include "ACS712.h"
 #include "SensoresCorrente.h"
+using namespace SensoresCorrente;
 
-SensoresCorrente::ACS712 currentSensor = SensoresCorrente::ACS712(SensoresCorrente::ModuleType::_30A);
+ACS712Class currentSensor = ACS712Class(_30A);
 const int sensorIn = A0;
 const int greenLed = 13;
 

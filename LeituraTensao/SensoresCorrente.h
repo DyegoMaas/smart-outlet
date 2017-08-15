@@ -1,5 +1,3 @@
-// SensoresCorrente.h
-
 #ifndef _SENSORESCORRENTE_h
 #define _SENSORESCORRENTE_h
 
@@ -7,9 +5,6 @@
 	#include "Arduino.h"
 #else
 	#include "WProgram.h"
-#endif
-
-
 #endif
 
 namespace SensoresCorrente 
@@ -37,15 +32,17 @@ namespace SensoresCorrente
 			: amps(current), voltage(voltage) {}
 	};
 
-	class ACS712
+	class ACS712Class
 	{
 		public:
-		explicit ACS712(ModuleType moduleType);
-		DCReading readDC(int analogInPin) const;
-		ACReading readAC(int analogInPin) const;
+			explicit ACS712Class(ModuleType moduleType);
+			DCReading readDC(int analogInPin) const;
+			ACReading readAC(int analogInPin) const;
 
 		private:
 			float mVperAmp = 66; // use 100 for 20A Module and 185 for 5A Module
 			const float ACSoffset = 2500;
 	};
 }
+
+#endif

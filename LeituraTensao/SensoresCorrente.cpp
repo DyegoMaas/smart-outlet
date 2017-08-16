@@ -11,6 +11,11 @@ ACS712Class::ACS712Class(ModuleType moduleType)
 		case _20A: mVperAmp = 100; break;
 		case _5A:
 		default: mVperAmp = 185; break;
+		
+		/*case _30A: mVperAmp = 0.066; break;
+		case _20A: mVperAmp = 0.1; break;
+		case _5A:
+		default: mVperAmp = 0.185; break;*/
 	}
 }
 
@@ -74,10 +79,10 @@ float getVPP(int analogInPin)
 		}
 	}
 
-	printThis("max", maxValue);
-	printThis("min", minValue);
-	printThis("diff", maxValue - minValue);
-	printThis("diff * V (arduino)", (maxValue - minValue)*5.0);
+	//printThis("max", maxValue);
+	//printThis("min", minValue);
+	//printThis("diff", maxValue - minValue);
+	//printThis("diff * V (arduino)", (maxValue - minValue)*5.0);
 	
 	// Subtract min from max
 	const auto arduinoVoltage = 5.0;
@@ -144,31 +149,57 @@ ACReading ACS712Class::readAC(int analogInPin) const
 
 	auto voltageAmplitude = getVPP2(analogInPin);
 	const auto voltsporUnidade = 5 / 1024.0;
-	auto valorSensor = (sqrt(voltageAmplitude / 10000)) * voltsporUnidade;
+	auto VRMS = (sqrt(voltageAmplitude / 10000)) * voltsporUnidade;
 	float sensibilidade = 0.066;
-	auto ampsRms = (valorSensor / sensibilidade/*mVperAmp*/);
+	auto ampsRms = (VRMS / sensibilidade/*mVperAmp*/);
 	if (ampsRms <= 0.095) {
 		ampsRms = 0;
 	}
 	const auto voltage = 220;
 	auto power = ampsRms * voltage;
-	return ACReading(ampsRms, voltage, power);
+	//return ACReading(ampsRms, voltage, power);
 
 
 
-	//auto voltageAmplitude = getVPP(analogInPin);
-	//printThis("amplitude", voltageAmplitude);
+
+
+
+
+	auto voltageAmplitude2 = getVPP(analogInPin);
+	//auto vMax = voltageAmplitude2 / 2.0;
+	auto vMax = voltageAmplitude2 / 2.0;
+	auto adjust = 2.0;
+	auto VRMS2 = vMax * 0.707 / adjust;
+
 	//auto VRMS = Utils::computeVrms(voltageAmplitude);
 
 
-	//printThis("vrms (mV)", VRMS);
-	////auto vrmsVolts = VRMS * 1000;
-	//printThis("vrms (V)", VRMS);
-	//auto ampsRms = VRMS / mVperAmp;
-	//printThis("ampsRms", ampsRms);
+	//auto vrmsVolts = VRMS * 1000;
+	auto ampsRms2 = VRMS2 / sensibilidade;//mVperAmp;
+	if (ampsRms2 <= 0.095) {
+		ampsRms2 = 0;
+	}
+	auto power2 = ampsRms2 * 220;
 	//auto power = Utils::computePower(ampsRms, VRMS);
-	//printThis("power", power);
-	//delay(5000);
 
-	//return ACReading(ampsRms, VRMS, power);
+	printThis("voltage amplitude I", voltageAmplitude);
+	printThis("voltage amplitude II", voltageAmplitude2);
+	printThis("-------------", 0);
+	printThis("VRMS I", VRMS);
+	printThis("VRMS II", VRMS2);
+	printThis("-------------", 0);
+	printThis("VRMS I", VRMS);
+	printThis("VRMS II", VRMS2);
+	printThis("-------------", 0);
+	printThis("AMP I", ampsRms);
+	printThis("AMP II", ampsRms2);
+	printThis("-------------", 0);
+	printThis("POWER I", power);
+	printThis("POWER II", power2);
+	printThis("-------------", 0);
+
+	delay(3000);
+
+
+	return ACReading(ampsRms, VRMS, power);
 }

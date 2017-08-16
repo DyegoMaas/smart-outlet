@@ -41,6 +41,16 @@ DCReading ACS712Class::readDC(int analogInPin) const
 //	return sensorMax;
 //}
 //
+
+
+
+void printThis(char string[], float valor)
+{
+	Serial.print(string);
+	Serial.print(": ");
+	Serial.println(valor);
+}
+
 float getVPP(int analogInPin)
 {
 	auto maxValue = 0;          // store max value here
@@ -63,10 +73,31 @@ float getVPP(int analogInPin)
 			minValue = readValue;
 		}
 	}
+
+	printThis("max", maxValue);
+	printThis("min", minValue);
+	printThis("diff", maxValue - minValue);
+	printThis("diff * V (arduino)", (maxValue - minValue)*5.0);
 	
 	// Subtract min from max
-	float result = ((maxValue - minValue) * 5.0) / 1024.0;	
+	const auto arduinoVoltage = 5.0;
+	auto voltsPerUnit = arduinoVoltage / 1024.0;
+	float result = (maxValue - minValue) * voltsPerUnit;
 	return result;
+}
+
+float getVPP2(int pin)
+{
+	auto sum = 0.0;
+	for (int i = 10000; i>0; i--) {
+		// le o sensor na pino analogico A0 e ajusta o valor lido ja que a saída do sensor é (1023)vcc/2 para corrente =0
+		float sensorValue_aux = (analogRead(pin) - 510);
+		// somam os quadrados das leituras.
+		sum += pow(sensorValue_aux, 2);
+		delay(1);
+	}
+
+	return sum;
 }
 
 ACReading ACS712Class::readAC(int analogInPin) const
@@ -111,15 +142,33 @@ ACReading ACS712Class::readAC(int analogInPin) const
 
 
 
+	auto voltageAmplitude = getVPP2(analogInPin);
+	const auto voltsporUnidade = 5 / 1024.0;
+	auto valorSensor = (sqrt(voltageAmplitude / 10000)) * voltsporUnidade;
+	float sensibilidade = 0.066;
+	auto ampsRms = (valorSensor / sensibilidade/*mVperAmp*/);
+	if (ampsRms <= 0.095) {
+		ampsRms = 0;
+	}
+	const auto voltage = 220;
+	auto power = ampsRms * voltage;
+	return ACReading(ampsRms, voltage, power);
 
 
 
+	//auto voltageAmplitude = getVPP(analogInPin);
+	//printThis("amplitude", voltageAmplitude);
+	//auto VRMS = Utils::computeVrms(voltageAmplitude);
 
-	auto voltageAmplitude = getVPP(analogInPin);
-	auto VRMS = Utils::computeVrms(voltageAmplitude);
-	auto vrmsVolts = VRMS * 1000;
-	auto ampsRms = vrmsVolts / mVperAmp;
-	auto power = Utils::computePower(ampsRms, vrmsVolts);
 
-	return ACReading(ampsRms, vrmsVolts, power);
+	//printThis("vrms (mV)", VRMS);
+	////auto vrmsVolts = VRMS * 1000;
+	//printThis("vrms (V)", VRMS);
+	//auto ampsRms = VRMS / mVperAmp;
+	//printThis("ampsRms", ampsRms);
+	//auto power = Utils::computePower(ampsRms, VRMS);
+	//printThis("power", power);
+	//delay(5000);
+
+	//return ACReading(ampsRms, VRMS, power);
 }

@@ -31,17 +31,6 @@ void loop()
 	Serial.println();
 }
 
-
-
-
-
-
-
-
-
-
-
-
 ////ACS712 Arduino Code
 //float vcc = 0;
 //

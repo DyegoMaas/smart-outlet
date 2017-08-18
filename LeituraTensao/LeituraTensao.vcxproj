@@ -80,11 +80,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Relay5V.h" />
     <ClInclude Include="SensoresCorrente.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="__vm\.LeituraTensao.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Relay5V.cpp" />
     <ClCompile Include="SensoresCorrente.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>

@@ -1,24 +1,29 @@
+#include "Relay5V.h"
 #include "Utils.h"
 #include "SensoresCorrente.h"
 using namespace SensoresCorrente;
 
 ACS712Class currentSensor = ACS712Class(_30A);
-const int sensorIn = A0;
-const int greenLed = 13;
+Relay5V relay = Relay5V(false); //TODO inverter a ligação física
+const int ACSensorIn = A0;
+const int Relay2Pin = 7;
+auto ligado = true;
+
+void setupPins()
+{
+	pinMode(ACSensorIn, INPUT);
+	pinMode(Relay2Pin, OUTPUT);
+}
 
 void setup()
 {
-	pinMode(greenLed, OUTPUT);
-	digitalWrite(greenLed, HIGH);
-
-	pinMode(sensorIn, INPUT);
-
+	setupPins();
 	Serial.begin(9600);
 }
 
-void loop()
+void readAC()
 {
-	auto leitura = currentSensor.readAC(sensorIn);
+	auto leitura = currentSensor.readAC(ACSensorIn);
 	Serial.print("potencia: ");
 	Serial.print(leitura.power);
 
@@ -27,8 +32,17 @@ void loop()
 
 	Serial.print("	tensao: ");
 	Serial.print(leitura.voltage);
+}
 
+void loop()
+{
+	relay.turnOn(Relay2Pin);
+	readAC();
 	Serial.println();
+
+	relay.turnOff(Relay2Pin);
+	delay(3000);
+	//ligado = !ligado;
 }
 
 ////ACS712 Arduino Code

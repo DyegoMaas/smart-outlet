@@ -22,3 +22,21 @@ void Relay5V::toggle(int pin)
 	else
 		turnOff(pin);
 }
+
+void DualRelay5V::turnOn(int pin1, int pin2) const
+{
+	relay1.turnOn(pin1);
+	relay2.turnOn(pin2);
+}
+
+void DualRelay5V::turnOff(int pin1, int pin2) const
+{
+	relay1.turnOff(pin1);
+	relay2.turnOff(pin2);
+}
+
+void DualRelay5V::toggle(int pin1, int pin2)
+{
+	relay1.toggle(pin1);
+	relay2.toggle(pin2);
+}

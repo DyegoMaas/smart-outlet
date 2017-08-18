@@ -21,4 +21,21 @@ private:
 	bool currentState = true;
 };
 
+class DualRelay5V
+{
+public:
+	explicit DualRelay5V(bool worksInLow) : 
+		relay1(Relay5V(worksInLow)), 
+		relay2(Relay5V(worksInLow))
+	{
+	}
+
+	void turnOn(int pin1, int pin2) const;
+	void turnOff(int pin1, int pin2) const;
+	void toggle(int pin1, int pin2);
+private:
+	Relay5V relay1;
+	Relay5V relay2;
+};
+
 #endif

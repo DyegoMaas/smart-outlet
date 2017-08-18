@@ -4,13 +4,15 @@
 using namespace SensoresCorrente;
 
 const int ACSensorIn = A0;
+const int Relay1Pin = 6;
 const int Relay2Pin = 7;
 ACS712 currentSensor = ACS712(_30A);
-Relay5V relay = Relay5V(false); //TODO inverter a ligação física
+DualRelay5V relay = DualRelay5V(true);
 
 void setupPins()
 {
 	pinMode(ACSensorIn, INPUT);
+	pinMode(Relay1Pin, OUTPUT);
 	pinMode(Relay2Pin, OUTPUT);
 }
 
@@ -35,10 +37,10 @@ void readAC()
 
 void loop()
 {
-	relay.toggle(Relay2Pin);
+	relay.toggle(Relay1Pin, Relay2Pin);
 	readAC();
 	Serial.println();
 
-	relay.toggle(Relay2Pin);
+	relay.toggle(Relay1Pin, Relay2Pin);
 	delay(3000);
 }

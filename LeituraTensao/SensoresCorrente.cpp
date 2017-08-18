@@ -2,7 +2,7 @@
 #include "Utils.h"
 using namespace SensoresCorrente;
 
-ACS712Class::ACS712Class(ModuleType moduleType)
+ACS712::ACS712(ModuleType moduleType)
 {
 	switch (moduleType)
 	{
@@ -13,7 +13,7 @@ ACS712Class::ACS712Class(ModuleType moduleType)
 	}
 }
 
-DCReading ACS712Class::readDC(int analogInPin) const
+DCReading ACS712::readDC(int analogInPin) const
 {
 	auto rawValue = analogRead(analogInPin);
 	auto voltage = rawValue / 1024.0 * 5000; // Gets you mV
@@ -52,7 +52,7 @@ float getVPP(int analogInPin)
 	return result;
 }
 
-ACReading ACS712Class::readAC(int analogInPin) const
+ACReading ACS712::readAC(int analogInPin) const
 {
 	auto voltageAmplitude = getVPP(analogInPin);
 	auto vMax = voltageAmplitude / 2.0;

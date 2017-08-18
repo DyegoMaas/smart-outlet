@@ -34,10 +34,10 @@ namespace SensoresCorrente
 			: amps(current), voltage(voltage), power(power) {}
 	};
 
-	class ACS712Class
+	class ACS712
 	{
 		public:
-			explicit ACS712Class(ModuleType moduleType);
+			explicit ACS712(ModuleType moduleType);
 			DCReading readDC(int analogInPin) const;
 			ACReading readAC(int analogInPin) const;
 

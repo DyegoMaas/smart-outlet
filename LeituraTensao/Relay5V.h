@@ -15,8 +15,10 @@ public:
 	explicit Relay5V(bool worksInLow) : worksInLow(worksInLow) {}
 	void turnOn(int pin) const;
 	void turnOff(int pin) const;
+	void toggle(int pin);
 private:
 	bool worksInLow = true; //relays are activated on LOW
+	bool currentState = true;
 };
 
 #endif

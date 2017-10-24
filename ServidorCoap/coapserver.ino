@@ -4,10 +4,11 @@ ESP-COAP Server
 
 #include <ESP8266WiFi.h>
 #include "coap_server.h"
-
+#include "Relay5V.h"
 
 // CoAP server endpoint url callback
 void callback_light(coapPacket *packet, IPAddress ip, int port, int obs);
+void callback_toggle(coapPacket *packet, IPAddress ip, int port, int obs);
 
 coapServer coap;
 
@@ -17,6 +18,10 @@ const char* password = "estreladamorte";
 
 // LED STATE
 bool LEDSTATE;
+
+int RELAY_PIN = 14;
+Relay5V relay = Relay5V(RELAY_PIN);
+
 
 // CoAP server endpoint URL
 void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
@@ -34,54 +39,43 @@ void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
   if (message.equals("0"))
   {
     digitalWrite(16,LOW);
-    Serial.println("if loop");
   }
   else if (message.equals("1"))
   {
     digitalWrite(16,HIGH);
-    Serial.println("else loop");
   } 
-  char *light = (digitalRead(16) > 0)? ((char *) "1") :((char *) "0");
-  
-   //coap.sendResponse(packet, ip, port, light);
-   if(obs==1)
-    coap.sendResponse(light);
-   else
-    coap.sendResponse(ip,port,light);
+	char *isOn = (digitalRead(16) > 0)? ((char *) "on") :((char *) "off");
+	if(obs==1)
+		coap.sendResponse(isOn);
+	else
+		coap.sendResponse(ip,port, isOn);
 }
 
-void callback_lightled(coapPacket &packet, IPAddress ip, int port,int obs) {
-  Serial.println("Lightled");
+void callback_toggle(coapPacket *packet, IPAddress ip, int port,int obs) {
+  Serial.println("Toggle");
 
   // send response
-  auto size = packet.payloadlen + 1;
+  auto size = packet->payloadlen + 1;
   char *p = new char[size];
-  memcpy(p, packet.payload, packet.payloadlen);
-  p[packet.payloadlen] = NULL;
+  memcpy(p, packet->payload, packet->payloadlen);
+  p[packet->payloadlen] = NULL;
+  Serial.println(p);
 
   String message(p);
-
   if (message.equals("0"))
-    LEDSTATE = false;
-  else if (message.equals("1"))
-    LEDSTATE = true;
-
-  if (LEDSTATE) {
-    digitalWrite(5, HIGH) ;
-    if(obs==1)
-     coap.sendResponse("1");
-     else
-    coap.sendResponse(ip, port, "1");
-    
-    //coap.sendResponse("1");
-  } else {
-    digitalWrite(5, LOW) ;
-    if (obs==1)
-    coap.sendResponse("0");
-    else
-    coap.sendResponse(ip, port, "0");
-    //coap.sendResponse("0");
+  {
+	  digitalWrite(16, LOW);
   }
+  else if (message.equals("1"))
+  {
+	  digitalWrite(16, HIGH);
+  }
+
+  char *isOn = (digitalRead(16) > 0) ? ((char *) "on") : ((char *) "off");
+  if (obs == 1)
+	  coap.sendResponse(isOn);
+  else
+	  coap.sendResponse(ip, port, isOn);
 }
 
 
@@ -122,10 +116,8 @@ void setup() {
   // can add multiple endpoint urls.
 
   coap.server(callback_light, "light");
-  /*coap.server(callback_light, "light");
-  coap.server(callback_lightled, "lightled");*/
- // coap.server(callback_text,"text");
-
+  coap.server(callback_light, "toggle");
+  
   // start coap server/client
   coap.start();
   // coap.start(5683);

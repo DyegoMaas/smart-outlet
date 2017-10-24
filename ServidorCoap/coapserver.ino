@@ -17,10 +17,11 @@ const char* ssid = "Dyego";
 const char* password = "estreladamorte";
 
 // LED STATE
+int LED_PIN = 16;
 bool LEDSTATE;
 
 int RELAY_PIN = 14;
-Relay5V relay = Relay5V(RELAY_PIN);
+Relay5V relay = Relay5V(true);
 
 
 // CoAP server endpoint URL
@@ -35,16 +36,15 @@ void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
   Serial.println(p);
   
   String message(p);
-
   if (message.equals("0"))
   {
-    digitalWrite(16,LOW);
+    digitalWrite(LED_PIN,LOW);
   }
   else if (message.equals("1"))
   {
-    digitalWrite(16,HIGH);
+    digitalWrite(LED_PIN,HIGH);
   } 
-	char *isOn = (digitalRead(16) > 0)? ((char *) "on") :((char *) "off");
+	char *isOn = (digitalRead(LED_PIN) > 0)? ((char *) "on") :((char *) "off");
 	if(obs==1)
 		coap.sendResponse(isOn);
 	else
@@ -64,14 +64,14 @@ void callback_toggle(coapPacket *packet, IPAddress ip, int port,int obs) {
   String message(p);
   if (message.equals("0"))
   {
-	  digitalWrite(16, LOW);
+	  relay.turnOff(RELAY_PIN);
   }
   else if (message.equals("1"))
   {
-	  digitalWrite(16, HIGH);
+	  relay.turnOn(RELAY_PIN);
   }
 
-  char *isOn = (digitalRead(16) > 0) ? ((char *) "on") : ((char *) "off");
+  char *isOn = (digitalRead(RELAY_PIN) > 0) ? ((char *) "on") : ((char *) "off");
   if (obs == 1)
 	  coap.sendResponse(isOn);
   else
@@ -108,15 +108,16 @@ void setup() {
   digitalWrite(16, HIGH);
   LEDSTATE = true;
 
-  pinMode(5, OUTPUT);
-  digitalWrite(5, HIGH);
+  // Relay state
+  pinMode(RELAY_PIN, OUTPUT);
+  relay.turnOff(RELAY_PIN);
 
 
   // add server url endpoints.
   // can add multiple endpoint urls.
 
   coap.server(callback_light, "light");
-  coap.server(callback_light, "toggle");
+  coap.server(callback_toggle, "toggle");
   
   // start coap server/client
   coap.start();

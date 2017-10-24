@@ -21,12 +21,21 @@
     <ClInclude Include="__vm\.coapserver.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\coap_server.h">
+    <ClInclude Include="__vm\.ServidorCoap.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="coap_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Relay5V.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\coap_server.cpp">
+    <ClCompile Include="coap_server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Relay5V.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     /// <summary>
     /// Represents a resource that forgets to return a separate response.

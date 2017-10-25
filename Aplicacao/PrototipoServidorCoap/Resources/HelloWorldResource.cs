@@ -1,7 +1,7 @@
 ﻿using System;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     /// <summary>
     /// This resource responds with a kind "hello world" to GET requests.

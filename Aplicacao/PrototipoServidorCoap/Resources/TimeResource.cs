@@ -3,7 +3,7 @@ using System.Threading;
 using CoAP;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     class TimeResource : Resource
     {

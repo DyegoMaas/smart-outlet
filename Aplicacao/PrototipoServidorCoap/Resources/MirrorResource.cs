@@ -4,7 +4,7 @@ using CoAP;
 using CoAP.Net;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     /// <summary>
     /// This resource responds with the data from a request in its payload. This

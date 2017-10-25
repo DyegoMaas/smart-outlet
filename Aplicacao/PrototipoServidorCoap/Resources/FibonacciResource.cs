@@ -1,7 +1,7 @@
 ﻿using System;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     /// <summary>
     /// This resource computes the Fibonacci numbers and therefore needs

@@ -2,7 +2,7 @@
 using System.Text;
 using CoAP.Server.Resources;
 
-namespace TesteCoapServer.Resources
+namespace PrototipoServidorCoAP.Resources
 {
     class LargeResource : Resource
     {

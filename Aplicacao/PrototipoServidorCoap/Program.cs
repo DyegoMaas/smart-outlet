@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using CoAP;
 using CoAP.Server;
-using TesteCoapServer.Resources;
+using PrototipoServidorCoAP.Resources;
 
-namespace TesteCoapServer
+namespace PrototipoServidorCoAP
 {
     internal class Program
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CoAP;
 using CoAP.Util;
 
-namespace TesteCoapCliente
+namespace ClienteSoapConsole
 {
     internal class Program
     {

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClienteCoapConsole", "Clien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrototipoServidorCoap", "PrototipoServidorCoap\PrototipoServidorCoap.csproj", "{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aplicacao", "Aplicacao", "{833D634E-7E4A-4FFB-98D5-603FDC729D5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototipos", "Prototipos", "{9F4E4208-0C8F-46CC-90D1-9B6A8D84F577}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8} = {9F4E4208-0C8F-46CC-90D1-9B6A8D84F577}
+		{3AADF1DE-B84E-4ADE-A314-77DDF1CC8E40} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
 	EndGlobalSection
 EndGlobal

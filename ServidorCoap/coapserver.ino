@@ -9,6 +9,7 @@ ESP-COAP Server
 // CoAP server endpoint url callback
 void callback_light(coapPacket *packet, IPAddress ip, int port, int obs);
 void callback_toggle(coapPacket *packet, IPAddress ip, int port, int obs);
+void callback_time(coapPacket *packet, IPAddress ip, int port, int obs);
 
 coapServer coap;
 
@@ -78,8 +79,29 @@ void callback_toggle(coapPacket *packet, IPAddress ip, int port,int obs) {
 	  coap.sendResponse(ip, port, isOn);
 }
 
+void callback_time(coapPacket *packet, IPAddress ip, int port, int obs) {
+	Serial.println("Time");
+
+	// send response
+	auto size = packet->payloadlen + 1;
+	char *p = new char[size];
+	memcpy(p, packet->payload, packet->payloadlen);
+	p[packet->payloadlen] = NULL;
+	Serial.println(p);
+	
+	char time[50];
+	sprintf(time, "%lu", millis());
+	Serial.print("Time: ");
+	Serial.println(time);
+	if (obs == 1)
+		coap.sendResponse(time);
+	else
+		coap.sendResponse(ip, port, time);
+}
+
 
 void setup() {
+
   yield();
   //serial begin
   Serial.begin(115200);
@@ -103,9 +125,17 @@ void setup() {
   // Print the IP address
   Serial.println(WiFi.localIP());
 
-  // LED State
-  pinMode(16, OUTPUT);
-  digitalWrite(16, HIGH);
+  // READY INDICATION
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH);
+  delay(250);
+  digitalWrite(LED_PIN, LOW);
+  delay(250);
+  digitalWrite(LED_PIN, HIGH);
+  delay(250);
+  digitalWrite(LED_PIN, LOW);
+  delay(250);
+  digitalWrite(LED_PIN, HIGH);
   LEDSTATE = true;
 
   // Relay state
@@ -118,6 +148,7 @@ void setup() {
 
   coap.server(callback_light, "light");
   coap.server(callback_toggle, "toggle");
+  coap.server(callback_time, "time");
   
   // start coap server/client
   coap.start();

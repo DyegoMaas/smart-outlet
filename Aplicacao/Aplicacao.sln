@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aplicacao", "Aplicacao", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prototipos", "Prototipos", "{9F4E4208-0C8F-46CC-90D1-9B6A8D84F577}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOutlet.Service", "SmartOutlet.Service\SmartOutlet.Service.csproj", "{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOutlet.Outlet", "SmartOutlet.Outlet\SmartOutlet.Outlet.csproj", "{8DD470C0-DCDC-4660-9395-6170ABF4CF66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{EC7E8A8F-8620-4880-92B3-DB9FED02A8A8} = {9F4E4208-0C8F-46CC-90D1-9B6A8D84F577}
 		{3AADF1DE-B84E-4ADE-A314-77DDF1CC8E40} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
+		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
+		{8DD470C0-DCDC-4660-9395-6170ABF4CF66} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
 	EndGlobalSection
 EndGlobal

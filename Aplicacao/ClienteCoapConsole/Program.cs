@@ -92,7 +92,7 @@ namespace ClienteSoapConsole
             {
                 if (byEvent)
                 {
-                    request.Respond += delegate(Object sender, ResponseEventArgs e)
+                    request.Respond += (sender, e) =>
                     {
                         Response response = e.Response;
                         if (response == null)

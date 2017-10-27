@@ -170,9 +170,10 @@ bool coapServer::loop() {
 
 	uint8_t buffer[BUF_MAX_SIZE];
 	int32_t packetlen = Udp.parsePacket();
+	Serial.println(packetlen);
 
 	if (packetlen > 0) {
-
+		Serial.println("loop->packet received");
 		packetlen = Udp.read(buffer, packetlen >= BUF_MAX_SIZE ? BUF_MAX_SIZE : packetlen);
 
 		request->bufferToPacket(buffer, packetlen);
@@ -193,14 +194,14 @@ bool coapServer::loop() {
 				url += urlname;
 
 			}
-		}
-
+		}		
+		Serial.println("loop -> " + url);
 
 		//response
 
 
 		if (request->code_() == COAP_EMPTY && request->type_() == COAP_CON) {
-
+			Serial.println("loop -> EMPTY");
 			response->version = request->version;
 			response->type = COAP_RESET;
 			response->code = COAP_EMPTY_MESSAGE;
@@ -211,7 +212,7 @@ bool coapServer::loop() {
 			sendPacket(response, Udp.remoteIP(), Udp.remotePort());
 		}
 		else if (request->code_() == COAP_EMPTY && request->type_() == COAP_RESET) {
-
+			Serial.println("loop -> RESET");
 			for (uint8_t i = 0; i<obscount; i++) {
 				if (observer[i].observer_clientip == Udp.remoteIP() && observer[i].observer_url == url) {
 
@@ -223,7 +224,7 @@ bool coapServer::loop() {
 
 		}
 		else if (request->code_() == COAP_GET || request->code_() == COAP_PUT || request->code_() == COAP_POST || request->code_() == COAP_DELETE) {
-
+			Serial.println("loop -> METHOD");
 			if (request->type_() == COAP_CON) {
 
 				response->version = request->version;
@@ -241,7 +242,7 @@ bool coapServer::loop() {
 			}
 
 			if (request->code_() == COAP_GET) {
-
+				Serial.println("loop -> GET");
 				uint8_t num;
 				for (uint8_t i = 0; i <= request->optionnum; i++)
 				{
@@ -254,7 +255,7 @@ bool coapServer::loop() {
 
 
 				if (request->options[num].number == COAP_OBSERVE) {
-
+					Serial.println("loop -> OBSERVE");
 					if (*(request->options[num].buffer) == 1) {
 
 						for (uint8_t i = 0; i<obscount; i++) {
@@ -278,12 +279,12 @@ bool coapServer::loop() {
 					}
 				}
 				else if (url == String(".well-known/core")) {
-
+					Serial.println("loop -> DISCOVERY");
 					resourceDiscovery(response, Udp.remoteIP(), Udp.remotePort(), resource);
 
 				}
 				else if (!uri.find(url)) {
-
+					Serial.println("loop -> UNKNOWN URL " + url);
 
 					response->payload = NULL;
 					response->payloadlen = 0;
@@ -303,13 +304,13 @@ bool coapServer::loop() {
 
 				}
 				else {
-
+					Serial.println("loop -> ELSE");
 					uri.find(url)(request, Udp.remoteIP(), Udp.remotePort(), 0);
 				}
 
 			}
 			else if (request->code_() == COAP_PUT) {
-
+				Serial.println("loop -> PUT");
 				if (!uri.find(url)) {
 
 					response->payload = NULL;
@@ -335,7 +336,7 @@ bool coapServer::loop() {
 				}
 			}
 			else if (request->code == COAP_POST) {
-
+				Serial.println("loop -> POST");
 				int i;
 				for (i = 0; i<rcount; i++) {
 					if (resource[i].rt == url) {
@@ -351,7 +352,7 @@ bool coapServer::loop() {
 
 			}
 			else if (request->code == COAP_DELETE) {
-
+				Serial.println("loop -> DELETE");
 
 				if (!uri.find(url)) {
 					response->payload = NULL;
@@ -380,17 +381,16 @@ bool coapServer::loop() {
 
 	}
 
-	//checking for the change for resource 
+	////checking for the change for resource 
 	unsigned currentMillis = millis();
 	if ((unsigned long)(currentMillis - previousMillis) >= interval)
 	{
-		//observing a resouce 
+		Serial.println("loop -> WOULD OBSERVE RESOURCE");
+	//	//observing a resouce 
 
-		uri.find(resource[0].rt)(request, IPAddress(0, 0, 0, 0), NULL, 1);
+	//	uri.find(resource[0].rt)(request, IPAddress(10, 0, 0, 3), NULL, 1); //TODO corrigir o IP
 		previousMillis = millis();
 	}
-
-
 }
 
 void coapPacket::bufferToPacket(uint8_t buffer[], int32_t packetlen) {

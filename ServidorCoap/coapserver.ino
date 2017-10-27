@@ -21,13 +21,18 @@ const char* password = "estreladamorte";
 int LED_PIN = 16;
 bool LEDSTATE;
 
+int GREEN_WIFI_LED_PIN = 15;
+int RED_COAP_LED_PIN = 13;
+
 int RELAY_PIN = 14;
 Relay5V relay = Relay5V(true);
 
 
 // CoAP server endpoint URL
 void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
-  Serial.println("light");
+	char time[50];
+	sprintf(time, "Llight in time %lu", millis());
+	Serial.print(time);
 
   // send response
   auto size = packet->payloadlen + 1;
@@ -50,6 +55,8 @@ void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
 		coap.sendResponse(isOn);
 	else
 		coap.sendResponse(ip,port, isOn);
+
+	Serial.print("light end");
 }
 
 void callback_toggle(coapPacket *packet, IPAddress ip, int port,int obs) {
@@ -77,6 +84,8 @@ void callback_toggle(coapPacket *packet, IPAddress ip, int port,int obs) {
 	  coap.sendResponse(isOn);
   else
 	  coap.sendResponse(ip, port, isOn);
+
+  Serial.print("toggle end");
 }
 
 void callback_time(coapPacket *packet, IPAddress ip, int port, int obs) {
@@ -97,10 +106,18 @@ void callback_time(coapPacket *packet, IPAddress ip, int port, int obs) {
 		coap.sendResponse(time);
 	else
 		coap.sendResponse(ip, port, time);
+
+	Serial.print("time end");
 }
 
-
 void setup() {
+	pinMode(LED_PIN, OUTPUT);
+	pinMode(GREEN_WIFI_LED_PIN, OUTPUT);
+	pinMode(RED_COAP_LED_PIN, OUTPUT);
+	
+	digitalWrite(LED_PIN, HIGH);
+	digitalWrite(GREEN_WIFI_LED_PIN, HIGH),
+	digitalWrite(RED_COAP_LED_PIN, HIGH),
 
   yield();
   //serial begin
@@ -125,10 +142,9 @@ void setup() {
   // Print the IP address
   Serial.println(WiFi.localIP());
 
-  // READY INDICATION
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH);
-  delay(250);
+  // READY INDICATION  
+  digitalWrite(GREEN_WIFI_LED_PIN, HIGH),
+
   digitalWrite(LED_PIN, LOW);
   delay(250);
   digitalWrite(LED_PIN, HIGH);
@@ -136,6 +152,8 @@ void setup() {
   digitalWrite(LED_PIN, LOW);
   delay(250);
   digitalWrite(LED_PIN, HIGH);
+  delay(250);
+  digitalWrite(LED_PIN, LOW);
   LEDSTATE = true;
 
   // Relay state
@@ -146,16 +164,23 @@ void setup() {
   // add server url endpoints.
   // can add multiple endpoint urls.
 
-  coap.server(callback_light, "light");
+  //coap.server(callback_light, "light");
   coap.server(callback_toggle, "toggle");
   coap.server(callback_time, "time");
   
   // start coap server/client
   coap.start();
+  //digitalWrite(RED_COAP_LED_PIN, LOW);
+  Serial.println("CoAP server online");
   // coap.start(5683);
 }
 
+int counter = 0;
 void loop() {
-  coap.loop();
-  delay(1000);
+	Serial.print("coap loop started");
+	Serial.println(counter);
+	coap.loop();
+	Serial.print("coap loop finished");
+	Serial.println(counter++);
+	delay(1000);
 }

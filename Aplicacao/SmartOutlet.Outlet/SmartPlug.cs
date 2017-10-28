@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using CoAP;
 using CoAP.Util;
@@ -24,13 +26,12 @@ namespace SmartOutlet.Outlet
 
         public ToggeResult TurnOn()
         {
-//            PlugState? ultimateResponse = null;
-            var task = new TaskFactory<PlugState>().StartNew(() =>
-            {
-                const string toggleOn = "1";
+            var taskCompletionSource = new TaskCompletionSource<PlugState>();
+                
+                const string toggleOnPayload = "1";
                 var post = RequestBuilder.New(_baseUri)
                     .Post("toggle")
-                    .WithTextPayload(toggleOn)
+                    .WithTextPayload(toggleOnPayload)
                     .WithCallback((sender, e) =>
                     {
                         var response = e.Response;
@@ -38,38 +39,31 @@ namespace SmartOutlet.Outlet
                         {
                             //Timeout
 //                        Console.WriteLine("Request timeout");
+                            taskCompletionSource.SetResult(PlugState.Unknown);
                         }
                         else
                         {
 //                        Console.WriteLine(Utils.ToString(response));
 //                        Console.WriteLine("Time (ms): " + response.RTT);
                             PlugState result = ParsePlugResponse(response.PayloadString);
-//                            return result;
+                            taskCompletionSource.SetResult(result);
                         }
-
-//                    if (msg.PayloadSize > 0 && MediaType.IsPrintable(msg.ContentType))
-//                    {
-//                        stringBuilder.AppendLine("---------------------------------------------------------------");
-//                        stringBuilder.AppendLine(msg.PayloadString);
-//                    }
                     })
-                    .Build();
+                    .Build();              
                 post.Send();
-                return PlugState.Off; //TODO corrigir
-            });
-//            .ContinueWith(t =>
-//            {
-//                ultimateResponse = t.Result;
-//            });
+            Task.WaitAll(taskCompletionSource.Task);
 
-            Task.WaitAll(task);
-
-            return new ToggeResult(task.Result);
+            return new ToggeResult(taskCompletionSource.Task.Result);
         }
 
         private PlugState ParsePlugResponse(string payload)
         {
-            throw new NotImplementedException();
+            switch (payload.Trim().ToLower())
+            {
+                case "on": return PlugState.On;
+                case "off": return PlugState.Off;
+                default: return PlugState.Unknown;
+            }
         }
     }
 
@@ -86,7 +80,8 @@ namespace SmartOutlet.Outlet
     public enum PlugState
     {
         Off = 0,
-        On = 1
+        On = 1,
+        Unknown = 2
     }
 
 //    public class CoapResquestFactory : ICoapRequestFactory

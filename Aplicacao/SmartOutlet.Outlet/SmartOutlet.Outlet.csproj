@@ -70,6 +70,11 @@
     <Compile Include="CoAP\IRequestBuilder.cs" />
     <Compile Include="CoAP\RequestBuilder.cs" />
     <Compile Include="Consumption\ConsumptionReading.cs" />
+    <Compile Include="EventSourcing\ConsumptionReadingReceived.cs" />
+    <Compile Include="EventSourcing\PlugActivated.cs" />
+    <Compile Include="EventSourcing\PlugHistory.cs" />
+    <Compile Include="EventSourcing\PlugTurnedOff.cs" />
+    <Compile Include="EventSourcing\PlugTurnedOn.cs" />
     <Compile Include="ISmartPlug.cs" />
     <Compile Include="PlugState.cs" />
     <Compile Include="SmartPlug.cs" />

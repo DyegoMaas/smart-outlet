@@ -12,7 +12,7 @@ namespace SmartOutlet.Outlet.Tests
                 .For("host=localhost;database=smartthings_test;password=postgres;username=postgres");
             using (var session = documentStore.LightweightSession())
             {
-                session.DeleteWhere<ConsumptionReading>(reading => true);
+                session.DeleteWhere<ConsumptionReading>(reading => true); //TODO parametrizar
                 session.SaveChanges();
             }
             return documentStore;
@@ -28,6 +28,11 @@ namespace SmartOutlet.Outlet.Tests
                 _.Events.AddEventTypes(eventTypes);
                 _.Events.InlineProjections.AggregateStreamsWith<TAgreggator>();
             });
+            using (var session = store.LightweightSession())
+            {
+                session.DeleteWhere<TAgreggator>(reading => true);
+                session.SaveChanges();
+            }
             return store;
         }
     }

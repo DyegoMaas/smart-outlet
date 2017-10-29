@@ -8,6 +8,6 @@ namespace SmartOutlet.Outlet.Consumption
         public string PlugName { get; set; }
         public PlugState PlugState { get; set; }
         public double ConsumoEmWatts { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public DateTimeOffset TimeStamp { get; set; }
     }
 }

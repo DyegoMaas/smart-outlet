@@ -1,4 +1,5 @@
 ﻿using System;
+using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing
 {

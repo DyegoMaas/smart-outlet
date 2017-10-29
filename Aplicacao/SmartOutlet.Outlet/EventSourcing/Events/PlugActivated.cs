@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartOutlet.Outlet.EventSourcing
+namespace SmartOutlet.Outlet.EventSourcing.Events
 {
     public class PlugActivated
     {

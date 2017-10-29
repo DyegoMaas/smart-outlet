@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace SmartOutlet.Outlet.EventSourcing
+namespace SmartOutlet.Outlet.EventSourcing.Events
 {
-    public class PlugTurnedOn
+    public class PlugTurnedOff
     {
         public DateTimeOffset TimeStamp { get; set; }
     }

@@ -73,15 +73,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsumptionReadingEventStore.cs" />
     <Compile Include="DocumentStoreForTests.cs" />
     <Compile Include="ConsumptionReadingDocumentStoreTests.cs" />
-    <Compile Include="EventSourcingExamples\ConsumptionReadingEventStore.cs" />
-    <Compile Include="EventSourcingExamples\Events\AccountCreated.cs" />
-    <Compile Include="EventSourcingExamples\Events\AccountCredited.cs" />
-    <Compile Include="EventSourcingExamples\Events\AccountDebited.cs" />
-    <Compile Include="EventSourcingExamples\Events\InvalidActionAttempted.cs" />
-    <Compile Include="EventSourcingExamples\Events\Transaction.cs" />
-    <Compile Include="EventSourcingExamples\Projections\Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

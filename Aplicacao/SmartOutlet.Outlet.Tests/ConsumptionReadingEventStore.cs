@@ -2,7 +2,6 @@
 using FluentAssertions;
 using Marten;
 using NUnit.Framework;
-using SmartOutlet.Outlet.Consumption;
 using SmartOutlet.Outlet.EventSourcing;
 
 namespace SmartOutlet.Outlet.Tests.EventSourcingExamples
@@ -18,7 +17,7 @@ namespace SmartOutlet.Outlet.Tests.EventSourcingExamples
                 typeof(PlugActivated),
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
-                typeof(ConsumptionReading)
+                typeof(ConsumptionReadingReceived)
             );
         }
 

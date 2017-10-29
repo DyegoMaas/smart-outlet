@@ -5,7 +5,7 @@ using Marten;
 using NUnit.Framework;
 using SmartOutlet.Outlet.Consumption;
 
-namespace SmartOutlet.Outlet.Tests
+namespace SmartOutlet.Outlet.Tests.Integration
 {
     [TestFixture]
     public class ConsumptionReadingDocumentStoreTests

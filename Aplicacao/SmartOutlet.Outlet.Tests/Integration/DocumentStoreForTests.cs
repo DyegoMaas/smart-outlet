@@ -2,7 +2,7 @@
 using Marten;
 using SmartOutlet.Outlet.Consumption;
 
-namespace SmartOutlet.Outlet.Tests
+namespace SmartOutlet.Outlet.Tests.Integration
 {
     public static class DocumentStoreForTests
     {

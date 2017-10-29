@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoAP.Util;
+using SmartOutlet.Outlet.CoAP;
 
 namespace SmartOutlet.Outlet
 {

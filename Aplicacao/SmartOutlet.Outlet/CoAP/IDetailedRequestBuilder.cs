@@ -1,7 +1,7 @@
 ﻿using System;
 using CoAP;
 
-namespace SmartOutlet.Outlet
+namespace SmartOutlet.Outlet.CoAP
 {
     public interface IDetailedRequestBuilder
     {

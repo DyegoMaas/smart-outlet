@@ -66,12 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoAP\IDetailedRequestBuilder.cs" />
+    <Compile Include="CoAP\IRequestBuilder.cs" />
+    <Compile Include="CoAP\RequestBuilder.cs" />
     <Compile Include="Consumption\ConsumptionReading.cs" />
-    <Compile Include="IDetailedRequestBuilder.cs" />
-    <Compile Include="IRequestBuilder.cs" />
     <Compile Include="ISmartPlug.cs" />
     <Compile Include="PlugState.cs" />
-    <Compile Include="RequestBuilder.cs" />
     <Compile Include="SmartPlug.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToggeResult.cs" />

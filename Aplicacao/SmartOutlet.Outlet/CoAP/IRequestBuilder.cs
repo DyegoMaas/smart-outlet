@@ -1,4 +1,4 @@
-﻿namespace SmartOutlet.Outlet
+﻿namespace SmartOutlet.Outlet.CoAP
 {
     public interface IRequestBuilder
     {

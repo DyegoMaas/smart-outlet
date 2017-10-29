@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SmartOutlet.Outlet.Consumption;
 using SmartOutlet.Outlet.EventSourcing;
 
-namespace SmartOutlet.Outlet.Tests
+namespace SmartOutlet.Outlet.Tests.EventSourcingExamples
 {
     public class ConsumptionReadingEventStore
     {

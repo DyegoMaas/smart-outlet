@@ -1,4 +1,5 @@
-﻿using Marten;
+﻿using System;
+using Marten;
 using SmartOutlet.Outlet.Consumption;
 
 namespace SmartOutlet.Outlet.Tests
@@ -15,6 +16,19 @@ namespace SmartOutlet.Outlet.Tests
                 session.SaveChanges();
             }
             return documentStore;
+        }
+
+        public static DocumentStore NewEventSource<TAgreggator>(params Type[] eventTypes) 
+            where TAgreggator : class, new()
+        {
+            var store = DocumentStore.For(_ =>
+            {
+                _.Connection("host=localhost;database=smartthings_test;password=postgres;username=postgres");
+
+                _.Events.AddEventTypes(eventTypes);
+                _.Events.InlineProjections.AggregateStreamsWith<TAgreggator>();
+            });
+            return store;
         }
     }
 }

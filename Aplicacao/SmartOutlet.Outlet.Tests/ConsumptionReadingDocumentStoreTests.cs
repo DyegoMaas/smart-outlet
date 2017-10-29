@@ -8,7 +8,7 @@ using SmartOutlet.Outlet.Consumption;
 namespace SmartOutlet.Outlet.Tests
 {
     [TestFixture]
-    public class ConsumptionReadingTests
+    public class ConsumptionReadingDocumentStoreTests
     {
         private DocumentStore _documentStore;
 
@@ -19,7 +19,7 @@ namespace SmartOutlet.Outlet.Tests
         }
         
         [Test]
-        public void saving_consumption_readings()
+        public void saving_consumption_readings_in_document_storage()
         {
             var readings = new[]
             {

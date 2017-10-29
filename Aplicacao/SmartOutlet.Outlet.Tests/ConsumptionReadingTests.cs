@@ -52,6 +52,7 @@ namespace SmartOutlet.Outlet.Tests
                     TimeStamp = DateTime.Today.AddMinutes(3)
                 }
             };
+            
             using (var session = _documentStore.LightweightSession())
             {
                 foreach (var reading in readings)

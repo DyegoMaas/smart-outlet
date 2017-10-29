@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOutlet.Service", "Smar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOutlet.Outlet", "SmartOutlet.Outlet\SmartOutlet.Outlet.csproj", "{8DD470C0-DCDC-4660-9395-6170ABF4CF66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartOutlet.Outlet.Tests", "SmartOutlet.Outlet.Tests\SmartOutlet.Outlet.Tests.csproj", "{17BC745A-55BC-4E14-9819-634EF02644C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DD470C0-DCDC-4660-9395-6170ABF4CF66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17BC745A-55BC-4E14-9819-634EF02644C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17BC745A-55BC-4E14-9819-634EF02644C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17BC745A-55BC-4E14-9819-634EF02644C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17BC745A-55BC-4E14-9819-634EF02644C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +52,6 @@ Global
 		{3AADF1DE-B84E-4ADE-A314-77DDF1CC8E40} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
 		{154C15F8-ACBE-45D2-9A1E-2ECCCD01360E} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
 		{8DD470C0-DCDC-4660-9395-6170ABF4CF66} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
+		{17BC745A-55BC-4E14-9819-634EF02644C9} = {833D634E-7E4A-4FFB-98D5-603FDC729D5E}
 	EndGlobalSection
 EndGlobal

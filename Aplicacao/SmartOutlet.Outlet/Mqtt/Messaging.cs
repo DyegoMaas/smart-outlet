@@ -8,8 +8,9 @@ namespace SmartOutlet.Outlet.Mqtt
 {
     public class Messaging : IPublisher, ITopicClientele
     {
-        private readonly MqttClient _mqttClient;
+        private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();
+        private readonly MqttClient _mqttClient;
 
         public Messaging()
         {
@@ -71,7 +72,7 @@ namespace SmartOutlet.Outlet.Mqtt
         public void Publish(string topic, string message)
         {
             var bytes = Encoding.UTF8.GetBytes(message);
-            _mqttClient.Publish(topic, bytes, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            _mqttClient.Publish(topic, bytes, QosLevel, true);
         }
 
         public void Subscribe(string topic, Action<string> onMessageReceived)
@@ -81,7 +82,19 @@ namespace SmartOutlet.Outlet.Mqtt
         
         public void Subscribe(string[] topics, Action<string> onMessageReceived)
         {
-            _mqttClient.Subscribe(topics, new[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });            
+            foreach (var topic in topics)
+            {
+                RegisterCallback(onMessageReceived, topic);
+            }
+            _mqttClient.Subscribe(topics, new[] { QosLevel });            
+        }
+
+        private static void RegisterCallback(Action<string> onMessageReceived, string topic)
+        {
+            if (!CallbacksPerTopic.ContainsKey(topic))
+                CallbacksPerTopic.Add(topic, new List<Action<string>>());
+
+            CallbacksPerTopic[topic].Add(onMessageReceived);
         }
     }
 }

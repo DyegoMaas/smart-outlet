@@ -77,7 +77,6 @@ namespace SmartOutlet.Service
 
         private void ConfigureNancy()
         {
-            
             _nancyHost.Start();
             Console.WriteLine($"Running on {ServiceUri}/");
         }
@@ -87,9 +86,6 @@ namespace SmartOutlet.Service
             var job = JobBuilder.Create<MyJob>().Build();
             var trigger = TriggerBuilder
                 .Create()
-//                .WithSimpleSchedule(x => x
-//                    .WithIntervalInSeconds(10)
-//                    .RepeatForever())
                 .StartNow()
                 .Build();
             _scheduler.ScheduleJob(job, trigger);

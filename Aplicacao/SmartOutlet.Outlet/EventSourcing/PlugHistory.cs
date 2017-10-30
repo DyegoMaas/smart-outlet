@@ -30,7 +30,7 @@ namespace SmartOutlet.Outlet.EventSourcing
 
         public void Apply(ConsumptionReadingReceived consumptionReading)
         {
-            LastConsumptionInWatts = consumptionReading.ConsumoEmWatts;
+            LastConsumptionInWatts = consumptionReading.ConssumptionInWatts;
         }
     }
 }

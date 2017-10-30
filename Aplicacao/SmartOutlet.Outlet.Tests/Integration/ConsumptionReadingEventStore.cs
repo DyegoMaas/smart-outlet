@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using FluentAssertions;
 using Marten;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
+using SmartOutlet.Outlet.EventSourcing.Reports;
 
 namespace SmartOutlet.Outlet.Tests.Integration
 {
@@ -68,6 +70,46 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 plugPinheiro.IsOn().Should().BeTrue();
                 plugTv.IsOn().Should().BeFalse();
             }
+        }
+        
+        [Test]
+        public void reporting_a_plugs_consumption()
+        {
+            var pinheiro = new PlugActivated(Guid.NewGuid(), "Pinheiro de Natal");
+
+            using (var session = _documentStore.OpenSession())
+            {
+                session.Events.Append(pinheiro.PlugId, pinheiro);
+                session.SaveChanges();
+            }
+            
+            using (var session = _documentStore.OpenSession())
+            {
+                session.Events.Append(pinheiro.PlugId, 
+                    new PlugTurnedOn(),
+                    new ConsumptionReadingReceived(20),
+                    new ConsumptionReadingReceived(20),
+                    new ConsumptionReadingReceived(22),
+                    new ConsumptionReadingReceived(23),
+                    new ConsumptionReadingReceived(24),
+                    new ConsumptionReadingReceived(20),
+                    new ConsumptionReadingReceived(21),
+                    new ConsumptionReadingReceived(22),
+                    new ConsumptionReadingReceived(20),
+                    new ConsumptionReadingReceived(21),
+                    new PlugTurnedOff(), 
+                    new PlugTurnedOn(),
+                    new ConsumptionReadingReceived(21)
+                );
+                session.SaveChanges();
+            }
+
+            var reporter = new ConsumptionReporter(_documentStore);
+            var consumptionReport = reporter.GetConsumptionReport(pinheiro.PlugId);
+            consumptionReport.Select(x => x.ConsumptionInWatts).Should().BeEquivalentTo(new []
+            {
+                20.0, 20.0, 22.0, 23.0, 24.0 ,20.0, 21.0, 22.0, 20.0, 21.0, 21.0
+            });
         }
     }
 }

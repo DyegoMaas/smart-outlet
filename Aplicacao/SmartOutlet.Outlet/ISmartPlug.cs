@@ -2,7 +2,7 @@
 {
     public interface ISmartPlug
     {
-        ToggeResult TurnOff();
-        ToggeResult TurnOn();
+        ToggeResult TryTurnOff();
+        ToggeResult TryTurnOn();
     }
 }

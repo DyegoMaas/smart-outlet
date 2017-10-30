@@ -25,13 +25,13 @@ namespace SmartOutlet.Service.Modules
 
         private static PlugState TurnPlugOn(ISmartPlug plug)
         {
-            ToggeResult result = plug.TurnOn();
+            ToggeResult result = plug.TryTurnOn();
             return result.State;
         }
 
         private static PlugState TurnPlugOff(ISmartPlug plug)
         {
-            ToggeResult result = plug.TurnOff();
+            ToggeResult result = plug.TryTurnOff();
             return result.State;
         }
     }

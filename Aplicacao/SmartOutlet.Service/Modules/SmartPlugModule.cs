@@ -1,17 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Nancy;
 using SmartOutlet.Outlet;
+using SmartOutlet.Outlet.EventSourcing.Reports;
 
 namespace SmartOutlet.Service.Modules
 {
     public class SmartPlugModule : NancyModule
     {
-        public SmartPlugModule(ISmartPlug plug) 
+        private readonly IConsumptionReporter _consumptionReporter;
+        private readonly ISmartPlug _smartPlug;
+
+        public SmartPlugModule(ISmartPlug plug, IConsumptionReporter consumptionReporter) 
             : base("plug")
         {
+            _smartPlug = plug;
+            _consumptionReporter = consumptionReporter;
             Get("/", _ => GetState());
-            Post("/turn-on", _ => TurnPlugOn(plug));
-            Post("/turn-off", _ => TurnPlugOff(plug));
+            Post("/turn-on", _ => TurnPlugOn());
+            Post("/turn-off", _ => TurnPlugOff());
+            Get("/consumption-report", _ => GetComsuptionReport());
         }
 
         private static SmartPlugResponse GetState()
@@ -23,16 +32,23 @@ namespace SmartOutlet.Service.Modules
             };
         }
 
-        private static PlugState TurnPlugOn(ISmartPlug plug)
+        private PlugState TurnPlugOn()
         {
-            ToggeResult result = plug.TryTurnOn();
+            ToggeResult result = _smartPlug.TryTurnOn();
             return result.State;
         }
 
-        private static PlugState TurnPlugOff(ISmartPlug plug)
+        private PlugState TurnPlugOff()
         {
-            ToggeResult result = plug.TryTurnOff();
+            ToggeResult result = _smartPlug.TryTurnOff();
             return result.State;
+        }
+
+        private IList<ConsumptionInTime> GetComsuptionReport()
+        {
+            return _consumptionReporter
+                .GetConsumptionReport(Plugs.PlugOneId)
+                .ToList();
         }
     }
 

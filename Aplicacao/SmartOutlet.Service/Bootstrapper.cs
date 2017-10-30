@@ -1,6 +1,4 @@
-﻿using System;
-using System.Configuration;
-using Marten;
+﻿using Marten;
 using Nancy;
 using Nancy.TinyIoc;
 using SmartOutlet.Outlet;
@@ -20,7 +18,7 @@ namespace SmartOutlet.Service
             container.Register<IConsumptionReporter, ConsumptionReporter>();
             container.Register<ISmartPlug, SmartPlug>();
 
-            container.Register<IDocumentStore>(NewEventSource<PlugHistory>(
+            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<PlugHistory>(
                 typeof(PlugActivated),
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
@@ -30,29 +28,6 @@ namespace SmartOutlet.Service
             var messaging = new Messaging();
             container.Register<IPublisher>(messaging);
             container.Register<ITopicClientele>(messaging);
-        }
-
-        private static DocumentStore NewEventSource<TAgreggator>(params Type[] eventTypes) 
-            where TAgreggator : class, new()
-        {
-            var store = DocumentStore.For(_ =>
-            {
-                _.Connection(GetConnectionString());
-
-                _.Events.AddEventTypes(eventTypes);
-                _.Events.InlineProjections.AggregateStreamsWith<TAgreggator>();
-            });
-            using (var session = store.LightweightSession())
-            {
-                session.DeleteWhere<TAgreggator>(reading => true);
-                session.SaveChanges();
-            }
-            return store;
-        }
-        
-        private static string GetConnectionString()
-        {
-            return ConfigurationManager.ConnectionStrings["Production"].ConnectionString;
         }
     }
 }

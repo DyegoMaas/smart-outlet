@@ -82,6 +82,9 @@
     <Compile Include="EventSourcing\Reports\ConsumptionReporter.cs" />
     <Compile Include="EventSourcing\Reports\IConsumptionReporter.cs" />
     <Compile Include="ISmartPlug.cs" />
+    <Compile Include="Mqtt\IPublisher.cs" />
+    <Compile Include="Mqtt\ITopicClientele.cs" />
+    <Compile Include="Mqtt\Messaging.cs" />
     <Compile Include="Plugs.cs" />
     <Compile Include="PlugState.cs" />
     <Compile Include="SmartPlug.cs" />

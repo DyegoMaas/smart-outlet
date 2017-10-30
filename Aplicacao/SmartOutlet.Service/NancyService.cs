@@ -1,4 +1,5 @@
 ﻿using System;
+using Marten;
 using Nancy.Hosting.Self;
 using Quartz;
 using Quartz.Impl;
@@ -21,8 +22,6 @@ namespace SmartOutlet.Service
         {
             ConfigureNancy();
             ConfigureJob();
-            
-            
         }
 
         private void ConfigureNancy()

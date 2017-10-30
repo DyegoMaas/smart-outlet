@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Marten;
 using SmartOutlet.Outlet.Consumption;
 
@@ -9,7 +10,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
         public static DocumentStore SetupNew()
         {
             var documentStore = DocumentStore
-                .For("host=localhost;database=smartthings_test;password=postgres;username=postgres");
+                .For(GetConnectionString());
             using (var session = documentStore.LightweightSession())
             {
                 session.DeleteWhere<ConsumptionReading>(reading => true); //TODO parametrizar
@@ -23,7 +24,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
         {
             var store = DocumentStore.For(_ =>
             {
-                _.Connection("host=localhost;database=smartthings_test;password=postgres;username=postgres");
+                _.Connection(GetConnectionString());
 
                 _.Events.AddEventTypes(eventTypes);
                 _.Events.InlineProjections.AggregateStreamsWith<TAgreggator>();
@@ -34,6 +35,12 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 session.SaveChanges();
             }
             return store;
+        }
+
+        private static string GetConnectionString()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["Tests"].ConnectionString;
+            return connectionString;
         }
     }
 }

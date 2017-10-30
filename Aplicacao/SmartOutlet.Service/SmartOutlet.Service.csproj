@@ -52,6 +52,7 @@
     <Reference Include="Marten, Version=2.3.2.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Marten.2.3.2\lib\net46\Marten.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Nancy, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Nancy.2.0.0-clinteastwood\lib\net452\Nancy.dll</HintPath>
     </Reference>
@@ -91,6 +92,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="DocumentStorageFactory.cs" />
     <Compile Include="Modules\SmartPlugModule.cs" />
+    <Compile Include="Modules\SmartPlugResponse.cs" />
     <Compile Include="NancyService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

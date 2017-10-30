@@ -18,6 +18,7 @@ namespace SmartOutlet.Service
 
             container.Register<ISmartPlug, SmartPlug>();
             container.Register<IPlugEventEmitter, PlugEventEmitter>();
+            container.Register<IPlugStateReporter, PlugStateReporter>();
             container.Register<IConsumptionReporter, ConsumptionReporter>();
 
             container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<PlugHistory>(
@@ -36,16 +37,20 @@ namespace SmartOutlet.Service
 
         private void RegisterSubscribers(Messaging messaging, TinyIoCContainer container)
         {
-            messaging.Subscribe("/smart-plug/new-state/on", s =>
+            messaging.Subscribe("/smart-plug/new-state", message =>
             {
                 var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
-                plugEventEmitter.PlugTurnedOn(Plugs.PlugOneId);
-            });
-            
-            messaging.Subscribe("/smart-plug/new-state/off", s =>
-            {
-                var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
-                plugEventEmitter.PlugTurnedOff(Plugs.PlugOneId);
+                
+                var newState = CleanString(message);
+                switch (newState)
+                {
+                    case "on":
+                        plugEventEmitter.PlugTurnedOn(Plugs.PlugOneId);
+                        break;
+                    case "off":
+                        plugEventEmitter.PlugTurnedOff(Plugs.PlugOneId);
+                        break;
+                }
             });
             
             messaging.Subscribe("/smart-plug/consumption", value =>
@@ -54,6 +59,11 @@ namespace SmartOutlet.Service
                 var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
                 plugEventEmitter.NewConsumption(Plugs.PlugOneId, consumptionInWatts);
             });
+        }
+
+        private static string CleanString(string message)
+        {
+            return message.Trim().ToLower();
         }
     }
 }

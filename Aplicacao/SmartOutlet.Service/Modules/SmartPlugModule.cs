@@ -4,44 +4,66 @@ using System.Linq;
 using Nancy;
 using SmartOutlet.Outlet;
 using SmartOutlet.Outlet.EventSourcing.Reports;
+using SmartOutlet.Outlet.Mqtt;
 
 namespace SmartOutlet.Service.Modules
 {
     public class SmartPlugModule : NancyModule
     {
         private readonly IConsumptionReporter _consumptionReporter;
+        private readonly IPlugStateReporter _plugStateReporter;
         private readonly ISmartPlug _smartPlug;
 
-        public SmartPlugModule(ISmartPlug plug, IConsumptionReporter consumptionReporter) 
-            : base("plug")
+        public SmartPlugModule(ISmartPlug plug, 
+            IConsumptionReporter consumptionReporter,
+            IPlugStateReporter plugStateReporter
+        ) : base("plug")
         {
             _smartPlug = plug;
             _consumptionReporter = consumptionReporter;
-            Get("/", _ => GetState());
-            Post("/turn-on", _ => TurnPlugOn());
-            Post("/turn-off", _ => TurnPlugOff());
+            _plugStateReporter = plugStateReporter;
+
+            Get("/", _ => GetListOfPlugStates());
+            
+            Get("/{plugId:guid}", _ => GetPlugState(_.plugId));
+            
+            Post("/try-turn-on", _ =>
+            {
+                _smartPlug.TryTurnOn(Plugs.PlugOneId);
+                return HttpStatusCode.OK;
+            });
+            
+            Post("/try-turn-off", _ =>
+            {
+                _smartPlug.TryTurnOff(Plugs.PlugOneId);
+                return HttpStatusCode.OK;
+            });
+            
             Get("/consumption-report", _ => GetComsuptionReport());
         }
 
-        private static SmartPlugResponse GetState()
+        private IList<SmartPlugResponse> GetListOfPlugStates()
         {
-            return new SmartPlugResponse
-            {
-                IsOn = Convert.ToBoolean(new Random().Next(0, 2)),
-                Name = "Plug 1"
-            };
+            var allPlugIds = new[] {Plugs.PlugOneId};
+            return GetPlugStates(allPlugIds);
         }
 
-        private PlugState TurnPlugOn()
+        private SmartPlugResponse GetPlugState(Guid plugId)
         {
-            ToggeResult result = _smartPlug.TryTurnOn();
-            return result.State;
+            return GetPlugStates(plugId).FirstOrDefault();
         }
 
-        private PlugState TurnPlugOff()
+        private IList<SmartPlugResponse> GetPlugStates(params Guid[] plugIds)
         {
-            ToggeResult result = _smartPlug.TryTurnOff();
-            return result.State;
+            var stateReport = _plugStateReporter.GetStateReport(plugIds);
+            return stateReport
+                .Select(x => new SmartPlugResponse
+                {
+                    IsOn = x.State == PlugState.On,
+                    Name = x.Name,
+                    LastConsumption = x.LastConsumptionInWatts
+                })
+                .ToList();
         }
 
         private IList<ConsumptionInTime> GetComsuptionReport()
@@ -50,11 +72,5 @@ namespace SmartOutlet.Service.Modules
                 .GetConsumptionReport(Plugs.PlugOneId)
                 .ToList();
         }
-    }
-
-    public class SmartPlugResponse
-    {
-        public bool IsOn { get; set; }
-        public string Name { get; set; }
     }
 }

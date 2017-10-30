@@ -1,58 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CoAP.Util;
-using SmartOutlet.Outlet.CoAP;
+using SmartOutlet.Outlet.Mqtt;
 
 namespace SmartOutlet.Outlet
 {
     public class SmartPlug : ISmartPlug
     {
-        //TODO tornar configurável
-//        private readonly Uri _baseUri = new Uri("coap://localhost:10.0.0.5");
-        
-        public ToggeResult TryTurnOff()
+        private readonly IPublisher _publisher;
+
+        public SmartPlug(IPublisher publisher)
         {
-            return new ToggeResult(PlugState.Off);
+            _publisher = publisher;
         }
 
-        public ToggeResult TryTurnOn()
+        public void TryTurnOff(Guid plugId)
         {
-//            var taskCompletionSource = new TaskCompletionSource<PlugState>();
-//                
-//            const string toggleOnPayload = "1";
-//            var post = RequestBuilder.New(_baseUri)
-//                .Post("toggle")
-//                .WithTextPayload(toggleOnPayload)
-//                .WithCallback((sender, e) =>
-//                {
-//                    var response = e.Response;
-//                    if (response == null)
-//                    {
-//                        taskCompletionSource.SetResult(PlugState.Unknown);
-//                    }
-//                    else
-//                    {
-//                        PlugState result = ParsePlugResponse(response.PayloadString);
-//                        taskCompletionSource.SetResult(result);
-//                    }
-//                })
-//                .Build();              
-//            post.Send();
-//            Task.WaitAll(taskCompletionSource.Task);
-//
-//            return new ToggeResult(taskCompletionSource.Task.Result);
-            return new ToggeResult(PlugState.Unknown);
+            _publisher.Publish("/smart-plug/state", "turn-off");
         }
 
-        private PlugState ParsePlugResponse(string payload)
+        public void TryTurnOn(Guid plugId)
         {
-            switch (payload.Trim().ToLower())
-            {
-                case "on": return PlugState.On;
-                case "off": return PlugState.Off;
-                default: return PlugState.Unknown;
-            }
+            _publisher.Publish("/smart-plug/state", "turn-on");
         }
     }
 }

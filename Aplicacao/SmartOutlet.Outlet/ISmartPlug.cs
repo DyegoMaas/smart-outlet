@@ -1,8 +1,10 @@
-﻿namespace SmartOutlet.Outlet
+﻿using System;
+
+namespace SmartOutlet.Outlet
 {
     public interface ISmartPlug
     {
-        ToggeResult TryTurnOff();
-        ToggeResult TryTurnOn();
+        void TryTurnOff(Guid plugId);
+        void TryTurnOn(Guid plugId);
     }
 }

@@ -72,7 +72,6 @@
     <Compile Include="CoAP\IDetailedRequestBuilder.cs" />
     <Compile Include="CoAP\IRequestBuilder.cs" />
     <Compile Include="CoAP\RequestBuilder.cs" />
-    <Compile Include="Consumption\ConsumptionReading.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
     <Compile Include="EventSourcing\Events\PlugActivated.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOff.cs" />

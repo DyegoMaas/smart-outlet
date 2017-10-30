@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Configuration;
 using Marten;
-using SmartOutlet.Outlet.Consumption;
 
 namespace SmartOutlet.Outlet.Tests.Integration
 {
@@ -13,7 +12,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 .For(GetConnectionString());
             using (var session = documentStore.LightweightSession())
             {
-                session.DeleteWhere<ConsumptionReading>(reading => true); //TODO parametrizar
+//                session.DeleteWhere<ConsumptionReading>(reading => true); //TODO parametrizar
                 session.SaveChanges();
             }
             return documentStore;

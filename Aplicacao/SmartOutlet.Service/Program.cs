@@ -1,6 +1,4 @@
 ﻿using System;
-using Emitter;
-using Emitter.Messages;
 using Nancy.Hosting.Self;
 using Quartz;
 using Quartz.Impl;
@@ -64,43 +62,17 @@ namespace SmartOutlet.Service
         private const string ServiceUri = "http://localhost:8001/smart-things/";
         private readonly NancyHost _nancyHost;
         private readonly IScheduler _scheduler;
-        
-        private const string  SmartThingsSecretKey = "a4cccb0a-7961-4e68-a83b-d23a5b6cc3e6";
-        private readonly Connection _emitter;
 
         public NancyService()
         {
             _nancyHost = new NancyHost(new Uri(ServiceUri));
             _scheduler = new StdSchedulerFactory().GetScheduler();
-            
-            _emitter = new Emitter.Connection();
         }
 
         public void Start()
         {
-            ConfigureEmitter();
             ConfigureNancy();
             ConfigureJob();
-        }
-
-        private void ConfigureEmitter()
-        {
-            _emitter.Connect();
-            
-            const string smartPlugChannelName = "smart-plug";
-//            _emitter.GenerateKey(
-//                SmartThingsSecretKey, 
-//                smartPlugChannelName,
-//                EmitterKeyType.ReadWrite,
-//                (response) => Console.WriteLine("Generated Key: " + response.Key)
-//            );
-
-            _emitter.On(SmartThingsSecretKey, smartPlugChannelName, (channel, msg) =>
-            {
-                Console.WriteLine("msg: " + msg);
-            });
-            
-            _emitter.Publish(SmartThingsSecretKey, smartPlugChannelName, "on");
         }
 
         private void ConfigureNancy()
@@ -126,7 +98,6 @@ namespace SmartOutlet.Service
 
         public void Stop()
         {
-            _emitter.Disconnect();
             _nancyHost.Dispose();
             _scheduler.Shutdown();
         }

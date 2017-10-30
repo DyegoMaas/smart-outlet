@@ -6,13 +6,12 @@ namespace SmartOutlet.Service.Modules
 {
     public class SmartPlugModule : NancyModule
     {
-//        public SmartPlugModule(ISmartPlug plug)
-        public SmartPlugModule()
+        public SmartPlugModule(ISmartPlug plug) 
             : base("plug")
         {
             Get("/", _ => GetState());
-//            Post("/turn-on", _ => TurnPlugOn(plug));
-//            Post("/turn-off", _ => TurnPlugOff(plug));
+            Post("/turn-on", _ => TurnPlugOn(plug));
+            Post("/turn-off", _ => TurnPlugOff(plug));
         }
 
         private static SmartPlugResponse GetState()

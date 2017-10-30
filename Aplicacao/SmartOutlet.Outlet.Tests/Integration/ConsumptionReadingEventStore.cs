@@ -69,8 +69,5 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 plugTv.IsOn().Should().BeFalse();
             }
         }
-       
-        
-        
     }
 }

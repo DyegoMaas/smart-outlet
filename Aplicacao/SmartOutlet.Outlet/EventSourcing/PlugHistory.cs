@@ -5,9 +5,9 @@ namespace SmartOutlet.Outlet.EventSourcing
 {
     public class PlugHistory
     {
-        public Guid Id { get; set; }
-        public PlugState State { get; set; }
-        public string Name { get; set; }
+        public Guid Id { get; set; } = Plugs.PlugOneId;
+        public PlugState State { get; set; } = PlugState.Off;
+        public string Name { get; set; } = "PlugOne";
         public double LastConsumptionInWatts { get; set; }
 
         public bool IsOn() => State == PlugState.On;

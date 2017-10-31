@@ -6,7 +6,7 @@
 const char* SSID = "Dyego"; // rede wifi
 const char* PASSWORD = "estreladamorte"; // senha da rede wifi
 
-const char* BROKER_MQTT = "10.0.0.9"; // ip/host do broker
+const char* BROKER_MQTT = "iot.eclipse.org"; // ip/host do broker
 int BROKER_PORT = 1883; // porta do broker
 
 						// prototypes
@@ -106,7 +106,6 @@ void reconnectMQTT() {
 }
 
 void recconectWiFi() {
-	Serial.println("reconneting to Wifi");
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(100);
 		Serial.print(".");

@@ -14,7 +14,7 @@ namespace SmartOutlet.Outlet.Mqtt
 
         public Messaging()
         {
-            const string brokerHostName = "localhost";
+            const string brokerHostName = "iot.eclipse.org";
             const int brokerPort = 1883;
             _mqttClient = new MqttClient(
                 brokerHostName:brokerHostName,

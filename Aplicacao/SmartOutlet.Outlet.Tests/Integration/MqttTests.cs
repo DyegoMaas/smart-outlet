@@ -16,6 +16,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
         public void um_teste()
         {
             var client = new MqttClient(
+//                brokerHostName:"localhost",
                 brokerHostName:"localhost",
                 brokerPort: 1883,
                 secure: false,
@@ -56,6 +57,16 @@ namespace SmartOutlet.Outlet.Tests.Integration
  
 // publish a message on "/home/temperature" topic with QoS 2 
             var messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
+            messageId = client.Publish("/home/temperature", Encoding.UTF8.GetBytes("25"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, true);
             Console.WriteLine($"Publish MessageId {messageId}");
 
             Thread.Sleep(3000);

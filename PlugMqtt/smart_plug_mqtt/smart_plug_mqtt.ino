@@ -1,14 +1,12 @@
-// Libs
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include "Relay5V.h"
 
-// Vars
-const char* SSID = "Dyego"; // rede wifi
-const char* PASSWORD = "estreladamorte"; // senha da rede wifi
+const char* SSID = "Dyego"; 
+const char* PASSWORD = "estreladamorte"; 
 
-const char* BROKER_MQTT = "iot.eclipse.org"; // ip/host do broker
-int BROKER_PORT = 1883; // porta do broker
+const char* BROKER_MQTT = "iot.eclipse.org"; 
+int BROKER_PORT = 1883; 
 
 void initPins();
 void initSerial();
@@ -16,14 +14,23 @@ void initWiFi();
 void initMQTT();
 
 WiFiClient espClient;
-PubSubClient MQTT(espClient); // instancia o mqtt
-
+PubSubClient MQTT(espClient);
 
 int WIFI_LED = D7;
 int RELAY_PIN = D5;
 Relay5V relay = Relay5V(true);
 
-							  // setup
+long lastMessageTime = 0;
+
+void reportConsumption() {
+  auto timeSinceLastConsumptionReport = millis() - lastMessageTime;  
+  if (timeSinceLastConsumptionReport >= 1000) {
+    Serial.print("publicando 25.7");
+    MQTT.publish("/smart-plug/consumption", (char *)"25.7");
+    lastMessageTime = millis();
+  }
+}
+
 void setup() {
 	initPins();
 	initSerial();
@@ -36,10 +43,10 @@ void loop() {
 		reconnectMQTT();
 	}
 	recconectWiFi();
+
+  reportConsumption();  
 	MQTT.loop();
 }
-
-// implementacao dos prototypes
 
 void initPins() {
   pinMode(WIFI_LED, OUTPUT);
@@ -69,11 +76,12 @@ void initWiFi() {
   digitalWrite(WIFI_LED, HIGH);
 }
 
-// Func�o para se conectar ao Broker MQTT
 void initMQTT() {
 	Serial.println("Initializing MQTT");
 	MQTT.setServer(BROKER_MQTT, BROKER_PORT);
 	MQTT.setCallback(mqtt_callback);
+
+	lastMessageTime = millis();
 }
 
 void turnOn() {
@@ -89,9 +97,7 @@ void sendConfirmationOfRelayActivation() {
 	MQTT.publish("/smart-plug/new-state", (char *)isOn);
 }
 
-//Fun��o que recebe as mensagens publicadas
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
-
 	String message;
 	for (int i = 0; i < length; i++) {
 		char c = (char)payload[i];
@@ -101,16 +107,16 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 	auto topicString = String(topic);
 	Serial.println("Topic => " + topicString + " | Value => " + String(message));
   
-  if (topicString == "/smart-plug/state") {
-    if (message == "turn-on") {
-      turnOn();
-	  sendConfirmationOfRelayActivation();
-    }
-    else if (message == "turn-off") {
-      turnOff();
-	  sendConfirmationOfRelayActivation();
-    }  
-  }
+	if (topicString == "/smart-plug/state") {
+		if (message == "turn-on") {
+			turnOn();
+			sendConfirmationOfRelayActivation();
+		}
+		else if (message == "turn-off") {
+			turnOff();
+			sendConfirmationOfRelayActivation();
+		}  
+	}
 	
 	Serial.flush();
 }

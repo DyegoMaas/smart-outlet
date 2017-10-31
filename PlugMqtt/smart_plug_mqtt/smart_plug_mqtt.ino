@@ -1,6 +1,7 @@
 // Libs
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include "Relay5V.h"
 
 // Vars
 const char* SSID = "Dyego"; // rede wifi
@@ -17,6 +18,11 @@ void initMQTT();
 
 WiFiClient espClient;
 PubSubClient MQTT(espClient); // instancia o mqtt
+
+
+int WIFI_LED = D7;
+int RELAY_PIN = D5;
+Relay5V relay = Relay5V(true);
 
 							  // setup
 void setup() {
@@ -37,13 +43,17 @@ void loop() {
 // implementacao dos prototypes
 
 void initPins() {
-	pinMode(D5, OUTPUT);
-	digitalWrite(D5, 0);
+  pinMode(WIFI_LED, OUTPUT);
+  digitalWrite(WIFI_LED, LOW);
+  
+  pinMode(RELAY_PIN, OUTPUT);
+  relay.turnOff(RELAY_PIN);
 }
 
 void initSerial() {
 	Serial.begin(115200);
 }
+
 void initWiFi() {
 	delay(10);
 	Serial.println("Conectando-se em: " + String(SSID));
@@ -56,6 +66,8 @@ void initWiFi() {
 	Serial.println();
 	Serial.print("Conectado na Rede " + String(SSID) + " | IP => ");
 	Serial.println(WiFi.localIP());
+ 
+  digitalWrite(WIFI_LED, HIGH);
 }
 
 // Func�o para se conectar ao Broker MQTT
@@ -63,6 +75,14 @@ void initMQTT() {
 	Serial.println("Initializing MQTT");
 	MQTT.setServer(BROKER_MQTT, BROKER_PORT);
 	MQTT.setCallback(mqtt_callback);
+}
+
+void turnOn() {
+   relay.turnOn(RELAY_PIN);
+}
+
+void turnOff() {
+   relay.turnOff(RELAY_PIN);
 }
 
 //Fun��o que recebe as mensagens publicadas
@@ -75,14 +95,20 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 	}
  
 	auto topicString = String(topic);
-	Serial.println("T�pico => " + topicString + " | Valor => " + String(message));
+	Serial.println("Topic => " + topicString + " | Value => " + String(message));
   
   if (topicString == "/smart-plug/state") {
     if (message == "turn-on") {
-      digitalWrite(D5, HIGH);
+      turnOn();
+
+//        char *isOn = (digitalRead(RELAY_PIN) > 0) ? ((char *) "on") : ((char *) "off");
+//        if (obs == 1)
+//          coap.sendResponse(isOn);
+//        else
+//          coap.sendResponse(ip, port, isOn);
     }
     else if (message == "turn-off") {
-      digitalWrite(D5, LOW);
+      turnOff();
     }  
   }
 	

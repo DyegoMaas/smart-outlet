@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace SmartOutlet.Outlet.Mqtt
 {
+    /*Public brokers:
+        broker.hivemq.com (port 1883).
+        broker.mqttdashboard.com (port 1883).
+        iot.eclipse.org (port 1883).
+        test.mosca.io (port 1883).
+     */
     public class Messaging : IPublisher, ITopicClientele
     {
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
@@ -27,6 +34,7 @@ namespace SmartOutlet.Outlet.Mqtt
             
             var clientId = Guid.NewGuid().ToString();
             _mqttClient.Connect(clientId);
+            Thread.Sleep(3000);
             if (!_mqttClient.IsConnected)
             {
                 var message = $"Not connected to MQTT broker '{brokerHostName}' on port '{brokerPort}'";

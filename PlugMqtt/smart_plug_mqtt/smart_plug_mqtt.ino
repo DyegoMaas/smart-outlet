@@ -10,7 +10,6 @@ const char* PASSWORD = "estreladamorte"; // senha da rede wifi
 const char* BROKER_MQTT = "iot.eclipse.org"; // ip/host do broker
 int BROKER_PORT = 1883; // porta do broker
 
-						// prototypes
 void initPins();
 void initSerial();
 void initWiFi();
@@ -85,6 +84,11 @@ void turnOff() {
    relay.turnOff(RELAY_PIN);
 }
 
+void sendConfirmationOfRelayActivation() {
+  auto isOn = relay.isOn(RELAY_PIN) ? "on": "off";
+	MQTT.publish("/smart-plug/new-state", (char *)isOn);
+}
+
 //Fun��o que recebe as mensagens publicadas
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 
@@ -100,15 +104,11 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   if (topicString == "/smart-plug/state") {
     if (message == "turn-on") {
       turnOn();
-
-//        char *isOn = (digitalRead(RELAY_PIN) > 0) ? ((char *) "on") : ((char *) "off");
-//        if (obs == 1)
-//          coap.sendResponse(isOn);
-//        else
-//          coap.sendResponse(ip, port, isOn);
+	  sendConfirmationOfRelayActivation();
     }
     else if (message == "turn-off") {
       turnOff();
+	  sendConfirmationOfRelayActivation();
     }  
   }
 	

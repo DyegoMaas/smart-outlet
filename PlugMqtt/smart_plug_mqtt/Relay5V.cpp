@@ -23,6 +23,13 @@ void Relay5V::toggle(int pin)
 		turnOff(pin);
 }
 
+bool Relay5V::isOn(int pin) const
+{
+  if (worksInLow)
+    return digitalRead(pin) == 0;
+  return digitalRead(pin) > 0;    
+}
+
 void DualRelay5V::turnOn(int pin1, int pin2) const
 {
 	relay1.turnOn(pin1);

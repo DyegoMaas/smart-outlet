@@ -16,6 +16,7 @@ public:
 	void turnOn(int pin) const;
 	void turnOff(int pin) const;
 	void toggle(int pin);
+  bool isOn(int pin) const;
 private:
 	bool worksInLow = true; //relays are activated on LOW
 	bool currentState = true;

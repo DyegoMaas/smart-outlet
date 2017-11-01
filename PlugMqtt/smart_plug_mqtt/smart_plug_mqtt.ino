@@ -1,6 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include "Relay5V.h"
+#include "SensoresCorrente.h"
+using namespace SensoresCorrente;
 
 const char* SSID = "Dyego"; 
 const char* PASSWORD = "estreladamorte"; 
@@ -20,13 +22,27 @@ int WIFI_LED = D7;
 int RELAY_PIN = D5;
 Relay5V relay = Relay5V(true);
 
+int AC_SENSOR_PIN = A0;
+ACS712 currentSensor = ACS712(_30A);
+
 long lastMessageTime = 0;
 
 void reportConsumption() {
   auto timeSinceLastConsumptionReport = millis() - lastMessageTime;  
   if (timeSinceLastConsumptionReport >= 1000) {
-    Serial.print("publicando 25.7");
-    MQTT.publish("/smart-plug/consumption", (char *)"25.7");
+    auto reading = currentSensor.readAC(AC_SENSOR_PIN);
+
+    char power[10];
+    dtostrf(reading.power, 7, 2, power);
+    //sprintf(power, "%7.2f", reading.power);
+    
+    Serial.print("lidox ");
+    Serial.print(reading.power);
+    
+    Serial.print(" | publicando ");
+    Serial.println(power);
+    
+    MQTT.publish("/smart-plug/consumption", power);
     lastMessageTime = millis();
   }
 }
@@ -54,6 +70,8 @@ void initPins() {
   
   pinMode(RELAY_PIN, OUTPUT);
   relay.turnOff(RELAY_PIN);
+
+  pinMode(AC_SENSOR_PIN, INPUT);
 }
 
 void initSerial() {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,8 +13,15 @@ namespace SmartOutlet.Outlet.Tests.Integration
 {
     public class MqttTests
     {
-        [Test]
-        public void um_teste()
+
+//        [Test]
+//        public void conversao()
+//        {
+//            Convert.ToDouble("20.5", CultureInfo.InvariantCulture).Should().Be(20.5d);
+//        }
+        
+        [Test, Ignore("publishes real messages")]
+        public void publishing_a_message()
         {
             var client = new MqttClient(
 //                brokerHostName:"localhost",

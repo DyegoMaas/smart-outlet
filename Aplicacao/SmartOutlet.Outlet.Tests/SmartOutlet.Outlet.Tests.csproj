@@ -81,6 +81,7 @@
     <Compile Include="Integration\DocumentStoreForTests.cs" />
     <Compile Include="Integration\MqttTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\PlugHistoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartOutlet.Outlet\SmartOutlet.Outlet.csproj">

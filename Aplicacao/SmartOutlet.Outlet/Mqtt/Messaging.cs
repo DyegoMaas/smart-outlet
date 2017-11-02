@@ -34,13 +34,13 @@ namespace SmartOutlet.Outlet.Mqtt
             ); 
             
             var clientId = Guid.NewGuid().ToString();
-            Policy.Handle<Exception>()
+            Policy
+                .Handle<Exception>()
                 .WaitAndRetry(5, 
                     count => TimeSpan.FromMinutes(3), 
                     (exception, retryCount) =>
                     {
                         Console.WriteLine($"Not able to connect to MQTT broker. Retrying for the {retryCount} time");
-                        Thread.Sleep(3000);        
                     })
                 .Execute(() =>
                 {

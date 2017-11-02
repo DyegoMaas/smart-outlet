@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using Polly;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -13,7 +14,7 @@ namespace SmartOutlet.Outlet.Mqtt
         iot.eclipse.org (port 1883).
         test.mosca.io (port 1883).
      */
-    public class Messaging : IPublisher, ITopicClientele
+    public class Messaging : IPublisher, ITopicClientele, IDisposable
     {
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();
@@ -33,13 +34,23 @@ namespace SmartOutlet.Outlet.Mqtt
             ); 
             
             var clientId = Guid.NewGuid().ToString();
-            _mqttClient.Connect(clientId);
-            Thread.Sleep(3000);
-            if (!_mqttClient.IsConnected)
-            {
-                var message = $"Not connected to MQTT broker '{brokerHostName}' on port '{brokerPort}'";
-                throw new InvalidOperationException(message);
-            }
+            Policy.Handle<Exception>()
+                .WaitAndRetry(5, 
+                    count => TimeSpan.FromMinutes(3), 
+                    (exception, retryCount) =>
+                    {
+                        Console.WriteLine($"Not able to connect to MQTT broker. Retrying for the {retryCount} time");
+                        Thread.Sleep(3000);        
+                    })
+                .Execute(() =>
+                {
+                    _mqttClient.Connect(clientId);
+                    if (_mqttClient.IsConnected) 
+                        return;
+                    
+                    var message = $"Not connected to MQTT broker '{brokerHostName}' on port '{brokerPort}'";
+                    throw new InvalidOperationException(message);
+                });
             
             _mqttClient.MqttMsgPublished += (sender, args) =>
             {
@@ -103,6 +114,11 @@ namespace SmartOutlet.Outlet.Mqtt
                 CallbacksPerTopic.Add(topic, new List<Action<string>>());
 
             CallbacksPerTopic[topic].Add(onMessageReceived);
+        }
+
+        public void Dispose()
+        {
+            _mqttClient.Disconnect();
         }
     }
 }

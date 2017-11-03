@@ -32,5 +32,10 @@ namespace SmartOutlet.Outlet.EventSourcing
         {
             LastConsumptionInWatts = consumptionReading.ConssumptionInWatts;
         }
+
+        public void Apply(PlugRenamed plugRenamed)
+        {
+            Name = plugRenamed.NewName;
+        }
     }
 }

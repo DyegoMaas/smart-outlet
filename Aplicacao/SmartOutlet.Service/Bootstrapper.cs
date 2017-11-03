@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Marten;
 using Nancy;
 using Nancy.TinyIoc;
@@ -55,9 +56,16 @@ namespace SmartOutlet.Service
             
             messaging.Subscribe("/smart-plug/consumption", value =>
             {
-                var consumptionInWatts = Convert.ToDouble(value);
-                var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
-                plugEventEmitter.NewConsumption(Plugs.PlugOneId, consumptionInWatts);
+                try
+                {
+                    var consumptionInWatts = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                    var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
+                    plugEventEmitter.NewConsumption(Plugs.PlugOneId, consumptionInWatts);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Entrada invalida");
+                }
             });
         }
 

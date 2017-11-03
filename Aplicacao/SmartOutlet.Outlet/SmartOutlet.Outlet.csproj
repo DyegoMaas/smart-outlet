@@ -54,6 +54,9 @@
     <Reference Include="Npgsql, Version=3.2.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7">
       <HintPath>..\packages\Npgsql.3.2.5\lib\net451\Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="Polly, Version=5.4.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Polly.5.4.0\lib\net45\Polly.dll</HintPath>
+    </Reference>
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b">
       <HintPath>..\packages\Remotion.Linq.2.1.1\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
@@ -74,6 +77,7 @@
     <Compile Include="CoAP\RequestBuilder.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
     <Compile Include="EventSourcing\Events\PlugActivated.cs" />
+    <Compile Include="EventSourcing\Events\PlugRenamed.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOff.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOn.cs" />
     <Compile Include="EventSourcing\IPlugEventEmitter.cs" />

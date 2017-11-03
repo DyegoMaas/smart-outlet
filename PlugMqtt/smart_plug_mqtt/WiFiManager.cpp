@@ -158,7 +158,8 @@ boolean WiFiManager::autoConnect(char const *apName, char const *apPassword) {
   //String pass = getPassword();
 
   // attempt to connect; should it fail, fall back to AP
-  WiFi.mode(WIFI_STA);
+  //WiFi.mode(WIFI_STA); //TODO go back to this version if not connecting
+  WiFi.mode(WIFI_AP);
 
   if (connectWifi("", "") == WL_CONNECTED)   {
     DEBUG_WM(F("IP Address:"));

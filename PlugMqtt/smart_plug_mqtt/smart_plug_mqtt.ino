@@ -28,6 +28,7 @@ WiFiClient espClient;
 PubSubClient MQTT(espClient);
 EEPROM_Manager eepromManager;
 
+int RESET_PIN = D2;
 int TRIGGER_PIN = D8;
 int WIFI_LED_PIN = D7;
 int RELAY_PIN = D5;
@@ -58,18 +59,26 @@ void reportConsumption() {
   }
 }
 
+void resetar() {
+  Serial.println("Reiniciando em 2s..");
+  delay(2000);
+  digitalWrite(D2, LOW);  
+}
+
 void setup() {
+  digitalWrite(RESET_PIN, HIGH);  
   initPins();
   initSerial();
   Serial.println("SETUP");
-  
+
+  WiFi.disconnect();
   initEEPROM();
   if (mustAskWifiCredentials())
     return;
   else {
     loadWifiCredentials();  
   }
-    
+   
 	initWiFi();
 	initMQTT();
 }
@@ -88,12 +97,22 @@ void saveCredentials(WifiCredentials credentials) {
   Serial.println(readCredentials.getSSID());
   Serial.println(readCredentials.getPassword());
 
-  Serial.println("Restarting!");
-  ESP.restart();
+  resetar();
 }
 
 void askWifiCredentials() {
+  WiFi.disconnect();
   Serial.println("resetando...");
+  digitalWrite(WIFI_LED_PIN, LOW);
+  delay(250);
+  digitalWrite(WIFI_LED_PIN, HIGH);
+  delay(250);
+  digitalWrite(WIFI_LED_PIN, LOW);
+  delay(250);
+  digitalWrite(WIFI_LED_PIN, HIGH);
+  delay(250);
+  digitalWrite(WIFI_LED_PIN, LOW);
+  
   //WiFiManager
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wifiManager;
@@ -106,7 +125,7 @@ void askWifiCredentials() {
   //sets timeout until configuration portal gets turned off
   //useful to make it all retry or go to sleep
   //in seconds
-  //wifiManager.setTimeout(120);
+  wifiManager.setTimeout(60);
   
   //it starts an access point with the specified name
   //here  "AutoConnectAP"
@@ -115,13 +134,16 @@ void askWifiCredentials() {
   //WITHOUT THIS THE AP DOES NOT SEEM TO WORK PROPERLY WITH SDK 1.5 , update to at least 1.5.1
   //WiFi.mode(WIFI_STA);
 
-  Serial.println("Setting Things Up!");
+  Serial.println("Subindo portal de configuração!");
   if (!wifiManager.startConfigPortal("OnDemandAP")) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
-    ESP.reset();
-    delay(5000);
+    //ESP.reset();
+    //ESP.restart();
+    resetar();
+    return;
+//    delay(5000);
   }
   
   //if you get here you have connected to the WiFi
@@ -140,6 +162,9 @@ void loadWifiCredentials() {
   auto credentials = eepromManager.readCredentials();  
   SSID = credentials.getSSID().c_str();
   PASSWORD = credentials.getPassword().c_str();
+  Serial.println("New credentials:");
+  Serial.println(SSID);
+  Serial.println(PASSWORD);
 }
 
 void loop() {

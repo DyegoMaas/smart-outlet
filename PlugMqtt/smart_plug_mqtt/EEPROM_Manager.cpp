@@ -18,19 +18,12 @@ void EEPROM_Manager::begin() {
 }
 
 void EEPROM_Manager::resetCredentials() {
-  EEPROM.write(0, 0);
-  EEPROM.write(1, 0);
-  EEPROM.write(2, 0);
-  EEPROM.write(3, 0);
+  EEPROM.write(0, (uint8_t)'f');  
 }
 
 void EEPROM_Manager::writeCredentials(String ssid, String password) {  
   int i = 0;
-
-  EEPROM.write(i++, 0); //indicates that there is a 
-  EEPROM.write(i++, 1); //indicates that there is a 
-  EEPROM.write(i++, 1); //indicates that there is a 
-  EEPROM.write(i++, 0); //indicates that there is a 
+  EEPROM.write(i++, (uint8_t)'t');  
 
   Serial.println("Writing ssid to EEPROM"); 
   auto ssidSize = ssid.length();  
@@ -54,7 +47,7 @@ void EEPROM_Manager::writeCredentials(String ssid, String password) {
 }
 
 Credentials EEPROM_Manager::readCredentials() {
-  int i = 3; //because of the sequence
+  int i = 1; //because of the indicator
 
   Serial.println("Reading ssid:");
   String ssid = "";
@@ -68,6 +61,7 @@ Credentials EEPROM_Manager::readCredentials() {
     ssid += c;
   }
 
+  Serial.println();
   Serial.println("Reading password:");
   String password = "";
   while(true) {
@@ -87,11 +81,6 @@ Credentials EEPROM_Manager::readCredentials() {
 }
 
 bool EEPROM_Manager::hasCredentials() {
-  auto has = EEPROM.read(0) == 0 && 
-    EEPROM.read(1) == 1 &&
-    EEPROM.read(2) == 1 &&
-    EEPROM.read(3) == 0;
-  Serial.print("Has credentials in EEPROM? ");
-  Serial.println(has);
+  auto has = char(EEPROM.read(0)) == 't';
   return has;    
 }

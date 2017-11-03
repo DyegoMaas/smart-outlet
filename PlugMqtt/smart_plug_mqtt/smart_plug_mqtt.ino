@@ -134,6 +134,9 @@ void askWifiCredentials() {
   //WITHOUT THIS THE AP DOES NOT SEEM TO WORK PROPERLY WITH SDK 1.5 , update to at least 1.5.1
   //WiFi.mode(WIFI_STA);
 
+  //set custom ip for portal
+  //wifiManager.setAPStaticIPConfig(IPAddress(10,0,1,1), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
+
   Serial.println("Subindo portal de configuração!");
   if (!wifiManager.startConfigPortal("OnDemandAP")) {
     Serial.println("failed to connect and hit timeout");

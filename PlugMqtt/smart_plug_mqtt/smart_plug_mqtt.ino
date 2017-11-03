@@ -4,7 +4,8 @@
 #include <PubSubClient.h>
 #include <EEPROM.h>
 
-#include "WiFiManager.h"    //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+//#include "WiFiManager.h"    //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
+#include "WiFiManagerUltraSimple.h"
 #include "Relay5V.h"
 #include "EEPROM_Manager.h"
 #include "SensoresCorrente.h"
@@ -99,10 +100,61 @@ void saveCredentials(WifiCredentials credentials) {
 
   resetar();
 }
+//
+//void askWifiCredentials() {
+//  WiFi.disconnect();
+//  Serial.println("resetando...");
+//  digitalWrite(WIFI_LED_PIN, LOW);
+//  delay(250);
+//  digitalWrite(WIFI_LED_PIN, HIGH);
+//  delay(250);
+//  digitalWrite(WIFI_LED_PIN, LOW);
+//  delay(250);
+//  digitalWrite(WIFI_LED_PIN, HIGH);
+//  delay(250);
+//  digitalWrite(WIFI_LED_PIN, LOW);
+//  
+//  //WiFiManager
+//  //Local intialization. Once its business is done, there is no need to keep it around
+//  WiFiManager wifiManager;
+//
+//  wifiManager.setSaveConfigCallback(saveCredentials);
+//  
+//  //reset settings - for testing
+//  //wifiManager.resetSettings();
+//  
+//  //sets timeout until configuration portal gets turned off
+//  //useful to make it all retry or go to sleep
+//  //in seconds
+//  wifiManager.setTimeout(60);
+//  
+//  //it starts an access point with the specified name
+//  //here  "AutoConnectAP"
+//  //and goes into a blocking loop awaiting configuration
+//  
+//  //WITHOUT THIS THE AP DOES NOT SEEM TO WORK PROPERLY WITH SDK 1.5 , update to at least 1.5.1
+//  //WiFi.mode(WIFI_STA);
+//
+//  Serial.println("Subindo portal de configuração!");
+//  if (!wifiManager.startConfigPortal("OnDemandAP")) {
+//    Serial.println("failed to connect and hit timeout");
+//    delay(3000);
+//    //reset and try again, or maybe put it to deep sleep
+//    //ESP.reset();
+//    //ESP.restart();
+//    resetar();
+//    return;
+////    delay(5000);
+//  }
+//  
+//  //if you get here you have connected to the WiFi
+//  Serial.println("Open Plug IP!");
+//}
 
-void askWifiCredentials() {
-  WiFi.disconnect();
-  Serial.println("resetando...");
+
+void askWifiCredentials2() {
+//  WiFi.disconnect();
+//  Serial.println("resetando...");
   digitalWrite(WIFI_LED_PIN, LOW);
   delay(250);
   digitalWrite(WIFI_LED_PIN, HIGH);
@@ -115,7 +167,8 @@ void askWifiCredentials() {
   
   //WiFiManager
   //Local intialization. Once its business is done, there is no need to keep it around
-  WiFiManager wifiManager;
+//  WiFiManager wifiManager;
+  WiFiManagerUltraSimple wifiManager;
 
   wifiManager.setSaveConfigCallback(saveCredentials);
   
@@ -125,7 +178,7 @@ void askWifiCredentials() {
   //sets timeout until configuration portal gets turned off
   //useful to make it all retry or go to sleep
   //in seconds
-  wifiManager.setTimeout(60);
+//  wifiManager.setTimeout(60);
   
   //it starts an access point with the specified name
   //here  "AutoConnectAP"
@@ -135,16 +188,17 @@ void askWifiCredentials() {
   //WiFi.mode(WIFI_STA);
 
   Serial.println("Subindo portal de configuração!");
-  if (!wifiManager.startConfigPortal("OnDemandAP")) {
-    Serial.println("failed to connect and hit timeout");
-    delay(3000);
-    //reset and try again, or maybe put it to deep sleep
-    //ESP.reset();
-    //ESP.restart();
-    resetar();
-    return;
-//    delay(5000);
-  }
+  wifiManager.connect();
+//  if (!wifiManager.startConfigPortal("OnDemandAP")) {
+//    Serial.println("failed to connect and hit timeout");
+//    delay(3000);
+//    //reset and try again, or maybe put it to deep sleep
+//    //ESP.reset();
+//    //ESP.restart();
+//    resetar();
+//    return;
+////    delay(5000);
+//  }
   
   //if you get here you have connected to the WiFi
   Serial.println("Open Plug IP!");
@@ -168,14 +222,17 @@ void loadWifiCredentials() {
 }
 
 void loop() {
-  if (mustAskWifiCredentials()) {   
-    reseting = true; 
+  if (mustAskWifiCredentials()) {    
     eepromManager.resetCredentials();
-    askWifiCredentials();  
+//    askWifiCredentials();  
+    if(!reseting) {
+      askWifiCredentials2();
+    }
+    reseting = true; 
   }
   
   if (reseting) {
-    Serial.println("skipping");
+    Serial.print(".");
     delay(100);
     return;
   }

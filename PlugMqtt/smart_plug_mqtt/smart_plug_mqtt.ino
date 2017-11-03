@@ -21,6 +21,8 @@ void initSerial();
 void initWiFi();
 void initMQTT();
 void initEEPROM();
+bool mustAskWifiCredentials();
+void loadWifiCredentials();
 
 WiFiClient espClient;
 PubSubClient MQTT(espClient);
@@ -62,12 +64,11 @@ void setup() {
   Serial.println("SETUP");
   
   initEEPROM();
-  
-//  eepromManager.writeCredentials(String("lalala"), String("password"));
-//  auto x = eepromManager.readCredentials();
-
   if (mustAskWifiCredentials())
     return;
+  else {
+    loadWifiCredentials();  
+  }
     
 	initWiFi();
 	initMQTT();
@@ -113,7 +114,8 @@ void askWifiCredentials() {
   
   //WITHOUT THIS THE AP DOES NOT SEEM TO WORK PROPERLY WITH SDK 1.5 , update to at least 1.5.1
   //WiFi.mode(WIFI_STA);
-  
+
+  Serial.println("Setting Things Up!");
   if (!wifiManager.startConfigPortal("OnDemandAP")) {
     Serial.println("failed to connect and hit timeout");
     delay(3000);
@@ -123,7 +125,7 @@ void askWifiCredentials() {
   }
   
   //if you get here you have connected to the WiFi
-  Serial.println("Conectado!");
+  Serial.println("Open Plug IP!");
 }
 
 bool mustReset() {
@@ -131,8 +133,13 @@ bool mustReset() {
 }
 
 bool mustAskWifiCredentials() {
-  Serial.println("Ask credentials?");
   return mustReset() || !eepromManager.hasCredentials();
+}
+
+void loadWifiCredentials() {
+  auto credentials = eepromManager.readCredentials();  
+  SSID = credentials.getSSID().c_str();
+  PASSWORD = credentials.getPassword().c_str();
 }
 
 void loop() {
@@ -142,9 +149,11 @@ void loop() {
     askWifiCredentials();  
   }
   
-  if (reseting)
+  if (reseting) {
+    Serial.println("skipping");
+    delay(100);
     return;
-    
+  }
 	if (!MQTT.connected()) {
 		reconnectMQTT();
 	}

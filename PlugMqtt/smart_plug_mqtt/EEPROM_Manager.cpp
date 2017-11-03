@@ -24,18 +24,7 @@ void EEPROM_Manager::resetCredentials() {
   EEPROM.write(3, 0);
 }
 
-void EEPROM_Manager::writeCredentials(String ssid, String password) {
-
-//  Credentials2 credentials = {
-//    ssid,
-//    password
-//  };
-
-//  EEPROM.put(0, credentials);
-//  EEPROM.commit();
-  Serial.println("Credentials saved");
-
-
+void EEPROM_Manager::writeCredentials(String ssid, String password) {  
   int i = 0;
 
   EEPROM.write(i++, 0); //indicates that there is a 
@@ -59,66 +48,15 @@ void EEPROM_Manager::writeCredentials(String ssid, String password) {
     Serial.print(j); Serial.print("="); Serial.print(password[j]); Serial.print("|"); Serial.print((uint8_t)password[j]); Serial.print(" ");
     yield();
   }  
- EEPROM.write(i++, '\0');
-  
-  
-//  int i = 0;  
-//  
-//  Serial.println("Writing ssid to EEPROM"); 
-//  auto ssidSize = ssid.length();
-//  EEPROM.write(i++, ssidSize);
-//  for (; i < ssidSize; i++) {
-//    EEPROM.write(i, (uint8_t)ssid[i]);
-//    yield();
-//  }
-//
-//  Serial.println("Writing password to EEPROM"); 
-//  auto passwordSize = password.length();
-//  EEPROM.write(i++, passwordSize);
-//  for (int j = 0; j < passwordSize; j++, i++) {
-//    EEPROM.write(i, (uint8_t)password[j]);
-//    yield();
-//  }  
-//  
+  EEPROM.write(i++, '\0');
+ 
   EEPROM.commit();
 }
 
-Credentials EEPROM_Manager::readCredentials() {  
-  Serial.println("Reading credentials:");
-//  auto ssidSize = EEPROM.read(0);
-//  yield();
-//  
-//  String ssid = "";
-//  for (int i = 1; i < ssidSize + 1; )
-//  {
-//    ssid += char(EEPROM.read(i));
-//    yield();
-//  }
-//  Serial.print("SSID: ");
-//  Serial.println(ssid);
-//  
-//  String password = "";
-//  auto passwordSize = EEPROM.read(ssidSize + 1);
-//  for (int i = passwordSize + 2; i < ssidSize + passwordSize + 2; i++)
-//  {
-//    password += char(EEPROM.read(i));
-//    yield();
-//  }
-//  Serial.print("PW: ");
-//  Serial.println(password);
-//
-//  EEPROM.end();
-
-
-//  Credentials2 credentials; //Variable to store custom object read from EEPROM.
-//  EEPROM.get(0, credentials);
-//  Serial.print(credentials.ssid);
-//  Serial.print(" | ");
-//  Serial.print(credentials.password);
-
+Credentials EEPROM_Manager::readCredentials() {
   int i = 3; //because of the sequence
 
-Serial.println("Reading ssid:");
+  Serial.println("Reading ssid:");
   String ssid = "";
   while(true) {
     auto value = EEPROM.read(i++);
@@ -155,6 +93,5 @@ bool EEPROM_Manager::hasCredentials() {
     EEPROM.read(3) == 0;
   Serial.print("Has credentials in EEPROM? ");
   Serial.println(has);
-  return has;
-    
+  return has;    
 }

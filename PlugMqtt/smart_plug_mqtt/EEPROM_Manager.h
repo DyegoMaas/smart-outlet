@@ -28,7 +28,4 @@ class EEPROM_Manager {
     void writeCredentials(String ssid, String password);
     bool hasCredentials();
     Credentials readCredentials();
-
-  private:
-    const int _size = 96;
 };

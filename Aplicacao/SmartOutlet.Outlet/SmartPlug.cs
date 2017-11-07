@@ -21,5 +21,20 @@ namespace SmartOutlet.Outlet
         {
             _publisher.Publish("/smart-plug/state", "turn-on");
         }
+
+        public void ScheduleTurnOn(TimeSpan timeInFuture)
+        {
+            _publisher.Publish("/smart-plug/schedule-on", GetMilisecondsString(timeInFuture));
+        }
+
+        public void ScheduleTurnOff(TimeSpan timeInFuture)
+        {
+            _publisher.Publish("/smart-plug/schedule-off", GetMilisecondsString(timeInFuture));
+        }
+
+        private static string GetMilisecondsString(TimeSpan timeInFuture)
+        {
+            return ((int)timeInFuture.TotalMilliseconds).ToString();
+        }
     }
 }

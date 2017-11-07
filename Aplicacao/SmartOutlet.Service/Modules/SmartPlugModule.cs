@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Nancy;
+using Nancy.ModelBinding;
 using SmartOutlet.Outlet;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 using SmartOutlet.Outlet.Mqtt;
@@ -36,6 +37,20 @@ namespace SmartOutlet.Service.Modules
             Post("/try-turn-off", _ =>
             {
                 _smartPlug.TryTurnOff(Plugs.PlugOneId);
+                return HttpStatusCode.OK;
+            });
+            
+            Post("/scheduling/turn-on", _ =>
+            {
+                var scheduleRequest = this.Bind<ScheduleRequest>();
+                _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
+                return HttpStatusCode.OK;
+            });
+            
+            Post("/scheduling/turn-off", _ =>
+            {
+                var scheduleRequest = this.Bind<ScheduleRequest>();
+                _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
                 return HttpStatusCode.OK;
             });
             

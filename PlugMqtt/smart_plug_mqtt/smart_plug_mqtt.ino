@@ -2,6 +2,7 @@
 #include <PubSubClient.h>
 #include "Relay5V.h"
 #include "SensoresCorrente.h"
+#include "TickerScheduler.h"
 using namespace SensoresCorrente;
 
 const char* SSID = "Dyego"; 
@@ -17,6 +18,7 @@ void initMQTT();
 
 WiFiClient espClient;
 PubSubClient MQTT(espClient);
+TickerScheduler scheduler(10);
 
 int WIFI_LED = D7;
 int RELAY_PIN = D5;
@@ -62,6 +64,7 @@ void loop() {
 
   reportConsumption();  
 	MQTT.loop();
+  scheduler.update();
 }
 
 void initPins() {
@@ -123,7 +126,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 	}
  
 	auto topicString = String(topic);
-	Serial.println("Topic => " + topicString + " | Value => " + String(message));
+	Serial.println("Topic => " + topicString + " | Value => " + message);
   
 	if (topicString == "/smart-plug/state") {
 		if (message == "turn-on") {
@@ -134,7 +137,40 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 			turnOff();
 			sendConfirmationOfRelayActivation();
 		}  
-	}
+	} else if (topicString == "/smart-plug/schedule-on") {
+    
+    auto intervaloMilisegundos = message.toInt();
+    Serial.print("ligando em ");
+    Serial.print(intervaloMilisegundos);
+    Serial.println("ms");
+
+    scheduler.remove(1);
+    scheduler.remove(2);
+    
+	  scheduler.add(1, intervaloMilisegundos, [&](void*) { 
+      Serial.println("ON");
+      turnOn();
+      scheduler.remove(1);
+    }, nullptr, false);
+    
+  } else if (topicString == "/smart-plug/schedule-off") {
+
+    auto intervaloMilisegundos = message.toInt();
+    Serial.print("desligando em ");
+    Serial.print(intervaloMilisegundos);
+    Serial.println("ms");
+
+    scheduler.remove(1);
+    scheduler.remove(2);
+    
+    auto funfou = scheduler.add(2, intervaloMilisegundos, [&](void*) { 
+      Serial.println("OFF");
+      turnOff();
+      scheduler.remove(2);
+    }, nullptr, false);
+    Serial.print("funfou = ");
+    Serial.println(funfou);    
+  }
 	
 	Serial.flush();
 }
@@ -143,9 +179,11 @@ void reconnectMQTT() {
 	while (!MQTT.connected()) {
 		Serial.println("Tentando se conectar ao Broker MQTT: " + String(BROKER_MQTT));
 		if (MQTT.connect("ESP8266-ESP12-E")) {
-			Serial.println("Conectado");
+			Serial.println("Conectado ao broker MQTT!");
       
 			MQTT.subscribe("/smart-plug/state");
+      MQTT.subscribe("/smart-plug/schedule-on");
+      MQTT.subscribe("/smart-plug/schedule-off");
 		}
 		else {
 			Serial.println("Falha ao Reconectar");

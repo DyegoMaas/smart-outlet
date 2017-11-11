@@ -14,7 +14,7 @@ namespace SmartOutlet.Outlet.Mqtt
         iot.eclipse.org (port 1883).
         test.mosca.io (port 1883).
      */
-    public class Messaging : IPublisher, ITopicClientele, IDisposable
+    public class Messaging : IPublisher, ITopicGuest, IDisposable
     {
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();

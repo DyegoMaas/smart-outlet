@@ -4,12 +4,12 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
 {
     public class ConsumptionReadingReceived
     {
-        public double ConssumptionInWatts { get; set; }
+        public double ConsumptionInWatts { get; set; }
         public DateTimeOffset TimeStamp { get; set; }
 
-        public ConsumptionReadingReceived(double conssumptionInWatts)
+        public ConsumptionReadingReceived(double consumptionInWatts)
         {
-            ConssumptionInWatts = conssumptionInWatts;
+            ConsumptionInWatts = consumptionInWatts;
         }
 
         protected ConsumptionReadingReceived()

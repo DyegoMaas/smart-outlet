@@ -48,7 +48,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
             
             _plugHistory.Apply(consumptionReadingReceived);
 
-            _plugHistory.LastConsumptionInWatts.Should().Be(consumptionReadingReceived.ConssumptionInWatts);
+            _plugHistory.LastConsumptionInWatts.Should().Be(consumptionReadingReceived.ConsumptionInWatts);
         }
 
         [Test]

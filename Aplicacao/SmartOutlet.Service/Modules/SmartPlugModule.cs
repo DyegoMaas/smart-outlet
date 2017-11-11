@@ -4,6 +4,7 @@ using System.Linq;
 using Nancy;
 using Nancy.ModelBinding;
 using SmartOutlet.Outlet;
+using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 using SmartOutlet.Outlet.Mqtt;
 
@@ -17,8 +18,9 @@ namespace SmartOutlet.Service.Modules
 
         public SmartPlugModule(ISmartPlug plug, 
             IConsumptionReporter consumptionReporter,
-            IPlugStateReporter plugStateReporter
-        ) : base("plug")
+            IPlugStateReporter plugStateReporter,
+            IPlugEventEmitter plugEventEmitter
+        ) : base("plugs")
         {
             _smartPlug = plug;
             _consumptionReporter = consumptionReporter;
@@ -26,35 +28,53 @@ namespace SmartOutlet.Service.Modules
 
             Get("/", _ => GetListOfPlugStates());
             
-            Get("/{plugId:guid}", _ => GetPlugState(_.plugId));
-            
-            Post("/try-turn-on", _ =>
+            Get("/{plugId:guid}", _ =>
             {
-                _smartPlug.TryTurnOn(Plugs.PlugOneId);
+                Guid plugId = _.plugId;
+                return GetPlugState(plugId);
+            });
+            
+            Post("/{plugId:guid}/try-turn-on", _ =>
+            {
+                Guid plugId = _.plugId;
+                _smartPlug.TryTurnOn(plugId);
                 return HttpStatusCode.OK;
             });
             
-            Post("/try-turn-off", _ =>
+            Post("/{plugId:guid}/try-turn-off", _ =>
             {
-                _smartPlug.TryTurnOff(Plugs.PlugOneId);
+                Guid plugId = _.plugId;
+                _smartPlug.TryTurnOff(plugId);
                 return HttpStatusCode.OK;
             });
             
-            Post("/scheduling/turn-on", _ =>
+            Post("/{plugId:guid}/rename", _ =>
+            {
+                Guid plugId = _.plugId;
+                string newName = _.newName;
+                _smartPlug.Rename(newName, plugId);
+                return HttpStatusCode.OK;
+            });
+            
+            Post("/{plugId:guid}/scheduling/turn-on", _ =>
             {
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
                 return HttpStatusCode.OK;
             });
             
-            Post("/scheduling/turn-off", _ =>
+            Post("/{plugId:guid}/scheduling/turn-off", _ =>
             {
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
                 return HttpStatusCode.OK;
             });
             
-            Get("/consumption-report", _ => GetComsuptionReport());
+            Get("/{plugId:guid}/consumption-report", _ =>
+            {
+                Guid plugId = _.plugId;
+                return GetComsuptionReport(plugId);
+            });
         }
 
         private IList<SmartPlugResponse> GetListOfPlugStates()
@@ -81,10 +101,10 @@ namespace SmartOutlet.Service.Modules
                 .ToList();
         }
 
-        private IList<ConsumptionInTime> GetComsuptionReport()
+        private IList<ConsumptionInTime> GetComsuptionReport(Guid plugId)
         {
             return _consumptionReporter
-                .GetConsumptionReport(Plugs.PlugOneId)
+                .GetConsumptionReport(plugId)
                 .ToList();
         }
     }

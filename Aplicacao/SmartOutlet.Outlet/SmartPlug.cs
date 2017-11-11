@@ -1,4 +1,5 @@
 ﻿using System;
+using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.Mqtt;
 
 namespace SmartOutlet.Outlet
@@ -6,10 +7,12 @@ namespace SmartOutlet.Outlet
     public class SmartPlug : ISmartPlug
     {
         private readonly IPublisher _publisher;
+        private readonly IPlugEventEmitter _plugEventEmitter;
 
-        public SmartPlug(IPublisher publisher)
+        public SmartPlug(IPublisher publisher, IPlugEventEmitter plugEventEmitter)
         {
             _publisher = publisher;
+            _plugEventEmitter = plugEventEmitter;
         }
 
         public void TryTurnOff(Guid plugId)
@@ -30,6 +33,11 @@ namespace SmartOutlet.Outlet
         public void ScheduleTurnOff(TimeSpan timeInFuture)
         {
             _publisher.Publish("/smart-plug/schedule-off", GetMilisecondsString(timeInFuture));
+        }
+
+        public void Rename(string newName, Guid plugId)
+        {
+            _plugEventEmitter.PlugRenamed(newName, plugId);
         }
 
         private static string GetMilisecondsString(TimeSpan timeInFuture)

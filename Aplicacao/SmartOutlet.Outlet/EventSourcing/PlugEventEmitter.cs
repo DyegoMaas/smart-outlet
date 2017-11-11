@@ -28,6 +28,11 @@ namespace SmartOutlet.Outlet.EventSourcing
             AppendEvent(plugId, new PlugTurnedOff());
         }
 
+        public void PlugRenamed(string newName, Guid plugId)
+        {
+            AppendEvent(plugId, new PlugRenamed(newName));
+        }
+
         private void AppendEvent<T>(Guid plugId, T @event)
         {
             using (var session = _documentStore.OpenSession())

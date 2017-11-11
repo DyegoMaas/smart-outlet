@@ -31,7 +31,7 @@ namespace SmartOutlet.Service
 
             var messaging = new Messaging();
             container.Register<IPublisher>(messaging);
-            container.Register<ITopicClientele>(messaging);
+            container.Register<ITopicGuest>(messaging);
 
             RegisterSubscribers(messaging, container);
         }

@@ -4,11 +4,11 @@ using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing
 {
-    public class PlugEventEmitter : IPlugEventEmitter
+    public class PlugEventSequencer : IPlugEventSequencer
     {
         private readonly IDocumentStore _documentStore;
 
-        public PlugEventEmitter(IDocumentStore documentStore)
+        public PlugEventSequencer(IDocumentStore documentStore)
         {
             _documentStore = documentStore;
         }

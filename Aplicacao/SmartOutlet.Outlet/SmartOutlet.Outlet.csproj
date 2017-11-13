@@ -80,8 +80,8 @@
     <Compile Include="EventSourcing\Events\PlugRenamed.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOff.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOn.cs" />
-    <Compile Include="EventSourcing\IPlugEventEmitter.cs" />
-    <Compile Include="EventSourcing\PlugEventEmitter.cs" />
+    <Compile Include="EventSourcing\IPlugEventSequencer.cs" />
+    <Compile Include="EventSourcing\PlugEventSequencer.cs" />
     <Compile Include="EventSourcing\PlugHistory.cs" />
     <Compile Include="EventSourcing\Reports\ConsumptionInTime.cs" />
     <Compile Include="EventSourcing\Reports\ConsumptionReporter.cs" />

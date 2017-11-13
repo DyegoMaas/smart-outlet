@@ -18,7 +18,7 @@ namespace SmartOutlet.Service
             base.ConfigureApplicationContainer(container);
 
             container.Register<ISmartPlug, SmartPlug>();
-            container.Register<IPlugEventEmitter, PlugEventEmitter>();
+            container.Register<IPlugEventSequencer, PlugEventSequencer>();
             container.Register<IPlugStateReporter, PlugStateReporter>();
             container.Register<IConsumptionReporter, ConsumptionReporter>();
 
@@ -40,7 +40,7 @@ namespace SmartOutlet.Service
         {
             messaging.Subscribe("/smart-plug/new-state", message =>
             {
-                var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
+                var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
                 
                 var newState = CleanString(message);
                 switch (newState)
@@ -57,7 +57,7 @@ namespace SmartOutlet.Service
             messaging.Subscribe("/smart-plug/consumption", value =>
             {
                 var consumptionInWatts = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                var plugEventEmitter = container.Resolve<IPlugEventEmitter>();
+                var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
                 plugEventEmitter.NewConsumption(Plugs.PlugOneId, consumptionInWatts);
             });
         }

@@ -2,7 +2,7 @@
 
 namespace SmartOutlet.Outlet.EventSourcing
 {
-    public interface IPlugEventEmitter
+    public interface IPlugEventSequencer
     {
         void NewConsumption(Guid plugId, double consumptionInWatts);
         void PlugTurnedOn(Guid plugId);

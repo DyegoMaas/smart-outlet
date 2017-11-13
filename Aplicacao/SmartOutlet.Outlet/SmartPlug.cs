@@ -7,12 +7,12 @@ namespace SmartOutlet.Outlet
     public class SmartPlug : ISmartPlug
     {
         private readonly IPublisher _publisher;
-        private readonly IPlugEventEmitter _plugEventEmitter;
+        private readonly IPlugEventSequencer _plugEventSequencer;
 
-        public SmartPlug(IPublisher publisher, IPlugEventEmitter plugEventEmitter)
+        public SmartPlug(IPublisher publisher, IPlugEventSequencer plugEventSequencer)
         {
             _publisher = publisher;
-            _plugEventEmitter = plugEventEmitter;
+            _plugEventSequencer = plugEventSequencer;
         }
 
         public void TryTurnOff(Guid plugId)
@@ -37,13 +37,13 @@ namespace SmartOutlet.Outlet
 
         public void Rename(string newName, Guid plugId)
         {
-            _plugEventEmitter.PlugRenamed(newName, plugId);
+            _plugEventSequencer.PlugRenamed(newName, plugId);
         }
 
         public Guid CreatePlug(string name)
         {
             var plugId = Guid.NewGuid();
-            _plugEventEmitter.PlugActivated(plugId, name);
+            _plugEventSequencer.PlugActivated(plugId, name);
             return plugId;
         }
 

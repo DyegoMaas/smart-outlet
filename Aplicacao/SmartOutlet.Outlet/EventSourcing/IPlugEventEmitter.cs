@@ -8,5 +8,6 @@ namespace SmartOutlet.Outlet.EventSourcing
         void PlugTurnedOn(Guid plugId);
         void PlugTurnedOff(Guid plugId);
         void PlugRenamed(string newName, Guid plugId);
+        void PlugActivated(Guid plugId, string name);
     }
 }

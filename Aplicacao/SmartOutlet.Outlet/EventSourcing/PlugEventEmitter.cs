@@ -13,24 +13,29 @@ namespace SmartOutlet.Outlet.EventSourcing
             _documentStore = documentStore;
         }
 
-        public void NewConsumption(Guid plugId, double consumptionInWatts)
+        public void PlugActivated(Guid plugId, string name)
         {
-            AppendEvent(plugId, new ConsumptionReadingReceived(consumptionInWatts));
+            AppendEvent(plugId, new PlugActivated(plugId, name));
+        }
+
+        public void PlugRenamed(string newName, Guid plugId)
+        {
+            AppendEvent(plugId, new PlugRenamed(newName));
         }
 
         public void PlugTurnedOn(Guid plugId)
         {
             AppendEvent(plugId, new PlugTurnedOn());
         }
-        
+
         public void PlugTurnedOff(Guid plugId)
         {
             AppendEvent(plugId, new PlugTurnedOff());
         }
 
-        public void PlugRenamed(string newName, Guid plugId)
+        public void NewConsumption(Guid plugId, double consumptionInWatts)
         {
-            AppendEvent(plugId, new PlugRenamed(newName));
+            AppendEvent(plugId, new ConsumptionReadingReceived(consumptionInWatts));
         }
 
         private void AppendEvent<T>(Guid plugId, T @event)

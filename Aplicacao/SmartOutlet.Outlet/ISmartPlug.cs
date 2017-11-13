@@ -9,5 +9,6 @@ namespace SmartOutlet.Outlet
         void ScheduleTurnOn(TimeSpan timeInFuture);
         void ScheduleTurnOff(TimeSpan timeInFuture);
         void Rename(string newName, Guid plugId);
+        Guid CreatePlug(string name);
     }
 }

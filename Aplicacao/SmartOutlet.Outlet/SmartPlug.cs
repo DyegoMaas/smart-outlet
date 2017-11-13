@@ -40,6 +40,13 @@ namespace SmartOutlet.Outlet
             _plugEventEmitter.PlugRenamed(newName, plugId);
         }
 
+        public Guid CreatePlug(string name)
+        {
+            var plugId = Guid.NewGuid();
+            _plugEventEmitter.PlugActivated(plugId, name);
+            return plugId;
+        }
+
         private static string GetMilisecondsString(TimeSpan timeInFuture)
         {
             return ((int)timeInFuture.TotalMilliseconds).ToString();

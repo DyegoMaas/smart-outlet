@@ -18,14 +18,19 @@ namespace SmartOutlet.Service.Modules
 
         public SmartPlugModule(ISmartPlug plug, 
             IConsumptionReporter consumptionReporter,
-            IPlugStateReporter plugStateReporter,
-            IPlugEventEmitter plugEventEmitter
+            IPlugStateReporter plugStateReporter
         ) : base("plugs")
         {
             _smartPlug = plug;
             _consumptionReporter = consumptionReporter;
             _plugStateReporter = plugStateReporter;
 
+            Post("/activate", _ =>
+            {
+                var request = this.Bind<ActivatePlugRequest>();
+                return _smartPlug.CreatePlug(request.Name);
+            });
+            
             Get("/", _ => GetListOfPlugStates());
             
             Get("/{plugId:guid}", _ =>

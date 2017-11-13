@@ -3,9 +3,9 @@ using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing
 {
-    public class PlugHistory
+    public class Plug
     {
-        public Guid Id { get; set; } = Plugs.PlugOneId;
+        public Guid Id { get; set; } = PlugIds.PlugOneId;
         public PlugState CurrentState { get; set; } = PlugState.Off;
         public string Name { get; private set; } = "PlugOne";
         public double LastConsumptionInWatts { get; private set; }

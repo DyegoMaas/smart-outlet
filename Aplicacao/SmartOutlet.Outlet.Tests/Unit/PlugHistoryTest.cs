@@ -8,12 +8,12 @@ namespace SmartOutlet.Outlet.Tests.Unit
 {
     public class PlugHistoryTest
     {
-        private PlugHistory _plugHistory;
+        private Plug _plug;
 
         [SetUp]
         public void SetUp()
         {
-            _plugHistory = new PlugHistory();
+            _plug = new Plug();
         }
         
         [Test]
@@ -21,24 +21,24 @@ namespace SmartOutlet.Outlet.Tests.Unit
         {
             var plugActivated = new PlugActivated(Guid.NewGuid(), "WONDROUS");
             
-            _plugHistory.Apply(plugActivated);
+            _plug.Apply(plugActivated);
 
-            _plugHistory.Id.Should().Be(plugActivated.PlugId);
-            _plugHistory.Name.Should().Be(plugActivated.PlugName);
+            _plug.Id.Should().Be(plugActivated.PlugId);
+            _plug.Name.Should().Be(plugActivated.PlugName);
         }
 
         [Test]
         public void turning_a_plug_on()
         {
-            _plugHistory.Apply(new PlugTurnedOn());
-            _plugHistory.CurrentState.Should().Be(PlugState.On);
+            _plug.Apply(new PlugTurnedOn());
+            _plug.CurrentState.Should().Be(PlugState.On);
         }
         
         [Test]
         public void turning_a_plug_off()
         {
-            _plugHistory.Apply(new PlugTurnedOff());
-            _plugHistory.CurrentState.Should().Be(PlugState.Off);
+            _plug.Apply(new PlugTurnedOff());
+            _plug.CurrentState.Should().Be(PlugState.Off);
         }
 
         [Test]
@@ -46,9 +46,9 @@ namespace SmartOutlet.Outlet.Tests.Unit
         {
             var consumptionReadingReceived = new ConsumptionReadingReceived(20.5d);
             
-            _plugHistory.Apply(consumptionReadingReceived);
+            _plug.Apply(consumptionReadingReceived);
 
-            _plugHistory.LastConsumptionInWatts.Should().Be(consumptionReadingReceived.ConsumptionInWatts);
+            _plug.LastConsumptionInWatts.Should().Be(consumptionReadingReceived.ConsumptionInWatts);
         }
 
         [Test]
@@ -56,9 +56,9 @@ namespace SmartOutlet.Outlet.Tests.Unit
         {
             var plugRenamed = new PlugRenamed(newName: "ELECTRIC SHEEP");
             
-            _plugHistory.Apply(plugRenamed);
+            _plug.Apply(plugRenamed);
 
-            _plugHistory.Name.Should().Be(plugRenamed.NewName);
+            _plug.Name.Should().Be(plugRenamed.NewName);
         }
     }
 }

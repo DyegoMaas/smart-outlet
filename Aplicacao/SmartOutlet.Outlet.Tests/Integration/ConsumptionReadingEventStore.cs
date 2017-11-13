@@ -16,7 +16,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            _documentStore = DocumentStoreForTests.NewEventSource<PlugHistory>(
+            _documentStore = DocumentStoreForTests.NewEventSource<Plug>(
                 typeof(PlugActivated),
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
@@ -64,8 +64,8 @@ namespace SmartOutlet.Outlet.Tests.Integration
             
             using (var session = _documentStore.LightweightSession())
             {
-                var plugPinheiro = session.Load<PlugHistory>(pinheiro.PlugId);
-                var plugTv = session.Load<PlugHistory>(tv.PlugId);
+                var plugPinheiro = session.Load<Plug>(pinheiro.PlugId);
+                var plugTv = session.Load<Plug>(tv.PlugId);
 
                 plugPinheiro.IsOn().Should().BeTrue();
                 plugTv.IsOn().Should().BeFalse();

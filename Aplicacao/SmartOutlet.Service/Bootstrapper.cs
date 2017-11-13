@@ -22,7 +22,7 @@ namespace SmartOutlet.Service
             container.Register<IPlugStateReporter, PlugStateReporter>();
             container.Register<IConsumptionReporter, ConsumptionReporter>();
 
-            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<PlugHistory>(
+            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<Plug>(
                 typeof(PlugActivated),
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
@@ -46,10 +46,10 @@ namespace SmartOutlet.Service
                 switch (newState)
                 {
                     case "on":
-                        plugEventEmitter.PlugTurnedOn(Plugs.PlugOneId);
+                        plugEventEmitter.PlugTurnedOn(PlugIds.PlugOneId);
                         break;
                     case "off":
-                        plugEventEmitter.PlugTurnedOff(Plugs.PlugOneId);
+                        plugEventEmitter.PlugTurnedOff(PlugIds.PlugOneId);
                         break;
                 }
             });
@@ -58,7 +58,7 @@ namespace SmartOutlet.Service
             {
                 var consumptionInWatts = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
-                plugEventEmitter.NewConsumption(Plugs.PlugOneId, consumptionInWatts);
+                plugEventEmitter.NewConsumption(PlugIds.PlugOneId, consumptionInWatts);
             });
         }
 

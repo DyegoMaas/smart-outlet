@@ -84,7 +84,7 @@ namespace SmartOutlet.Service.Modules
 
         private IList<SmartPlugResponse> GetListOfPlugStates()
         {
-            var allPlugIds = new[] {Plugs.PlugOneId};
+            var allPlugIds = new[] {PlugIds.PlugOneId};
             return GetPlugStates(allPlugIds);
         }
 

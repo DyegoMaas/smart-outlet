@@ -5,6 +5,6 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
 {
     public interface IPlugStateReporter
     {
-        IEnumerable<PlugHistory> GetStateReport(params Guid[] plugIds);
+        IEnumerable<Plug> GetStateReport(params Guid[] plugIds);
     }
 }

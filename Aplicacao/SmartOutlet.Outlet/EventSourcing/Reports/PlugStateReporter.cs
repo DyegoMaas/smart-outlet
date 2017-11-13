@@ -13,11 +13,11 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
             _documentStore = documentStore;
         }
 
-        public IEnumerable<PlugHistory> GetStateReport(params Guid[] plugIds)
+        public IEnumerable<Plug> GetStateReport(params Guid[] plugIds)
         {
             using (var session = _documentStore.LightweightSession())
             {
-                return session.LoadMany<PlugHistory>(plugIds);
+                return session.LoadMany<Plug>(plugIds);
             }
         }
     }

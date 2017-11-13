@@ -106,14 +106,16 @@ void initMQTT() {
 }
 
 void turnOn() {
-   relay.turnOn(RELAY_PIN);
+	 relay.turnOn(RELAY_PIN);
+	 sendConfirmationOfRelayStateChange();
 }
 
 void turnOff() {
-   relay.turnOff(RELAY_PIN);
+	 relay.turnOff(RELAY_PIN);
+	 sendConfirmationOfRelayStateChange();
 }
 
-void sendConfirmationOfRelayActivation() {
+void sendConfirmationOfRelayStateChange() {
   auto isOn = relay.isOn(RELAY_PIN) ? "on": "off";
 	MQTT.publish("/smart-plug/new-state", (char *)isOn);
 }
@@ -130,12 +132,10 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   
 	if (topicString == "/smart-plug/state") {
 		if (message == "turn-on") {
-			turnOn();
-			sendConfirmationOfRelayActivation();
+			turnOn();			
 		}
 		else if (message == "turn-off") {
 			turnOff();
-			sendConfirmationOfRelayActivation();
 		}  
 	} else if (topicString == "/smart-plug/schedule-on") {
     

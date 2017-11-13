@@ -6,11 +6,11 @@ namespace SmartOutlet.Outlet.EventSourcing
     public class PlugHistory
     {
         public Guid Id { get; set; } = Plugs.PlugOneId;
-        public PlugState State { get; set; } = PlugState.Off;
-        public string Name { get; set; } = "PlugOne";
-        public double LastConsumptionInWatts { get; set; }
+        public PlugState CurrentState { get; set; } = PlugState.Off;
+        public string Name { get; private set; } = "PlugOne";
+        public double LastConsumptionInWatts { get; private set; }
 
-        public bool IsOn() => State == PlugState.On;
+        public bool IsOn() => CurrentState == PlugState.On;
 
         public void Apply(PlugActivated activation)
         {
@@ -20,12 +20,12 @@ namespace SmartOutlet.Outlet.EventSourcing
         
         public void Apply(PlugTurnedOn plugTurnedOn)
         {
-            State = PlugState.On;
+            CurrentState = PlugState.On;
         }
         
         public void Apply(PlugTurnedOff plugTurnedOff)
         {
-            State = PlugState.Off;
+            CurrentState = PlugState.Off;
         }
 
         public void Apply(ConsumptionReadingReceived consumptionReading)

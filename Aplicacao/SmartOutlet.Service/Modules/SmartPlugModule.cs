@@ -94,7 +94,7 @@ namespace SmartOutlet.Service.Modules
             return stateReport
                 .Select(x => new SmartPlugResponse
                 {
-                    IsOn = x.State == PlugState.On,
+                    IsOn = x.CurrentState == PlugState.On,
                     Name = x.Name,
                     LastConsumption = x.LastConsumptionInWatts
                 })

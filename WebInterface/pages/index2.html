@@ -179,13 +179,12 @@
             });
         }
 
-        function _get(url, request, success) {
+        function _get(url, success) {
             $.ajax({
                 url: url,
                 type: "GET",
                 crossDomain: true,
-                data: request,
-                dataType: "json",
+                data: "",
                 success: success,
                 error: function (xhr, status) {
                     alert("Algo não saiu conforme o esperado...");
@@ -193,11 +192,12 @@
             });
         }
 
-        function _post(url, success) {
+        function _post(url, request, success) {
             $.ajax({
                 url: url,
                 type: "POST",
                 crossDomain: true,
+                data: request,
                 dataType: "json",
                 success: success,
                 error: function (xhr, status) {
@@ -215,11 +215,13 @@
         }
 
         function _loadPlugs(callback) {
+            console.log("loading plugs");
             var url = BACKEND_URL + "/";
             _get(url, function (plugs){
                 console.log("did get plugs!");
                 console.log(plugs);
-                plugs.array.forEach(plugData => {
+
+                plugs.forEach(plugData => {
                     console.log(plugData.plugId);
                     _renderNewPlugControl(plugData);
                 });
@@ -254,16 +256,16 @@
                     console.log("response: ");
                     console.log(viewData);
 
-                    // _renderNewPlugControl(viewData);
-                    $.Mustache.load('../templates/plug-control.htm')
-                        .done(function () {
-                            $('#plug-controls').mustache('plug-control', viewData);
+                    _renderNewPlugControl(viewData);
+                    // $.Mustache.load('../templates/plug-control.htm')
+                    //     .done(function () {
+                    //         $('#plug-controls').mustache('plug-control', viewData);
 
-                            var switchId = "plugState_" + viewData.plugId;
-                            _initializeSwitch(switchId, function (el, newState){
-                                _onPlugToggled(el, newState, viewData.plugId);
-                            });
-                        });
+                    //         var switchId = "plugState_" + viewData.plugId;
+                    //         _initializeSwitch(switchId, function (el, newState){
+                    //             _onPlugToggled(el, newState, viewData.plugId);
+                    //         });
+                    //     });
                 });
 
                 $("#nome-plugue").val("");
@@ -272,7 +274,7 @@
 
         $(function() {
             console.log("initialising");
-            // _initializeNewPlugButton();
+            _initializeNewPlugButton();
             _loadPlugs();     
         });
 

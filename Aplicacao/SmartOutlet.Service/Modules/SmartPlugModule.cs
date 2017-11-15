@@ -68,15 +68,17 @@ namespace SmartOutlet.Service.Modules
             
             Post("/{plugId:guid}/scheduling/turn-on", _ =>
             {
+                Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
-                _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
+                _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
                 return new OkResponse();
             });
             
             Post("/{plugId:guid}/scheduling/turn-off", _ =>
             {
+                Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
-                _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
+                _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
                 return new OkResponse();
             });
             

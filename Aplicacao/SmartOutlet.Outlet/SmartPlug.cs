@@ -17,22 +17,22 @@ namespace SmartOutlet.Outlet
 
         public void TryTurnOff(Guid plugId)
         {
-            _publisher.Publish("/smart-plug/state", "turn-off");
+            _publisher.Publish("/smart-plug/state", $"{plugId}|turn-off");
         }
 
         public void TryTurnOn(Guid plugId)
         {
-            _publisher.Publish("/smart-plug/state", "turn-on");
+            _publisher.Publish("/smart-plug/state", $"{plugId}|turn-on");
         }
 
-        public void ScheduleTurnOn(TimeSpan timeInFuture)
+        public void ScheduleTurnOn(TimeSpan timeInFuture, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-on", GetMilisecondsString(timeInFuture));
+            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|GetMilisecondsString(timeInFuture)");
         }
 
-        public void ScheduleTurnOff(TimeSpan timeInFuture)
+        public void ScheduleTurnOff(TimeSpan timeInFuture, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-off", GetMilisecondsString(timeInFuture));
+            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|GetMilisecondsString(timeInFuture)");
         }
 
         public void Rename(string newName, Guid plugId)

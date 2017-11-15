@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marten;
+using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {
@@ -16,15 +17,12 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
 
         public IEnumerable<Plug> GetStateReport(params Guid[] plugIds)
         {
-            using (var session = _documentStore.LightweightSession())
+            using (var session = _documentStore.OpenSession())
             {
                 if (!plugIds.Any())
                 {
-                    // ReSharper disable once RemoveToList.1
-                    plugIds = session
-                        .Query<Plug>()
-                        .Select(x => x.Id)
-                        .ToList()
+                    plugIds = session.Events.QueryRawEventDataOnly<PlugActivated>()
+                        .Select(x => x.PlugId)
                         .ToArray();
                 }
                 return session.LoadMany<Plug>(plugIds);

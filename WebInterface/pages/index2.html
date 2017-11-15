@@ -80,7 +80,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <!-- Nav tabs -->
-                            <ul class="nav nav-tabs">
+                            <ul class="nav nav-tabs" id="plug-tabs">
                                 <li class="active">
                                     <a href="#plug02" data-toggle="tab">Plugue 1</a>
                                 </li>
@@ -88,17 +88,29 @@
                                     <a href="#plug02" data-toggle="tab">Plugue 2</a>
                                 </li>
                                 <li>
-                                    <a href="#void" data-toggle="modal" data-target="#myModal">+</a>
+                                    <a href="#void" data-toggle="modal" data-target="#modalAtivacaoPlugue">+</a>
                                 </li>
                             </ul>
 
                             <!-- Tab panes -->
-                            <div class="tab-content">
+                            <div class="tab-content" id="plug-tabs-content">
                                 <div class="tab-pane fade in active" id="plug01">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <!-- CONTROLE -->
+                                    <div class="row">
+                                        <div class="col-lg-12 form-group">
+                                            <span>Estado</span>
+                                            <input type="checkbox" name="switch" id="plugState01" checked>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="plug02">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    <!-- CONTROLE -->
+                                    <div class="row">
+                                        <div class="col-lg-12 form-group">                                            
+                                            <span>Estado</span>
+                                            <input type="checkbox" name="switch" id="plugState02" checked>
+                                        </div>
+                                    </div>
                                 </div>                                
                             </div>
                         </div>
@@ -108,19 +120,25 @@
             </div>
 
             <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modalAtivacaoPlugue" tabindex="-1" role="dialog" aria-labelledby="modalAtivacaoPlugueLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                            <h4 class="modal-title" id="modalAtivacaoPlugueLabel">Ativar plugue</h4>
                         </div>
                         <div class="modal-body">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>Nome</label>
+                                    <input class="form-control" id="nome-plugue">
+                                    <!-- <p class="help-block">Dê um nome para o seu plugue</p> -->
+                                </div>
+                            </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnActivate">Ativar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -128,7 +146,7 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
-
+           
 
             <!-- /.row -->
             <div class="row">
@@ -671,6 +689,9 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap switch -->
+    <link href="../vendor/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet">
     
     <!-- MetisMenu CSS -->
     <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
@@ -697,6 +718,9 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
+    <!-- Bootstrap switch -->
+    <script src="../vendor/bootstrap-switch/js/bootstrap-switch.js"></script>
+
     <!-- Metis Menu Plugin JavaScript -->
     <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
@@ -707,6 +731,76 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
+
+    <script>
+
+        var PAGE_URL = "http://localhost:8001/smart-things/plugs/plug-manager";
+        var BACKEND_URL = "http://localhost:8001/smart-things/plugs";
+
+        function _initializeSwitches() {
+            var switches = $("[name='switch']");
+            switches.bootstrapSwitch();
+            switches.on('switchChange.bootstrapSwitch', function(event, state) {
+                console.log(this); // DOM element
+                console.log(event); // jQuery event
+                console.log(state); // true | false
+
+                //TODO ligar ou desligar o plug
+            });
+        }
+
+        function _post(url, request, success) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                crossDomain: true,
+                data: request,
+                dataType: "json",
+                success: success,
+                error: function (xhr, status) {
+                    alert("Algo não saiu conforme o esperado...");
+                }
+            });
+        }
+
+        function _initializeNewPlugButton() {
+            $('#btnActivate').on('click', function(event) {
+                event.preventDefault(); // To prevent following the link (optional)
+
+                var request = {
+                    name: $("#nome-plugue").val()
+                };
+                _post(BACKEND_URL + "/activate", request, function (response) {
+                    console.log("response: ");
+                    console.log(response);
+
+                    
+                });
+                // $.ajax({
+                //     url: BACKEND_URL + "/activate",
+                //     type: "POST",
+                //     crossDomain: true,
+                //     data: request,
+                //     dataType: "json",
+                //     success: function (response) {
+                //         var resp = JSON.parse(response)
+                //         alert(resp.status);
+                //     },
+                //     error: function (xhr, status) {
+                //         alert("Algo não saiu conforme o esperado...");
+                //     }
+                // });
+                //get new id
+                //create a new plug tab
+            });
+        }
+
+        $(function() {
+            console.log("initialising");            
+            _initializeSwitches();
+            _initializeNewPlugButton();         
+        });
+    </script>
 
 </body>
 

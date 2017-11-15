@@ -2,6 +2,7 @@
 using System.Globalization;
 using Marten;
 using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using SmartOutlet.Outlet;
 using SmartOutlet.Outlet.EventSourcing;
@@ -13,6 +14,16 @@ namespace SmartOutlet.Service
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            pipelines.AfterRequest += ctx =>
+            {
+                ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+                ctx.Response.Headers.Add("Access-Control-Allow-Methods", "POST,GET");
+            };
+        }
+        
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);

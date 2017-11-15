@@ -28,7 +28,12 @@ namespace SmartOutlet.Service.Modules
             Post("/activate", _ =>
             {
                 var request = this.Bind<ActivatePlugRequest>();
-                return _smartPlug.CreatePlug(request.Name);
+                var plugId = _smartPlug.CreatePlug(request.Name);
+                return new
+                {
+                    Name = request.Name,
+                    PlugId = plugId
+                };
             });
             
             Get("/", _ => GetListOfPlugStates());

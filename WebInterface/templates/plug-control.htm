@@ -1,0 +1,17 @@
+<script id="plug-control-tab" type="text/html">
+    <li>
+        <a href="#plug-tab_{{plugId}}" data-toggle="tab">{{name}}</a>
+    </li>
+</script>
+
+<script id="plug-control" type="text/html">
+    <div class="tab-pane fade" id="plug_{{plugId}}">
+        <!-- CONTROLE -->
+        <div class="row">
+            <div class="col-lg-12 form-group">
+                <span>Estado</span>
+                <input type="checkbox" name="switch" id="plugState_{{plugId}}" checked="false">
+            </div>
+        </div>
+    </div>
+</script>

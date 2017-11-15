@@ -73,6 +73,11 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAtivacaoPlugue">Novo Plugue</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Plugues
@@ -80,22 +85,25 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <!-- Nav tabs -->
+
                             <ul class="nav nav-tabs" id="plug-tabs">
-                                <li class="active">
+                                <!-- <li class="active">
                                     <a href="#plug02" data-toggle="tab">Plugue 1</a>
                                 </li>
                                 <li>
                                     <a href="#plug02" data-toggle="tab">Plugue 2</a>
-                                </li>
-                                <li>
+                                </li> -->
+                                <!-- <li class="active">
                                     <a href="#void" data-toggle="modal" data-target="#modalAtivacaoPlugue">+</a>
-                                </li>
+                                </li> -->
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content" id="plug-tabs-content">
-                                <div class="tab-pane fade in active" id="plug01">
-                                    <!-- CONTROLE -->
+                                <!-- <div class="tab-pane fade in active" id="ativar-plugue">
+                                    <span>Ative o seu plugue!</span>
+                                </div> -->
+                                <!-- <div class="tab-pane fade in active" id="plug01">
                                     <div class="row">
                                         <div class="col-lg-12 form-group">
                                             <span>Estado</span>
@@ -104,14 +112,13 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="plug02">
-                                    <!-- CONTROLE -->
                                     <div class="row">
                                         <div class="col-lg-12 form-group">                                            
                                             <span>Estado</span>
                                             <input type="checkbox" name="switch" id="plugState02" checked>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>                                 -->
                             </div>
                         </div>
                         <!-- /.panel-body -->
@@ -715,6 +722,10 @@
     <!-- jQuery -->
     <script src="../vendor/jquery/jquery.min.js"></script>
 
+    <!-- MUSTACHE -->
+    <script src="../vendor/mustache-js/mustache.min.js"></script>
+    <script src="../vendor/jquery-Mustache/jquery.mustache.js"></script>
+
     <!-- Bootstrap Core JavaScript -->
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 
@@ -737,7 +748,7 @@
         var PAGE_URL = "http://localhost:8001/smart-things/plugs/plug-manager";
         var BACKEND_URL = "http://localhost:8001/smart-things/plugs";
 
-        function _initializeSwitches() {
+        function _initializeSwitches(onToggle) {
             var switches = $("[name='switch']");
             switches.bootstrapSwitch();
             switches.on('switchChange.bootstrapSwitch', function(event, state) {
@@ -746,6 +757,7 @@
                 console.log(state); // true | false
 
                 //TODO ligar ou desligar o plug
+                onToggle(this, state);
             });
         }
 
@@ -764,42 +776,37 @@
         }
 
         function _initializeNewPlugButton() {
+
             $('#btnActivate').on('click', function(event) {
                 event.preventDefault(); // To prevent following the link (optional)
 
                 var request = {
                     name: $("#nome-plugue").val()
                 };
-                _post(BACKEND_URL + "/activate", request, function (response) {
+                _post(BACKEND_URL + "/activate", request, function (viewData) {
                     console.log("response: ");
-                    console.log(response);
+                    console.log(viewData);
 
-                    
+                    $.Mustache.load('../templates/plug-control.htm')
+                        .done(function () {
+                            $('#plug-tabs').mustache('plug-control-tab', viewData);
+                            $('#plug-tabs-content').mustache('plug-control', viewData);
+                            $("#plug-tab_" + viewData.id).click();
+
+                            _initializeSwitches(function(el, state) {
+                                alert(el.id);
+                            });
+                        });
                 });
-                // $.ajax({
-                //     url: BACKEND_URL + "/activate",
-                //     type: "POST",
-                //     crossDomain: true,
-                //     data: request,
-                //     dataType: "json",
-                //     success: function (response) {
-                //         var resp = JSON.parse(response)
-                //         alert(resp.status);
-                //     },
-                //     error: function (xhr, status) {
-                //         alert("Algo não saiu conforme o esperado...");
-                //     }
-                // });
-                //get new id
-                //create a new plug tab
             });
         }
 
         $(function() {
             console.log("initialising");            
-            _initializeSwitches();
+            // _initializeSwitches();
             _initializeNewPlugButton();         
         });
+
     </script>
 
 </body>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Marten;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
@@ -17,6 +18,15 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
         {
             using (var session = _documentStore.LightweightSession())
             {
+                if (!plugIds.Any())
+                {
+                    // ReSharper disable once RemoveToList.1
+                    plugIds = session
+                        .Query<Plug>()
+                        .Select(x => x.Id)
+                        .ToList()
+                        .ToArray();
+                }
                 return session.LoadMany<Plug>(plugIds);
             }
         }

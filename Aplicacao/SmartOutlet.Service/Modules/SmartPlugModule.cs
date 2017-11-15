@@ -48,14 +48,14 @@ namespace SmartOutlet.Service.Modules
             {
                 Guid plugId = _.plugId;
                 _smartPlug.TryTurnOn(plugId);
-                return HttpStatusCode.OK;
+                return new OkResponse();
             });
             
             Post("/{plugId:guid}/try-turn-off", _ =>
             {
                 Guid plugId = _.plugId;
                 _smartPlug.TryTurnOff(plugId);
-                return HttpStatusCode.OK;
+                return new OkResponse();
             });
             
             Post("/{plugId:guid}/rename", _ =>
@@ -63,21 +63,21 @@ namespace SmartOutlet.Service.Modules
                 Guid plugId = _.plugId;
                 string newName = _.newName;
                 _smartPlug.Rename(newName, plugId);
-                return HttpStatusCode.OK;
+                return new OkResponse();
             });
             
             Post("/{plugId:guid}/scheduling/turn-on", _ =>
             {
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
-                return HttpStatusCode.OK;
+                return new OkResponse();
             });
             
             Post("/{plugId:guid}/scheduling/turn-off", _ =>
             {
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
-                return HttpStatusCode.OK;
+                return new OkResponse();
             });
             
             Get("/{plugId:guid}/consumption-report", _ =>
@@ -87,10 +87,13 @@ namespace SmartOutlet.Service.Modules
             });
         }
 
+        private class OkResponse
+        {
+            private HttpStatusCode Status = HttpStatusCode.OK;
+        }
         private IList<SmartPlugResponse> GetListOfPlugStates()
         {
-            var allPlugIds = new[] {PlugIds.PlugOneId};
-            return GetPlugStates(allPlugIds);
+            return GetPlugStates();
         }
 
         private SmartPlugResponse GetPlugState(Guid plugId)
@@ -104,6 +107,7 @@ namespace SmartOutlet.Service.Modules
             return stateReport
                 .Select(x => new SmartPlugResponse
                 {
+                    PlugId = x.Id,
                     IsOn = x.CurrentState == PlugState.On,
                     Name = x.Name,
                     LastConsumption = x.LastConsumptionInWatts

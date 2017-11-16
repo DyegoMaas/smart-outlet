@@ -44,6 +44,7 @@ namespace SmartOutlet.Outlet
         {
             var plugId = Guid.NewGuid();
             _plugEventSequencer.PlugActivated(plugId, name);
+            _publisher.Publish("/smart-plug/activate", $"{plugId}");
             return plugId;
         }
 

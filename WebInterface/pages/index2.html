@@ -172,12 +172,56 @@
         var PAGE_URL = "http://localhost:8001/smart-things/plugs/plug-manager";
         var BACKEND_URL = "http://localhost:8001/smart-things/plugs";
 
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ( (charCode > 31 && charCode < 48) || charCode > 57) {
+                return false;
+            }
+            return true;
+        }
+        
         function _initializeSwitch(elementId, onToggle) {
             var switches = $("#" + elementId);
             switches.bootstrapSwitch();
             switches.on('switchChange.bootstrapSwitch', function(event, state) {
                 onToggle(this, state);
             });
+        }
+
+        function _initializeScheduleButton(elementId, plugId) {
+            var button = $("#" + elementId);
+            button.on('click', function () {
+                var action = $("#selectAction_" + plugId).val();
+                var time = $("#executeIn_" + plugId).val();
+                var periodicity = $("#selectPeriodicity_" + plugId).val();
+
+                if (!time) {
+                    alert('É necessário informar o tempo');
+                    return;
+                }
+
+                var url = action == "1"
+                    ? BACKEND_URL + "/" + plugId + "/scheduling/turn-on"
+                    : BACKEND_URL + "/" + plugId + "/scheduling/turn-off";
+                time = parseInt(time);
+                time = _convertToSeconds(time, periodicity);
+                console.log('time in future: ' + time);
+
+                var request = { secondsInFuture: time };
+                _post(url, request, function(response){
+                    //TODO render other things
+                })
+            });
+        }
+
+        function _convertToSeconds(time, periodicity) {
+            switch (periodicity) {
+                case "1": return time;
+                case "2": return time * 60;
+                case "3": return time * 60 * 60;
+                default: return time * 60 * 60 * 24;
+            }
         }
 
         function _get(url, success) {
@@ -241,6 +285,9 @@
                     _initializeSwitch(switchId, function (el, newState){
                         _onPlugToggled(el, newState, plugData.plugId);
                     });
+
+                    var scheduleButtonId = "btnScheduleAction_" + plugData.plugId;
+                    _initializeScheduleButton(scheduleButtonId, plugData.plugId);
                 });
         }
 
@@ -258,15 +305,6 @@
                     console.log(viewData);
 
                     _renderNewPlugControl(viewData);
-                    // $.Mustache.load('../templates/plug-control.htm')
-                    //     .done(function () {
-                    //         $('#plug-controls').mustache('plug-control', viewData);
-
-                    //         var switchId = "plugState_" + viewData.plugId;
-                    //         _initializeSwitch(switchId, function (el, newState){
-                    //             _onPlugToggled(el, newState, viewData.plugId);
-                    //         });
-                    //     });
                 });
 
                 $("#nome-plugue").val("");

@@ -16,41 +16,27 @@ namespace SmartOutlet.Outlet.Mqtt
      */
     public class Messaging : IPublisher, ITopicGuest, IDisposable
     {
+        private const string BrokerHostName = "iot.eclipse.org";
+        private const int BrokerPort = 1883;
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
+        
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();
         private readonly MqttClient _mqttClient;
 
         public Messaging()
         {
-            const string brokerHostName = "iot.eclipse.org";
-            const int brokerPort = 1883;
             _mqttClient = new MqttClient(
-                brokerHostName:brokerHostName,
-                brokerPort: brokerPort,
+                brokerHostName:BrokerHostName,
+                brokerPort: BrokerPort,
                 secure: false,
                 sslProtocol: MqttSslProtocols.None,
                 userCertificateSelectionCallback: null,
                 userCertificateValidationCallback: null
-            ); 
-            
-            var clientId = Guid.NewGuid().ToString();
-            Policy
-                .Handle<Exception>()
-                .WaitAndRetry(5, 
-                    count => TimeSpan.FromMinutes(3), 
-                    (exception, retryCount) =>
-                    {
-                        Console.WriteLine($"Not able to connect to MQTT broker. Retrying for the {retryCount} time");
-                    })
-                .Execute(() =>
-                {
-                    _mqttClient.Connect(clientId);
-                    if (_mqttClient.IsConnected) 
-                        return;
-                    
-                    var message = $"Not connected to MQTT broker '{brokerHostName}' on port '{brokerPort}'";
-                    throw new InvalidOperationException(message);
-                });
+            );
+
+            _mqttClient.ConnectionClosed += (sender, args) => { TryToConnect(); };
+
+            TryToConnect();
             
             _mqttClient.MqttMsgPublished += (sender, args) =>
             {
@@ -86,6 +72,28 @@ namespace SmartOutlet.Outlet.Mqtt
             {
                 Console.WriteLine($"MQTT subscription: {args.MessageId}");
             };
+        }
+
+        private void TryToConnect()
+        {
+            var clientId = Guid.NewGuid().ToString();
+            Policy
+                .Handle<Exception>()
+                .WaitAndRetry(5, 
+                    count => TimeSpan.FromMinutes(3), 
+                    (exception, retryCount) =>
+                    {
+                        Console.WriteLine($"Not able to connect to MQTT broker. Retrying for the {retryCount} time");
+                    })
+                .Execute(() =>
+                {
+                    _mqttClient.Connect(clientId);
+                    if (_mqttClient.IsConnected) 
+                        return;
+                    
+                    var message = $"Not connected to MQTT broker '{BrokerHostName}' on port '{BrokerPort}'";
+                    throw new InvalidOperationException(message);
+                });
         }
 
         public void Publish(string topic, string message)

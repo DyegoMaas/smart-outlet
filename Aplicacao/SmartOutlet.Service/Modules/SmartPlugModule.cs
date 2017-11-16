@@ -71,7 +71,7 @@ namespace SmartOutlet.Service.Modules
                 Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
-                return new OkResponse();
+                return GetEstimatedActionTimeResponse(scheduleRequest);
             });
             
             Post("/{plugId:guid}/scheduling/turn-off", _ =>
@@ -79,7 +79,7 @@ namespace SmartOutlet.Service.Modules
                 Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
-                return new OkResponse();
+                return GetEstimatedActionTimeResponse(scheduleRequest);
             });
             
             Get("/{plugId:guid}/consumption-report", _ =>
@@ -89,10 +89,14 @@ namespace SmartOutlet.Service.Modules
             });
         }
 
-        private class OkResponse
+        private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(ScheduleRequest scheduleRequest)
         {
-            private HttpStatusCode Status = HttpStatusCode.OK;
+            return new EstimatedActionTimeResponse
+            {
+                EstimatedActionTime = DateTime.Now.AddSeconds(scheduleRequest.SecondsInFuture).ToString("MM/dd/yyyy HH:mm:ss")
+            };
         }
+
         private IList<SmartPlugResponse> GetListOfPlugStates()
         {
             return GetPlugStates();

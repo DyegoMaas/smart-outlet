@@ -195,7 +195,7 @@
                 var action = $("#selectAction_" + plugId).val();
                 var time = $("#executeIn_" + plugId).val();
                 var periodicity = $("#selectPeriodicity_" + plugId).val();
-
+                var periodicityText = $("#selectPeriodicity_" + plugId + " :selected").text();
                 if (!time) {
                     alert('É necessário informar o tempo');
                     return;
@@ -204,15 +204,39 @@
                 var url = action == "1"
                     ? BACKEND_URL + "/" + plugId + "/scheduling/turn-on"
                     : BACKEND_URL + "/" + plugId + "/scheduling/turn-off";
-                time = parseInt(time);
-                time = _convertToSeconds(time, periodicity);
-                console.log('time in future: ' + time);
+                var intTime = parseInt(time);
+                var timeInSeconds = _convertToSeconds(intTime, periodicity);
+                console.log('time in future: ' + timeInSeconds);
 
-                var request = { secondsInFuture: time };
-                _post(url, request, function(response){
-                    //TODO render other things
+                var request = { secondsInFuture: timeInSeconds };
+                _post(url, request, function(response){                    
+                    var container = $("#schedulingsFor_" + plugId);
+                    console.log("estimado: " + response.estimatedActionTime);
+
+                    // setTimeout(function () {
+                    //     var switch2 = $("plugState_" + plugId);
+                    //     var newValue = action == "1";
+                    //     console.log("changing plugState_" + plugId + " to " + newValue);
+                        
+                    //     switch2.prop('checked', newValue);
+                    // }, timeInSeconds * 1000);
+
+                    _renderScheduling(container, {
+                        plugId: plugId,
+                        action: action == "1" ? "Ligar" : "Desligar",
+                        time: time,
+                        periodicity: periodicityText,
+                        estimatedTime: response.estimatedActionTime
+                    });
                 })
             });
+        }
+
+        function _renderScheduling(container, viewData) {
+            $.Mustache.load('../templates/schedule-line.htm')
+                .done(function () {
+                    $("#schedulingsFor_" + viewData.plugId).mustache('plug-control-scheduling', viewData);                    
+                });
         }
 
         function _convertToSeconds(time, periodicity) {

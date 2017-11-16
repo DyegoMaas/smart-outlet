@@ -38,7 +38,7 @@ void reportConsumption() {
     dtostrf(reading.power, 7, 2, power);
     //sprintf(power, "%7.2f", reading.power);
     
-    Serial.print("lidox ");
+    Serial.print("lido ");
     Serial.print(reading.power);
     
     Serial.print(" | publicando ");

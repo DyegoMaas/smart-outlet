@@ -15,6 +15,22 @@ namespace SmartOutlet.Outlet
             _plugEventSequencer = plugEventSequencer;
         }
 
+        public Guid CreatePlug(string name)
+        {
+            var plugId = Guid.NewGuid();
+            _plugEventSequencer.PlugActivated(plugId, name);
+            
+            var payload = $"{plugId}";
+            _publisher.Publish("/smart-plug/activate", payload);
+            
+            return plugId;
+        }
+
+        public void Rename(string newName, Guid plugId)
+        {
+            _plugEventSequencer.PlugRenamed(newName, plugId);
+        }
+
         public void TryTurnOff(Guid plugId)
         {
             _publisher.Publish("/smart-plug/state", $"{plugId}|turn-off");
@@ -27,25 +43,12 @@ namespace SmartOutlet.Outlet
 
         public void ScheduleTurnOn(TimeSpan timeInFuture, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|GetMilisecondsString(timeInFuture)");
+            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|{GetMilisecondsString(timeInFuture)}");
         }
 
         public void ScheduleTurnOff(TimeSpan timeInFuture, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|GetMilisecondsString(timeInFuture)");
-        }
-
-        public void Rename(string newName, Guid plugId)
-        {
-            _plugEventSequencer.PlugRenamed(newName, plugId);
-        }
-
-        public Guid CreatePlug(string name)
-        {
-            var plugId = Guid.NewGuid();
-            _plugEventSequencer.PlugActivated(plugId, name);
-            _publisher.Publish("/smart-plug/activate", $"{plugId}");
-            return plugId;
+            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|{GetMilisecondsString(timeInFuture)}");
         }
 
         private static string GetMilisecondsString(TimeSpan timeInFuture)

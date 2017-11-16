@@ -102,7 +102,6 @@ namespace SmartOutlet.Service
                 PlugId = originPlugId,
                 Content = content,
             };
-            
         }
 
         private struct Payload

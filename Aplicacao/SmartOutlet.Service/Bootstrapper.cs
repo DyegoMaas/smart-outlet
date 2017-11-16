@@ -52,26 +52,63 @@ namespace SmartOutlet.Service
         {
             messaging.Subscribe("/smart-plug/new-state", message =>
             {
-                var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
+                if (!IsValidMessageWithId(message))
+                    return;
                 
-                var newState = CleanString(message);
+                var payload = ExtractPayload(message);
+                var newState = payload.Content;
+                var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
                 switch (newState)
                 {
                     case "on":
-                        plugEventEmitter.PlugTurnedOn(PlugIds.PlugOneId);
+                        plugEventEmitter.PlugTurnedOn(payload.PlugId);
                         break;
                     case "off":
-                        plugEventEmitter.PlugTurnedOff(PlugIds.PlugOneId);
+                        plugEventEmitter.PlugTurnedOff(payload.PlugId);
                         break;
                 }
             });
             
-            messaging.Subscribe("/smart-plug/consumption", value =>
+            messaging.Subscribe("/smart-plug/consumption", message =>
             {
-                var consumptionInWatts = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                if (!IsValidMessageWithId(message))
+                    return;
+                
+                var payload = ExtractPayload(message);
+                var consumptionInWatts = Convert.ToDouble(payload.Content, CultureInfo.InvariantCulture);
+
                 var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
-                plugEventEmitter.NewConsumption(PlugIds.PlugOneId, consumptionInWatts);
+                plugEventEmitter.NewConsumption(payload.PlugId, consumptionInWatts);
             });
+        }
+
+        private bool IsValidMessageWithId(string message)
+        {
+            if (!message.Contains("|"))
+                return false;
+            
+            var parts = message.Split('|');
+            return Guid.TryParse(parts[0], out var id);
+        }
+
+        private Payload ExtractPayload(string message)
+        {
+            var parts = message.Split('|');
+
+            var originPlugId = Guid.Parse(parts[0]);
+            var content = CleanString(parts[1]);
+            return new Payload
+            {
+                PlugId = originPlugId,
+                Content = content,
+            };
+            
+        }
+
+        private struct Payload
+        {
+            public Guid PlugId { get; set; }
+            public string Content { get; set; }
         }
 
         private static string CleanString(string message)

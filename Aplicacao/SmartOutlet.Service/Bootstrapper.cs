@@ -88,7 +88,8 @@ namespace SmartOutlet.Service
                 return false;
             
             var parts = message.Split('|');
-            return Guid.TryParse(parts[0], out var id);
+            Guid id = Guid.Empty;
+            return Guid.TryParse(parts[0], out id);
         }
 
         private Payload ExtractPayload(string message)

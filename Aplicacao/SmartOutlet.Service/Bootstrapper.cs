@@ -9,6 +9,7 @@ using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 using SmartOutlet.Outlet.Mqtt;
+using Nancy.Hosting.Self;
 
 namespace SmartOutlet.Service
 {
@@ -16,14 +17,14 @@ namespace SmartOutlet.Service
     {
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            pipelines.AfterRequest += ctx =>
+            pipelines.AfterRequest.AddItemToEndOfPipeline(ctx =>
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                ctx.Response.Headers.Add("Access-Control-Allow-Methods", "POST,GET");
-            };
+                ctx.Response.Headers.Add("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
+            });
         }
-        
+                
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);

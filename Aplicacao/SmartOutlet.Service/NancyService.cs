@@ -17,7 +17,10 @@ namespace SmartOutlet.Service
 
         public NancyService()
         {
-            _nancyHost = new NancyHost(new Uri(ServiceUri));
+            var configuration = new HostConfiguration();
+            configuration.UrlReservations.CreateAutomatically = true;
+
+            _nancyHost = new NancyHost(configuration, new Uri(ServiceUri));
             _scheduler = new StdSchedulerFactory().GetScheduler();
         }
 

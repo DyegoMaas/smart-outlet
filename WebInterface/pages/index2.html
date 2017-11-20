@@ -169,8 +169,8 @@
 
     <script>
 
-        var PAGE_URL = "http://localhost:8001/smart-things/plugs/plug-manager";
-        var BACKEND_URL = "http://localhost:8001/smart-things/plugs";
+        var PAGE_URL = "http://" + window.location.hostname +  ":8001/smart-things/plugs/plug-manager";
+        var BACKEND_URL = "http://" + window.location.hostname +  ":8001/smart-things/plugs";
 
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
@@ -246,6 +246,7 @@
         }
 
         function _get(url, success) {
+            console.log(url);
             $.ajax({
                 url: url,
                 type: "GET",
@@ -253,12 +254,14 @@
                 data: "",
                 success: success,
                 error: function (xhr, status) {
+                    console.log(xhr);
                     alert("Algo não saiu conforme o esperado...");
                 }
             });
         }
 
         function _post(url, request, success) {
+            console.log(url);
             $.ajax({
                 url: url,
                 type: "POST",
@@ -267,6 +270,7 @@
                 dataType: "json",
                 success: success,
                 error: function (xhr, status) {
+                    console.log(xhr);
                     alert("Algo não saiu conforme o esperado...");
                 }
             });
@@ -284,9 +288,6 @@
             console.log("loading plugs");
             var url = BACKEND_URL + "/";
             _get(url, function (plugs){
-                console.log("did get plugs!");
-                console.log(plugs);
-
                 plugs.forEach(plugData => {
                     console.log(plugData.plugId);
                     _renderNewPlugControl(plugData);
@@ -295,9 +296,6 @@
         }
 
         function _renderNewPlugControl(plugData) {
-            console.log("rendering new plug control");
-            console.log(plugData);
-
             _renderTemplate("plug-control", "plug-controls", plugData, function () {
                 var switchId = "plugState_" + plugData.plugId;
                 _initializeSwitch(switchId, function (el, newState){
@@ -314,7 +312,7 @@
             Mustache.parse(template);
 
             var rendered = Mustache.render(template, viewData);
-            $("#" + targetId).html(rendered);
+            $("#" + targetId).append(rendered);
 
             if (callback)
                 callback();

@@ -30,14 +30,14 @@ namespace SmartOutlet.Outlet.Tests.Unit
         [Test]
         public void turning_a_plug_on()
         {
-            _plug.Apply(new PlugTurnedOn());
+            _plug.Apply(new PlugTurnedOn(DateTime.Now));
             _plug.CurrentState.Should().Be(PlugState.On);
         }
         
         [Test]
         public void turning_a_plug_off()
         {
-            _plug.Apply(new PlugTurnedOff());
+            _plug.Apply(new PlugTurnedOff(DateTime.Now));
             _plug.CurrentState.Should().Be(PlugState.Off);
         }
 

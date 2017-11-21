@@ -2,7 +2,7 @@
 
 namespace SmartOutlet.Outlet.EventSourcing.Events
 {
-    public class OperationScheduled
+    public class OperationScheduled : IPlugEvent
     {
         public CommandType Type { get; set; }
         public DateTime IssuedAt { get; set; }

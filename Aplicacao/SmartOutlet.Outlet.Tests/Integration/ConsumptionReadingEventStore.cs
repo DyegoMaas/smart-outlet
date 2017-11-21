@@ -42,7 +42,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             using (var session = _documentStore.OpenSession())
             {
                 session.Events.Append(pinheiro.PlugId, 
-                    new PlugTurnedOn(),
+                    new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(22),
@@ -53,11 +53,11 @@ namespace SmartOutlet.Outlet.Tests.Integration
                     new ConsumptionReadingReceived(22),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(21),
-                    new PlugTurnedOff(), 
-                    new PlugTurnedOn(),
+                    new PlugTurnedOff(DateTime.Now), 
+                    new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(21)
                 );
-                session.Events.Append(tv.PlugId, new PlugTurnedOn(), new PlugTurnedOff());
+                session.Events.Append(tv.PlugId, new PlugTurnedOn(DateTime.Now), new PlugTurnedOff(DateTime.Now));
 
                 session.SaveChanges();
             }
@@ -86,7 +86,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             using (var session = _documentStore.OpenSession())
             {
                 session.Events.Append(pinheiro.PlugId, 
-                    new PlugTurnedOn(),
+                    new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(22),
@@ -97,8 +97,8 @@ namespace SmartOutlet.Outlet.Tests.Integration
                     new ConsumptionReadingReceived(22),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(21),
-                    new PlugTurnedOff(), 
-                    new PlugTurnedOn(),
+                    new PlugTurnedOff(DateTime.Now), 
+                    new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(21)
                 );
                 session.SaveChanges();

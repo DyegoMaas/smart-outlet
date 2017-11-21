@@ -82,6 +82,8 @@
     <Compile Include="Integration\MqttTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\PlugTest.cs" />
+    <Compile Include="Unit\Timeline.cs" />
+    <Compile Include="Unit\TimeLineTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartOutlet.Outlet\SmartOutlet.Outlet.csproj">

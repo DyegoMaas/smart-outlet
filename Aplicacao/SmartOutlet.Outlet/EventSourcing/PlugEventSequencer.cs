@@ -30,12 +30,12 @@ namespace SmartOutlet.Outlet.EventSourcing
 
         public void PlugTurnedOn(Guid plugId)
         {
-            AppendEvent(plugId, new PlugTurnedOn());
+            AppendEvent(plugId, new PlugTurnedOn(DateTime.Now));
         }
 
         public void PlugTurnedOff(Guid plugId)
         {
-            AppendEvent(plugId, new PlugTurnedOff());
+            AppendEvent(plugId, new PlugTurnedOff(DateTime.Now));
         }
 
         public void NewConsumption(Guid plugId, double consumptionInWatts)

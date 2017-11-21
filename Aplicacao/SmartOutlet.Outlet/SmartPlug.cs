@@ -44,6 +44,7 @@ namespace SmartOutlet.Outlet
         public void ScheduleTurnOn(ScheduleCommand command, Guid plugId)
         {
             _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
+            _plugEventSequencer.ActionScheduled(command, plugId);
         }
 
         public void ScheduleTurnOff(ScheduleCommand command, Guid plugId)

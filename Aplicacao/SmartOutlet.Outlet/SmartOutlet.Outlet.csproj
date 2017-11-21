@@ -77,6 +77,7 @@
     <Compile Include="CoAP\RequestBuilder.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
+    <Compile Include="EventSourcing\Events\IPlugEvent.cs" />
     <Compile Include="EventSourcing\Events\OperationScheduled.cs" />
     <Compile Include="EventSourcing\Events\PlugActivated.cs" />
     <Compile Include="EventSourcing\Events\PlugRenamed.cs" />

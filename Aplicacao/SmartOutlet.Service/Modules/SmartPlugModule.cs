@@ -70,16 +70,20 @@ namespace SmartOutlet.Service.Modules
             {
                 Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
-                _smartPlug.ScheduleTurnOn(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
-                return GetEstimatedActionTimeResponse(scheduleRequest);
+                
+                var scheduleCommand = new ScheduleCommand(CommandType.TurnOn, TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
+                _smartPlug.ScheduleTurnOff(scheduleCommand, plugId);
+                return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
             });
             
             Post("/{plugId:guid}/scheduling/turn-off", _ =>
             {
                 Guid plugId = _.plugId;
                 var scheduleRequest = this.Bind<ScheduleRequest>();
-                _smartPlug.ScheduleTurnOff(TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture), plugId);
-                return GetEstimatedActionTimeResponse(scheduleRequest);
+
+                var scheduleCommand = new ScheduleCommand(CommandType.TurnOff, TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
+                _smartPlug.ScheduleTurnOff(scheduleCommand, plugId);
+                return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
             });
             
             Get("/{plugId:guid}/consumption-report", _ =>
@@ -89,11 +93,16 @@ namespace SmartOutlet.Service.Modules
             });
         }
 
-        private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(ScheduleRequest scheduleRequest)
+        private static DateTime EstimateExecutionTime(TimeSpan timeInFuture)
+        {
+            return DateTime.Now + timeInFuture;
+        }
+
+        private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(ScheduleRequest scheduleRequest, DateTime future)
         {
             return new EstimatedActionTimeResponse
             {
-                EstimatedActionTime = DateTime.Now.AddSeconds(scheduleRequest.SecondsInFuture).ToString("MM/dd/yyyy HH:mm:ss")
+                EstimatedActionTime = future.ToString("MM/dd/yyyy HH:mm:ss")
             };
         }
 

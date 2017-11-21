@@ -19,6 +19,7 @@ namespace SmartOutlet.Outlet.Mqtt
         private const string BrokerHostName = "iot.eclipse.org";
         private const int BrokerPort = 1883;
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
+        private static readonly Guid ClientId = Guid.NewGuid();
         
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();
         private readonly MqttClient _mqttClient;
@@ -76,7 +77,6 @@ namespace SmartOutlet.Outlet.Mqtt
 
         private void TryToConnect()
         {
-            var clientId = Guid.NewGuid().ToString();
             Policy
                 .Handle<Exception>()
                 .WaitAndRetryForever(
@@ -87,7 +87,7 @@ namespace SmartOutlet.Outlet.Mqtt
                     })
                 .Execute(() =>
                 {
-                    _mqttClient.Connect(clientId);
+                    _mqttClient.Connect(ClientId.ToString());
                     Thread.Sleep(500);
                     if (_mqttClient.IsConnected) 
                         return;

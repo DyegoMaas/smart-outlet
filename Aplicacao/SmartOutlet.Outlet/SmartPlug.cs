@@ -41,14 +41,15 @@ namespace SmartOutlet.Outlet
             _publisher.Publish("/smart-plug/state", $"{plugId}|turn-on");
         }
 
-        public void ScheduleTurnOn(TimeSpan timeInFuture, Guid plugId)
+        public void ScheduleTurnOn(ScheduleCommand command, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|{GetMilisecondsString(timeInFuture)}");
+            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
         }
 
-        public void ScheduleTurnOff(TimeSpan timeInFuture, Guid plugId)
+        public void ScheduleTurnOff(ScheduleCommand command, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|{GetMilisecondsString(timeInFuture)}");
+            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
+            _plugEventSequencer.ActionScheduled(command, plugId);
         }
 
         private static string GetMilisecondsString(TimeSpan timeInFuture)

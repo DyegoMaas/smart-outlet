@@ -18,6 +18,11 @@ namespace SmartOutlet.Outlet.EventSourcing
             AppendEvent(plugId, new PlugActivated(plugId, name));
         }
 
+        public void ActionScheduled(ScheduleCommand command, Guid plugId)
+        {
+            AppendEvent(plugId, new OperationScheduled(command.Type, command.IssuedAt, command.TimeInFuture));
+        }
+
         public void PlugRenamed(string newName, Guid plugId)
         {
             AppendEvent(plugId, new PlugRenamed(newName));

@@ -6,8 +6,8 @@ namespace SmartOutlet.Outlet
     {
         void TryTurnOff(Guid plugId);
         void TryTurnOn(Guid plugId);
-        void ScheduleTurnOn(TimeSpan timeInFuture, Guid plugId);
-        void ScheduleTurnOff(TimeSpan timeInFuture, Guid plugId);
+        void ScheduleTurnOn(ScheduleCommand command, Guid plugId);
+        void ScheduleTurnOff(ScheduleCommand command, Guid plugId);
         void Rename(string newName, Guid plugId);
         Guid CreatePlug(string name);
     }

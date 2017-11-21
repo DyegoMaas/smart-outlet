@@ -24,7 +24,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             );
         }
 
-        [Test]
+        [Test, Ignore("integration")]
         public void saving_consumption_readings_in_event_store()
         {
             var pinheiro = new PlugActivated(Guid.NewGuid(), "Pinheiro de Natal");
@@ -72,7 +72,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             }
         }
         
-        [Test]
+        [Test, Ignore("integration")]
         public void reporting_a_plugs_consumption()
         {
             var pinheiro = new PlugActivated(Guid.NewGuid(), "Pinheiro de Natal");

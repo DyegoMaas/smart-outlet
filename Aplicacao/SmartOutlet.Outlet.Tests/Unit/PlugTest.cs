@@ -6,7 +6,7 @@ using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.Tests.Unit
 {
-    public class PlugHistoryTest
+    public class PlugTest
     {
         private Plug _plug;
 

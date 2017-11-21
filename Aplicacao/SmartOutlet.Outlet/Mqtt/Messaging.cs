@@ -79,8 +79,8 @@ namespace SmartOutlet.Outlet.Mqtt
             var clientId = Guid.NewGuid().ToString();
             Policy
                 .Handle<Exception>()
-                .WaitAndRetry(5, 
-                    count => TimeSpan.FromMinutes(3), 
+                .WaitAndRetryForever(
+                    count => TimeSpan.FromSeconds(1), 
                     (exception, retryCount) =>
                     {
                         Console.WriteLine($"Not able to connect to MQTT broker. Retrying for the {retryCount} time");
@@ -88,6 +88,7 @@ namespace SmartOutlet.Outlet.Mqtt
                 .Execute(() =>
                 {
                     _mqttClient.Connect(clientId);
+                    Thread.Sleep(500);
                     if (_mqttClient.IsConnected) 
                         return;
                     

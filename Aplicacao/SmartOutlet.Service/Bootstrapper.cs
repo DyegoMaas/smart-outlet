@@ -9,7 +9,6 @@ using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 using SmartOutlet.Outlet.Mqtt;
-using Nancy.Hosting.Self;
 
 namespace SmartOutlet.Service
 {

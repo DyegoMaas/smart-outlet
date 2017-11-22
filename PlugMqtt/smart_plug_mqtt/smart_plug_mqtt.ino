@@ -35,6 +35,8 @@ long lastMessageTime = 0;
 int scheduledActionId = 1;
 
 void reportConsumption() {  
+  if (!hasCredentials)
+    return;
   auto timeSinceLastConsumptionReport = millis() - lastMessageTime;  
   if (timeSinceLastConsumptionReport >= 5000) {
     auto reading = currentSensor.readAC(AC_SENSOR_PIN);
@@ -61,7 +63,9 @@ void initCredentials() {
   Serial.println("INITILIASING CREDENTIALS: ");
   
   hasCredentials = eepromManager.hasData();
-  id = eepromManager.loadId();
+  id = hasCredentials 
+    ? eepromManager.loadId() 
+    : "";
   Serial.print("loaded credentials:");
   Serial.println(id);  
 }
@@ -247,7 +251,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 void reconnectMQTT() {
 	while (!MQTT.connected()) {
 		Serial.println("Tentando se conectar ao Broker MQTT: " + String(BROKER_MQTT));
-		if (MQTT.connect("ESP8266-ESP12-E")) {
+    String clientId = id == "" ? "Unknown plug X" : id;
+		if (MQTT.connect((char *)clientId.c_str())) {
 			Serial.println("Conectado ao broker MQTT!");
       
       Serial.println("subscribed to /smart-things/plug/clean-identity");

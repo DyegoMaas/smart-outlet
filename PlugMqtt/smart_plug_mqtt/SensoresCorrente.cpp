@@ -6,10 +6,10 @@ ACS712::ACS712(ModuleType moduleType)
 {
 	switch (moduleType)
 	{
-		case _30A: mVperAmp = 0.066; break;
-		case _20A: mVperAmp = 0.1; break;
+		case _30A: mVperAmp = 66; break;
+		case _20A: mVperAmp = 100; break;
 		case _5A:
-		default: mVperAmp = 0.185; break;
+		default: mVperAmp = 185; break;
 	}
 }
 
@@ -77,18 +77,40 @@ float getAmplitudeOverOneSecond(int analogInPin)
   return result;
 }
 
+double changeScale(double minA, double maxA, double minB, double maxB, double valueInA) {
+	auto a = valueInA - minA;
+	auto b = maxA - minA;
+	auto c = maxB - minB;
+	auto valueInB = (a / b * c) + minB;
+	return valueInB;
+}
+
 ACReading ACS712::readAC(int analogInPin) const
 {
-  int RawValue = analogRead(analogInPin);
-  double Voltage = (RawValue / 1024.0) * 3400; // Gets you mV
-  double Amps = ((Voltage - ACSoffset) / mVperAmp);
+  int rawValue = analogRead(analogInPin);
+  auto scaledValue = changeScale(0, 1024, 4, 910, rawValue);
+  auto voltage = (scaledValue / 910) * ACSVoltage;
+
+  //double Voltage = (RawValue / 1024.0) * ACVoltage; // Gets you mV
+  double Amps = ((voltage - ACSoffset) / mVperAmp);
+  if (Amps < 0)
+  	Amps *= -1;
+  if (Amps < 0.05)
+    Amps = 0;
 
   Serial.print("Raw Value = " ); // shows pre-scaled value 
-  Serial.print(RawValue); 
-  Serial.print("\t mV = "); // shows the voltage measured 
-  Serial.print(Voltage,3); // the '3' after voltage allows you to display 3 digits after decimal point
-  Serial.print("\t Amps = "); // shows the voltage measured 
-  Serial.println(Amps,3); // the '3' after voltage allows you to display 3 digits after decimal point
+  Serial.print(rawValue); 
+  Serial.print("\t mV (("); // shows the voltage measured 
+  Serial.print(voltage,3); // the '3' after voltage allows you to display 3 digits after decimal point
+  Serial.print(")\t - ACOffset ("); // shows the voltage measured 
+  Serial.print(ACSoffset, 3); // the '3' after voltage allows you to display 3 digits after decimal point
+  Serial.print(")) / mVperAmp ("); // shows the voltage measured 
+  Serial.print(mVperAmp, 3); // the '3' after voltage allows you to display 3 digits after decimal point
+  //Serial.print("\t mV (old) = "); // shows the voltage measured 
+  //Serial.print((rawValue / 1024) * ACVoltage,3); // the '3' after voltage allows you to display 3 digits after decimal point
+  Serial.print(") = "); // shows the voltage measured 
+  Serial.println(Amps, 3); // the '3' after voltage allows you to display 3 digits after decimal point
+  Serial.print("A"); // shows the voltage measured 
  
 
 //  auto voltageAmplitude = getAmplitudeOverOneSecond(analogInPin);
@@ -110,9 +132,9 @@ ACReading ACS712::readAC(int analogInPin) const
 //  auto power = ampsRms * voltage;
 
 auto ampsRms = 0;
-auto voltage = 0;
+//auto voltage = 0;
 auto power = 0;
-  return ACReading(ampsRms, voltage, power);
+  return ACReading(ampsRms, 220, power);
 }
 
 //obsolete

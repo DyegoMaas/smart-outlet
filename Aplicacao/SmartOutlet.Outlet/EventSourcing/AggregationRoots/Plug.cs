@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
-namespace SmartOutlet.Outlet.EventSourcing
+namespace SmartOutlet.Outlet.EventSourcing.AggregationRoots
 {
     public class Plug
     {

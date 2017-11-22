@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
-namespace SmartOutlet.Outlet.Tests.Unit
+namespace SmartOutlet.Outlet.EventSourcing.AggregationRoots
 {
     public class TimeLine
     {

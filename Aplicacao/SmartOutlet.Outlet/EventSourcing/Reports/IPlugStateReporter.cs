@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SmartOutlet.Outlet.EventSourcing.AggregationRoots;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {

@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandType.cs" />
+    <Compile Include="EventSourcing\AggregationRoots\Plug.cs" />
+    <Compile Include="EventSourcing\AggregationRoots\Timeline.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
     <Compile Include="EventSourcing\Events\IPlugEvent.cs" />
     <Compile Include="EventSourcing\Events\OperationScheduled.cs" />
@@ -79,7 +81,6 @@
     <Compile Include="EventSourcing\Events\PlugTurnedOn.cs" />
     <Compile Include="EventSourcing\IPlugEventSequencer.cs" />
     <Compile Include="EventSourcing\PlugEventSequencer.cs" />
-    <Compile Include="EventSourcing\Plug.cs" />
     <Compile Include="EventSourcing\Reports\ConsumptionInTime.cs" />
     <Compile Include="EventSourcing\Reports\ConsumptionReporter.cs" />
     <Compile Include="EventSourcing\Reports\IConsumptionReporter.cs" />

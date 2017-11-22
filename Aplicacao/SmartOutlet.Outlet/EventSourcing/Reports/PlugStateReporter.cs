@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marten;
+using SmartOutlet.Outlet.EventSourcing.AggregationRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports

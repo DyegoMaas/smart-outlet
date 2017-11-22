@@ -44,7 +44,7 @@ namespace SensoresCorrente
 
 		private:
 			float mVperAmp = 66; // use 100 for 20A Module and 185 for 5A Module
-			const float ACSoffset = 1700; // equivalente to 0A
+			const float ACSoffset = 1700; // equivalent to 0A
 	};
 }
 

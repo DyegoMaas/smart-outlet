@@ -52,7 +52,7 @@ void reportConsumption() {
     payload += '|';
     payload += power;
     
-    MQTT.publish("/smart-plug/consumption", (char *)payload.c_str());
+    MQTT.publish("/smart-things/plug/consumption", (char *)payload.c_str());
     lastMessageTime = millis();
   }
 }
@@ -147,7 +147,7 @@ void sendConfirmationOfRelayStateChange() {
   payload += '|';
   payload += isOn;
 
-	MQTT.publish("/smart-plug/new-state", (char *)payload.c_str());
+	MQTT.publish("/smart-things/plug/new-state", (char *)payload.c_str());
 }
 
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
@@ -160,12 +160,12 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 	auto topicString = String(topic);
 	Serial.println("Topic => " + topicString + " | Value => " + message);
 
-  if (topicString == "/smart-plug/clean-identity") {
+  if (topicString == "/smart-things/plug/clean-identity") {
     Serial.println("identity cleared");
     eepromManager.clear(); 
     initCredentials();   
     return;
-  } else if (topicString == "/smart-plug/activate") {
+  } else if (topicString == "/smart-things/plug/activate") {
     if (!hasCredentials) {
       Serial.print("assuming new identity! ");
       auto newId = message;
@@ -210,7 +210,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message content is ");
   Serial.println(data);
   
-  if (topicString == "/smart-plug/state") {
+  if (topicString == "/smart-things/plug/state") {
 		if (data == "turn-on") {
 			turnOn();			
 		}
@@ -220,7 +220,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     else {
       Serial.println("nothing to do related to state...");  
     }
-	} else if (topicString == "/smart-plug/schedule-on") {
+	} else if (topicString == "/smart-things/plug/schedule-on") {
     
     auto intervaloMilisegundos = data.toInt();
     Serial.print("ligando em ");
@@ -228,7 +228,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("ms");
     
     scheduler.schedule(turnOn, intervaloMilisegundos);   
-  } else if (topicString == "/smart-plug/schedule-off") {
+  } else if (topicString == "/smart-things/plug/schedule-off") {
 
     auto intervaloMilisegundos = data.toInt();
     Serial.print("desligando em ");
@@ -250,24 +250,24 @@ void reconnectMQTT() {
 		if (MQTT.connect("ESP8266-ESP12-E")) {
 			Serial.println("Conectado ao broker MQTT!");
       
-      Serial.println("subscribed to /smart-plug/clean-identity");
-      MQTT.subscribe("/smart-plug/clean-identity");
+      Serial.println("subscribed to /smart-things/plug/clean-identity");
+      MQTT.subscribe("/smart-things/plug/clean-identity");
       MQTT.loop();
 
-      Serial.println("subscribed to /smart-plug/activate");
-      MQTT.subscribe("/smart-plug/activate");
+      Serial.println("subscribed to /smart-things/plug/activate");
+      MQTT.subscribe("/smart-things/plug/activate");
       MQTT.loop();
 			
-			Serial.println("subscribed to /smart-plug/state");
-			MQTT.subscribe("/smart-plug/state");
+			Serial.println("subscribed to /smart-things/plug/state");
+			MQTT.subscribe("/smart-things/plug/state");
       MQTT.loop();
       
-      Serial.println("subscribed to /smart-plug/schedule-on");
-      MQTT.subscribe("/smart-plug/schedule-on");
+      Serial.println("subscribed to /smart-things/plug/schedule-on");
+      MQTT.subscribe("/smart-things/plug/schedule-on");
       MQTT.loop();
       
-      Serial.println("subscribed to /smart-plug/schedule-off");
-      MQTT.subscribe("/smart-plug/schedule-off");
+      Serial.println("subscribed to /smart-things/plug/schedule-off");
+      MQTT.subscribe("/smart-things/plug/schedule-off");
       MQTT.loop();
 		}
 		else {

@@ -21,7 +21,7 @@ namespace SmartOutlet.Outlet
             _plugEventSequencer.PlugActivated(plugId, name);
             
             var payload = $"{plugId}";
-            _publisher.Publish("/smart-plug/activate", payload);
+            _publisher.Publish("/smart-things/plug/activate", payload);
             
             return plugId;
         }
@@ -33,23 +33,23 @@ namespace SmartOutlet.Outlet
 
         public void TryTurnOff(Guid plugId)
         {
-            _publisher.Publish("/smart-plug/state", $"{plugId}|turn-off");
+            _publisher.Publish("/smart-things/plug/state", $"{plugId}|turn-off");
         }
 
         public void TryTurnOn(Guid plugId)
         {
-            _publisher.Publish("/smart-plug/state", $"{plugId}|turn-on");
+            _publisher.Publish("/smart-things/plug/state", $"{plugId}|turn-on");
         }
 
         public void ScheduleTurnOn(ScheduleCommand command, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-on", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
+            _publisher.Publish("/smart-things/plug/schedule-on", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
             _plugEventSequencer.ActionScheduled(command, plugId);
         }
 
         public void ScheduleTurnOff(ScheduleCommand command, Guid plugId)
         {
-            _publisher.Publish("/smart-plug/schedule-off", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
+            _publisher.Publish("/smart-things/plug/schedule-off", $"{plugId}|{GetMilisecondsString(command.TimeInFuture)}");
             _plugEventSequencer.ActionScheduled(command, plugId);
         }
 

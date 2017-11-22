@@ -50,7 +50,7 @@ namespace SmartOutlet.Service
 
         private void RegisterSubscribers(Messaging messaging, TinyIoCContainer container)
         {
-            messaging.Subscribe("/smart-plug/new-state", message =>
+            messaging.Subscribe("/smart-things/plug/new-state", message =>
             {
                 if (!IsValidMessageWithId(message))
                     return;
@@ -69,7 +69,7 @@ namespace SmartOutlet.Service
                 }
             });
             
-            messaging.Subscribe("/smart-plug/consumption", message =>
+            messaging.Subscribe("/smart-things/plug/consumption", message =>
             {
                 if (!IsValidMessageWithId(message))
                     return;

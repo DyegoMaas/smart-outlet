@@ -76,6 +76,7 @@
     <Compile Include="EventSourcing\Events\IPlugEvent.cs" />
     <Compile Include="EventSourcing\Events\OperationScheduled.cs" />
     <Compile Include="EventSourcing\Events\PlugActivated.cs" />
+    <Compile Include="EventSourcing\Events\PlugEventExtensions.cs" />
     <Compile Include="EventSourcing\Events\PlugRenamed.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOff.cs" />
     <Compile Include="EventSourcing\Events\PlugTurnedOn.cs" />

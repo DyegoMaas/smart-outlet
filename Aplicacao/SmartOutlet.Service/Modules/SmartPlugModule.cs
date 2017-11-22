@@ -36,6 +36,12 @@ namespace SmartOutlet.Service.Modules
                 };
             });
             
+            Post("/credentials/reset", _ =>
+            {
+                _smartPlug.ResetCredentials();
+                return new OkResponse();
+            });
+            
             Get("/", _ => GetListOfPlugStates());
             
             Get("/{plugId:guid}", _ =>
@@ -72,7 +78,7 @@ namespace SmartOutlet.Service.Modules
                 var scheduleRequest = this.Bind<ScheduleRequest>();
                 
                 var scheduleCommand = new ScheduleCommand(CommandType.TurnOn, TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
-                _smartPlug.ScheduleTurnOff(scheduleCommand, plugId);
+                _smartPlug.ScheduleTurnOn(scheduleCommand, plugId);
                 return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
             });
             

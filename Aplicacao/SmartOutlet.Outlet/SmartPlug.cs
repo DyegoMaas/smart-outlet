@@ -26,6 +26,11 @@ namespace SmartOutlet.Outlet
             return plugId;
         }
 
+        public void ResetCredentials()
+        {
+            _publisher.Publish("/smart-things/plug/clean-identity", string.Empty);
+        }
+
         public void Rename(string newName, Guid plugId)
         {
             _plugEventSequencer.PlugRenamed(newName, plugId);

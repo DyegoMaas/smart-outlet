@@ -39,6 +39,7 @@ namespace SmartOutlet.Service
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
                 typeof(PlugRenamed),
+                typeof(OperationScheduled),
                 typeof(ConsumptionReadingReceived)    
             ));
 

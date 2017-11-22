@@ -7,8 +7,8 @@ namespace SmartOutlet.Outlet.EventSourcing.AggregationRoots
     {
         public Guid Id { get; set; } = PlugIds.PlugOneId;
         public PlugState CurrentState { get; set; } = PlugState.Off;
-        public string Name { get; private set; } = "PlugOne";
-        public double LastConsumptionInWatts { get; private set; }
+        public string Name { get; set; }
+        public double LastConsumptionInWatts { get; set; }
 
         public bool IsOn() => CurrentState == PlugState.On;
 

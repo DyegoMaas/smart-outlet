@@ -18,6 +18,5 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
         protected PlugActivated()
         {
         }
-
     }
 }

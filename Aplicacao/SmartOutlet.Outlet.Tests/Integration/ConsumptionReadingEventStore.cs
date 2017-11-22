@@ -19,13 +19,15 @@ namespace SmartOutlet.Outlet.Tests.Integration
         {
             _documentStore = DocumentStoreForTests.NewEventSource<Plug>(
                 typeof(PlugActivated),
+                typeof(PlugRenamed),
                 typeof(PlugTurnedOn),
                 typeof(PlugTurnedOff),
+                typeof(OperationScheduled),
                 typeof(ConsumptionReadingReceived)
             );
         }
 
-        [Test, Ignore("integration")]
+        [Test]
         public void saving_consumption_readings_in_event_store()
         {
             var pinheiro = new PlugActivated(Guid.NewGuid(), "Pinheiro de Natal");
@@ -43,6 +45,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             using (var session = _documentStore.OpenSession())
             {
                 session.Events.Append(pinheiro.PlugId, 
+                    new PlugRenamed("New Name"),
                     new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(20),
                     new ConsumptionReadingReceived(20),
@@ -50,6 +53,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
                     new ConsumptionReadingReceived(23),
                     new ConsumptionReadingReceived(24),
                     new ConsumptionReadingReceived(20),
+                    new OperationScheduled(CommandType.TurnOff, DateTime.Now, 30.Minutes()),
                     new ConsumptionReadingReceived(21),
                     new ConsumptionReadingReceived(22),
                     new ConsumptionReadingReceived(20),
@@ -58,7 +62,11 @@ namespace SmartOutlet.Outlet.Tests.Integration
                     new PlugTurnedOn(DateTime.Now),
                     new ConsumptionReadingReceived(21)
                 );
-                session.Events.Append(tv.PlugId, new PlugTurnedOn(DateTime.Now), new PlugTurnedOff(DateTime.Now));
+                
+                session.Events.Append(tv.PlugId, 
+                    new PlugTurnedOn(DateTime.Now), 
+                    new PlugTurnedOff(DateTime.Now)
+                );
 
                 session.SaveChanges();
             }
@@ -69,6 +77,8 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 var plugTv = session.Load<Plug>(tv.PlugId);
 
                 plugPinheiro.IsOn().Should().BeTrue();
+                plugPinheiro.Name.Should().Be("New Name");
+                
                 plugTv.IsOn().Should().BeFalse();
             }
         }

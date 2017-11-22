@@ -10,22 +10,37 @@ namespace SmartOutlet.Outlet.Tests.Unit
         
         public void Apply(PlugTurnedOn plugTurnedOn)
         {
-            _eventDescriptions.Add(plugTurnedOn.GetDescription());
+            InserirDescricaoDeEvento(plugTurnedOn.GetDescription());
+        }
+
+        public void Apply(PlugTurnedOff plugTurnedOff)
+        {
+            InserirDescricaoDeEvento(plugTurnedOff.GetDescription());
+        }
+
+        public void Apply(PlugRenamed plugRenamed)
+        {
+            InserirDescricaoDeEvento(plugRenamed.GetDescription());
+        }
+
+        public void Apply(PlugActivated activation)
+        {
+            InserirDescricaoDeEvento(activation.GetDescription());
+        }
+
+        public void Apply(OperationScheduled scheduling)
+        {
+            InserirDescricaoDeEvento(scheduling.GetDescription());
+        }
+
+        private void InserirDescricaoDeEvento(string descricao)
+        {
+            _eventDescriptions.Insert(0, descricao);
         }
 
         public IEnumerable<string> GetEvents()
         {
             return _eventDescriptions;
-        }
-
-        public void Apply(PlugTurnedOff plugTurnedOff)
-        {
-            _eventDescriptions.Add(plugTurnedOff.GetDescription());
-        }
-
-        public void Apply(PlugRenamed plugRenamed)
-        {
-            _eventDescriptions.Add(plugRenamed.GetDescription());
         }
     }
 
@@ -48,11 +63,10 @@ namespace SmartOutlet.Outlet.Tests.Unit
                     return "Plugue ligado";
                 case PlugTurnedOff _:
                     return "Plugue desligado";
-                case OperationScheduled _:
-                    var agendamento = (OperationScheduled) @event;
+                case OperationScheduled agendamento:
                     return agendamento.Type == CommandType.TurnOn
-                        ? $"Agendamento para ligar às {agendamento.IssuedAt + agendamento.TimeInFuture:yyyy/MM-dd HH:mm:ss}"
-                        : $"Agendamento para desligar às {agendamento.IssuedAt + agendamento.TimeInFuture:yyyy/MM-dd HH:mm:ss}";
+                        ? $"Ligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({agendamento.IssuedAt + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"
+                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({agendamento.IssuedAt + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})";
             }
 
             return string.Empty;

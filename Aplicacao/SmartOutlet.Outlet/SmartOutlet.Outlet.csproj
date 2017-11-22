@@ -36,9 +36,6 @@
     <Reference Include="Baseline, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Baseline.1.3.0\lib\net46\Baseline.dll</HintPath>
     </Reference>
-    <Reference Include="CoAP.NET, Version=1.1.0.0, Culture=neutral, PublicKeyToken=e2c10a743037308b">
-      <HintPath>..\packages\CoAP.1.1.0\lib\net40\CoAP.NET.dll</HintPath>
-    </Reference>
     <Reference Include="FastExpressionCompiler, Version=1.1.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\FastExpressionCompiler.1.1.1\lib\net452\FastExpressionCompiler.dll</HintPath>
     </Reference>
@@ -72,9 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoAP\IDetailedRequestBuilder.cs" />
-    <Compile Include="CoAP\IRequestBuilder.cs" />
-    <Compile Include="CoAP\RequestBuilder.cs" />
     <Compile Include="CommandType.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
     <Compile Include="EventSourcing\Events\IPlugEvent.cs" />

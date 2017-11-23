@@ -35,8 +35,6 @@ namespace SmartOutlet.Outlet.Mqtt
                 userCertificateValidationCallback: null
             );
 
-            _mqttClient.ConnectionClosed += (sender, args) => { TryToConnect(); };
-
             TryToConnect();
             
             _mqttClient.MqttMsgPublished += (sender, args) =>
@@ -62,6 +60,7 @@ namespace SmartOutlet.Outlet.Mqtt
             _mqttClient.ConnectionClosed += (sender, args) =>
             {
                 Console.WriteLine("MQTT connection closed.");
+                TryToConnect();
             };
 
             _mqttClient.MqttMsgUnsubscribed += (sender, args) =>
@@ -89,9 +88,12 @@ namespace SmartOutlet.Outlet.Mqtt
                 {
                     _mqttClient.Connect(ClientId.ToString());
                     Thread.Sleep(500);
-                    if (_mqttClient.IsConnected) 
+                    if (_mqttClient.IsConnected)
+                    {
+                        Console.WriteLine("MQTT connected");
                         return;
-                    
+                    }
+
                     var message = $"Not connected to MQTT broker '{BrokerHostName}' on port '{BrokerPort}'";
                     throw new InvalidOperationException(message);
                 });

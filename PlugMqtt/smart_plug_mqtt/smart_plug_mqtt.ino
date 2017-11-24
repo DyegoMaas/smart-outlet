@@ -50,10 +50,20 @@ void reportConsumption() {
     Serial.print(" | publicando ");
     Serial.println(power);
 
+    char amps[10];
+    dtostrf(reading.amps, 7, 2, amps);
+    char voltage[10];
+    dtostrf(reading.voltage, 7, 2, voltage);
+
     String payload = id;
     payload += '|';
+    payload += amps;
+    payload += '|';
+    payload += voltage;
+    payload += '|';    
     payload += power;
     
+
     MQTT.publish("/smart-things/plug/consumption", (char *)payload.c_str());
     lastMessageTime = millis();
   }

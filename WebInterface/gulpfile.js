@@ -40,7 +40,7 @@ gulp.task('minify-css', ['less'], function() {
 
 // Copy JS to dist
 gulp.task('js', function() {
-    return gulp.src(['js/sb-admin-2.js'])
+    return gulp.src(['js/sb-admin-2.js', 'js/common-things.js'])
         .pipe(header(banner, { pkg: pkg }))
         .pipe(gulp.dest('dist/js'))
         .pipe(browserSync.reload({
@@ -119,7 +119,7 @@ gulp.task('browserSync', function() {
 })
 
 // Dev task with browserSync
-gulp.task('dev', [/*'copy',*/ 'browserSync', 'less', 'minify-css', 'js', 'minify-js'], function() {
+gulp.task('dev', ['browserSync', 'less', 'minify-css', 'js', 'minify-js'], function() {
     gulp.watch('less/*.less', ['less']);
     gulp.watch('dist/css/*.css', ['minify-css']);
     gulp.watch('js/*.js', ['minify-js']);

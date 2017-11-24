@@ -97,6 +97,29 @@ namespace SmartOutlet.Service.Modules
                 Guid plugId = _.plugId;
                 return GetComsuptionReport(plugId);
             });
+
+            Get("/{plugId:guid}/reports/consumption", _ =>
+            {
+                Guid plugId = _.plugId;
+                return new
+                {
+                    first = DateTime.Today.AddHours(12),
+                    data = new[]
+                    {
+                        new {Power = 10, Time = 0},
+                        new {Power = 12, Time = 5},
+                        new {Power = 13, Time = 10},
+                        new {Power = 13, Time = 15},
+                        new {Power = 13, Time = 20},
+                        new {Power = 12, Time = 25},
+                        new {Power = 11, Time = 30},
+                        new {Power = 11, Time = 35},
+                        new {Power = 11, Time = 40},
+                        new {Power = 11, Time = 45},
+                        new {Power = 11, Time = 50}
+                    }
+                };
+            });
         }
 
         private static DateTime EstimateExecutionTime(TimeSpan timeInFuture)

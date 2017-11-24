@@ -4,7 +4,7 @@ using FluentAssertions;
 using Marten;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing;
-using SmartOutlet.Outlet.EventSourcing.AggregationRoots;
+using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 

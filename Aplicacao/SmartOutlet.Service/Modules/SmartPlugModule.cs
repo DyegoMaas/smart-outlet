@@ -122,11 +122,6 @@ namespace SmartOutlet.Service.Modules
             });
         }
 
-        private static DateTime EstimateExecutionTime(TimeSpan timeInFuture)
-        {
-            return DateTime.Now + timeInFuture;
-        }
-
         private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(ScheduleRequest scheduleRequest, DateTime future)
         {
             return new EstimatedActionTimeResponse

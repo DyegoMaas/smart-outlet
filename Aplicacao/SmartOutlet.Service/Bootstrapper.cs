@@ -6,7 +6,7 @@ using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using SmartOutlet.Outlet;
 using SmartOutlet.Outlet.EventSourcing;
-using SmartOutlet.Outlet.EventSourcing.AggregationRoots;
+using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 using SmartOutlet.Outlet.Mqtt;
@@ -34,20 +34,33 @@ namespace SmartOutlet.Service
             container.Register<IPlugStateReporter, PlugStateReporter>();
             container.Register<IConsumptionReporter, ConsumptionReporter>();
 
-            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<Plug>(
-                typeof(PlugActivated),
-                typeof(PlugTurnedOn),
-                typeof(PlugTurnedOff),
-                typeof(PlugRenamed),
-                typeof(OperationScheduled),
-                typeof(ConsumptionReadingReceived)    
-            ));
+            ConfigureAggregatingRoots(container);
 
             var messaging = new Messaging();
             container.Register<IPublisher>(messaging);
             container.Register<ITopicGuest>(messaging);
 
             RegisterSubscribers(messaging, container);
+        }
+
+        private static void ConfigureAggregatingRoots(TinyIoCContainer container)
+        {
+            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<Plug>(
+                typeof(PlugActivated),
+                typeof(PlugTurnedOn),
+                typeof(PlugTurnedOff),
+                typeof(PlugRenamed),
+                typeof(OperationScheduled),
+                typeof(ConsumptionReadingReceived)
+            ));
+
+            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<TimeLine>(
+                typeof(PlugActivated),
+                typeof(PlugTurnedOn),
+                typeof(PlugTurnedOff),
+                typeof(PlugRenamed),
+                typeof(OperationScheduled)
+            ));
         }
 
         private void RegisterSubscribers(Messaging messaging, TinyIoCContainer container)

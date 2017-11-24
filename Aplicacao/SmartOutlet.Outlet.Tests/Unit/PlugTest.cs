@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing;
-using SmartOutlet.Outlet.EventSourcing.AggregationRoots;
+using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.Tests.Unit

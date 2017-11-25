@@ -5,8 +5,8 @@ namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
 {
     public class Plug
     {
-        public Guid Id { get; set; } = PlugIds.PlugOneId;
-        public PlugState CurrentState { get; set; } = PlugState.Off;
+        public Guid Id { get; set; } 
+        public PlugState CurrentState { get; set; }
         public string Name { get; set; }
         public double LastConsumptionInWatts { get; set; }
 

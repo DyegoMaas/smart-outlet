@@ -129,6 +129,11 @@ namespace SmartOutlet.Outlet.Tests.Integration
             {
                 20.0, 20.0, 22.0, 23.0, 24.0 ,20.0, 21.0, 22.0, 20.0, 21.0, 21.0
             });
+            
+            using (var session = _documentStore.OpenSession())
+            {
+                session.Load<Plug>(pinheiro.PlugId).LastConsumptionInWatts.Should().Be(21);
+            }
         }
     }
 }

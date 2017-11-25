@@ -10,7 +10,7 @@ namespace SmartOutlet.Outlet
         void ScheduleTurnOff(ScheduleCommand command, Guid plugId);
         void Rename(string newName, Guid plugId);
         Guid Activate(string name);
-        void Desactivate(Guid plugId);
+        void Deactivate(Guid plugId);
         void ResetCredentials();
     }
 }

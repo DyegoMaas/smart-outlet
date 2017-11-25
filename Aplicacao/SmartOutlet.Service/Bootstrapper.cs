@@ -26,6 +26,11 @@ namespace SmartOutlet.Service
                 ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
                 ctx.Response.Headers.Add("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
             });
+
+            pipelines.OnError += (ctx, er) =>
+            {
+                return HttpStatusCode.InternalServerError;
+            };
         }
                 
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
@@ -137,7 +142,7 @@ namespace SmartOutlet.Service
             var parts = message.Split('|');
 
             var originPlugId = Guid.Parse(parts[0]);
-            var content = CleanString(parts[1]);
+            var content = CleanString(string.Join("|", parts.Skip(1)));
             return new Payload
             {
                 PlugId = originPlugId,

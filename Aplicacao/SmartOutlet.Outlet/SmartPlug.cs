@@ -26,7 +26,7 @@ namespace SmartOutlet.Outlet
             return plugId;
         }
 
-        public void Desactivate(Guid plugId)
+        public void Deactivate(Guid plugId)
         {
             _plugEventSequencer.PlugDeactivated(plugId);
         }

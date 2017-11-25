@@ -39,10 +39,10 @@ namespace SmartOutlet.Service.Modules
                 };
             });
             
-            Post("/{plugId:guid}/desactivate", _ =>
+            Post("/{plugId:guid}/deactivate", _ =>
             {
                 Guid plugId = _.plugId;
-                _smartPlug.Desactivate(plugId);
+                _smartPlug.Deactivate(plugId);
                 return new OkResponse();
             });
             
@@ -105,9 +105,12 @@ namespace SmartOutlet.Service.Modules
             Get("/{plugId:guid}/reports/consumption", _ =>
             {
                 Guid plugId = _.plugId;
-                var report = _consumptionReporter.GetConsumptionReport(plugId).ToList();
+                var report = _consumptionReporter
+                    .GetConsumptionReport(plugId/*, startTime: DateTime.UtcNow.AddMinutes(-15)*/)
+                    .ToList();
                 if (!report.Any())
                 {
+                    //TODO retornar potência e corrente para plotar no gráfico
                     return new ConsumptionReportResponse
                     {
                         Data = new ConsumptionResponse[0]

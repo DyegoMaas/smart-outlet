@@ -54,26 +54,26 @@ namespace SmartOutlet.Outlet.Tests.Integration
             {
                 session.Events.Append(pinheiro.PlugId, 
                     new PlugRenamed("New Name"),
-                    new PlugTurnedOn(DateTime.Now),
+                    new PlugTurnedOn(),
                     new ConsumptionReadingReceived(2.2, 220, 20),
                     new ConsumptionReadingReceived(2.2, 220, 20),
                     new ConsumptionReadingReceived(2.2, 220, 22),
                     new ConsumptionReadingReceived(2.2, 220, 23),
                     new ConsumptionReadingReceived(2.2, 220, 24),
                     new ConsumptionReadingReceived(2.2, 220, 20),
-                    new OperationScheduled(CommandType.TurnOff, DateTime.Now, 30.Minutes()),
+                    new OperationScheduled(CommandType.TurnOff, 30.Minutes()),
                     new ConsumptionReadingReceived(2.3, 220, 21),
                     new ConsumptionReadingReceived(2.3, 220, 22),
                     new ConsumptionReadingReceived(2.3, 220, 20),
                     new ConsumptionReadingReceived(2.3, 220, 21),
-                    new PlugTurnedOff(DateTime.Now), 
-                    new PlugTurnedOn(DateTime.Now),
+                    new PlugTurnedOff(), 
+                    new PlugTurnedOn(),
                     new ConsumptionReadingReceived(2.3, 220, 21)
                 );
                 
                 session.Events.Append(tv.PlugId, 
-                    new PlugTurnedOn(DateTime.Now), 
-                    new PlugTurnedOff(DateTime.Now)
+                    new PlugTurnedOn(), 
+                    new PlugTurnedOff()
                 );
 
                 session.SaveChanges();
@@ -105,7 +105,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             using (var session = _documentStore.OpenSession())
             {
                 session.Events.Append(pinheiro.PlugId, 
-                    new PlugTurnedOn(DateTime.Now),
+                    new PlugTurnedOn(),
                     new ConsumptionReadingReceived(2.3, 220, 20),
                     new ConsumptionReadingReceived(2.3, 220, 20),
                     new ConsumptionReadingReceived(2.3, 220, 22),
@@ -116,8 +116,8 @@ namespace SmartOutlet.Outlet.Tests.Integration
                     new ConsumptionReadingReceived(2.3, 220, 22),
                     new ConsumptionReadingReceived(2.3, 220, 20),
                     new ConsumptionReadingReceived(2.3, 220, 21),
-                    new PlugTurnedOff(DateTime.Now), 
-                    new PlugTurnedOn(DateTime.Now),
+                    new PlugTurnedOff(), 
+                    new PlugTurnedOn(),
                     new ConsumptionReadingReceived(2.2, 220, 21)
                 );
                 session.SaveChanges();

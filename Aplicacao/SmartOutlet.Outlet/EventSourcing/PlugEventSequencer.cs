@@ -26,7 +26,7 @@ namespace SmartOutlet.Outlet.EventSourcing
 
         public void ActionScheduled(ScheduleCommand command, Guid plugId)
         {
-            AppendEvent(plugId, new OperationScheduled(command.Type, command.IssuedAt, command.TimeInFuture));
+            AppendEvent(plugId, new OperationScheduled(command.Type, command.TimeInFuture));
         }
 
         public void PlugRenamed(string newName, Guid plugId)
@@ -36,12 +36,12 @@ namespace SmartOutlet.Outlet.EventSourcing
 
         public void PlugTurnedOn(Guid plugId)
         {
-            AppendEvent(plugId, new PlugTurnedOn(DateTime.Now));
+            AppendEvent(plugId, new PlugTurnedOn());
         }
 
         public void PlugTurnedOff(Guid plugId)
         {
-            AppendEvent(plugId, new PlugTurnedOff(DateTime.Now));
+            AppendEvent(plugId, new PlugTurnedOff());
         }
 
         public void NewConsumption(Guid plugId, double current, double voltage, double consumptionInWatts)

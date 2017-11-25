@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Marten.Events;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.AggregatingRoots
@@ -9,28 +10,28 @@ namespace SmartOutlet.Outlet.EventSourcing.AggregatingRoots
         public List<string> EventDescriptions = new List<string>();
         public Guid Id { get; set; }
 
-        public void Apply(PlugActivated activation)
+        public void Apply(Event<PlugActivated> activation)
         {
-            Id = activation.PlugId;
+            Id = activation.Data.PlugId;
             InserirDescricaoDeEvento(activation.GetDescription());
         }
 
-        public void Apply(PlugTurnedOn plugTurnedOn)
+        public void Apply(Event<PlugTurnedOn> plugTurnedOn)
         {
             InserirDescricaoDeEvento(plugTurnedOn.GetDescription());
         }
 
-        public void Apply(PlugTurnedOff plugTurnedOff)
+        public void Apply(Event<PlugTurnedOff> plugTurnedOff)
         {
             InserirDescricaoDeEvento(plugTurnedOff.GetDescription());
         }
 
-        public void Apply(OperationScheduled scheduling)
+        public void Apply(Event<OperationScheduled> scheduling)
         {
             InserirDescricaoDeEvento(scheduling.GetDescription());
         }
 
-        public void Apply(PlugRenamed plugRenamed)
+        public void Apply(Event<PlugRenamed> plugRenamed)
         {
             InserirDescricaoDeEvento(plugRenamed.GetDescription());
         }

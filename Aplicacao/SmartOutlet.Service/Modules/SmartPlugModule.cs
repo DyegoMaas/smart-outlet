@@ -12,10 +12,10 @@ namespace SmartOutlet.Service.Modules
 {
     public class SmartPlugModule : NancyModule
     {
+        private readonly ISmartPlug _smartPlug;
         private readonly IConsumptionReporter _consumptionReporter;
         private readonly IPlugStateReporter _plugStateReporter;
         private readonly ITimelineReporter _timelineReporter;
-        private readonly ISmartPlug _smartPlug;
 
         public SmartPlugModule(ISmartPlug plug, 
             IConsumptionReporter consumptionReporter,
@@ -100,16 +100,22 @@ namespace SmartOutlet.Service.Modules
                 Guid plugId = _.plugId;
                 var report = _consumptionReporter.GetConsumptionReport(plugId).ToList();
                 if (!report.Any())
-                    return new {data = new string[0]};
-
-                var firstReading = report.First().TimeStamp;
-                return new
                 {
-                    data = report.Select(x => new
+                    return new ConsumptionReportResponse
                     {
-                        Power = x.ConsumptionInWatts,
-                        Time = (int)(x.TimeStamp - firstReading).TotalSeconds
-                    })
+                        Data = new ConsumptionResponse[0]
+                    };
+                }
+                
+                var firstReading = report.First().TimeStamp;
+                return new ConsumptionReportResponse
+                {
+                    Data = report
+                        .Select(x => new ConsumptionResponse
+                        {
+                            Power = x.ConsumptionInWatts,
+                            Time = (int)(x.TimeStamp - firstReading).TotalSeconds
+                        }).ToArray()
                 };
             });
             
@@ -117,7 +123,15 @@ namespace SmartOutlet.Service.Modules
             {
                 Guid plugId = _.plugId;
                 var timeline = _timelineReporter.LoadTimeLine(plugId);
-                return timeline.EventDescriptions;
+                var response = new TimelineResponse
+                {
+                    Events = timeline.EventDescriptions
+                        .Select(x => new EventResponse
+                        {
+                            Description = x
+                        }).ToArray()
+                };
+                return response;
             });
         }
 

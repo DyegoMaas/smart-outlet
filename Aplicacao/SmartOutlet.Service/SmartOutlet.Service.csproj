@@ -95,11 +95,15 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="DocumentStorageFactory.cs" />
     <Compile Include="Modules\ActivatePlugRequest.cs" />
+    <Compile Include="Modules\ConsumptionReportResponse.cs" />
+    <Compile Include="Modules\ConsumptionResponse.cs" />
     <Compile Include="Modules\EstimatedActionTimeResponse.cs" />
+    <Compile Include="Modules\EventResponse.cs" />
     <Compile Include="Modules\OkResponse.cs" />
     <Compile Include="Modules\ScheduleRequest.cs" />
     <Compile Include="Modules\SmartPlugModule.cs" />
     <Compile Include="Modules\SmartPlugResponse.cs" />
+    <Compile Include="Modules\TimelineResponse.cs" />
     <Compile Include="NancyService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

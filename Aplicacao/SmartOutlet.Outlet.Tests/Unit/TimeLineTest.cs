@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using Marten.Events;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
@@ -21,8 +22,8 @@ namespace SmartOutlet.Outlet.Tests.Unit
         public void describing_a_plug_activation()
         {
             var activation = new PlugActivated(plugId:Guid.NewGuid(), plugName:"Sanduicheira");
-
-            _timeLine.Apply(activation);
+            
+            _timeLine.Apply(new Event<PlugActivated>(activation));
 
             _timeLine.Id.Should().Be(activation.PlugId);
 
@@ -33,22 +34,27 @@ namespace SmartOutlet.Outlet.Tests.Unit
         [Test]
         public void describing_a_plug_turning_on()
         {
-            var time = new DateTime(2017, 10, 10) + 17.Hours(10.Minutes(5.Seconds()));
-            var plugTurnedOn = new PlugTurnedOn(time);
-
-            _timeLine.Apply(plugTurnedOn);
+            _timeLine.Apply(new Event<PlugTurnedOn>(new PlugTurnedOn())
+            {
+                Timestamp = NewTimestamp(2017, 10, 10, 17.Hours(10.Minutes(5.Seconds())))
+            });
 
             var events = _timeLine.EventDescriptions;
             events.Should().Contain("2017/10/10 17:10:05 - Plugue ligado");
         }
-        
+
+        private static DateTimeOffset NewTimestamp(int year, int month, int day, TimeSpan time)
+        {
+            return new DateTimeOffset(year, month, day, time.Hours, time.Minutes, time.Seconds, TimeSpan.Zero);
+        }
+
         [Test]
         public void describing_a_plug_turning_off()
         {
-            var time = new DateTime(2017, 10, 10) + 17.Hours(10.Minutes(5.Seconds()));
-            var plugTurnedOff = new PlugTurnedOff(time);
-
-            _timeLine.Apply(plugTurnedOff);
+            _timeLine.Apply(new Event<PlugTurnedOff>(new PlugTurnedOff())
+            {
+                Timestamp = NewTimestamp(2017, 10, 10, 17.Hours(10.Minutes(5.Seconds())))
+            });
 
             var events = _timeLine.EventDescriptions;
             events.Should().Contain("2017/10/10 17:10:05 - Plugue desligado");
@@ -57,10 +63,10 @@ namespace SmartOutlet.Outlet.Tests.Unit
         [Test]
         public void describing_a_plug_renamed()
         {
-            var time = new DateTime(2017, 10, 10) + 17.Hours(10.Minutes(5.Seconds()));
-            var plugRenamed = new PlugRenamed("Lala");
-
-            _timeLine.Apply(plugRenamed);
+            _timeLine.Apply(new Event<PlugRenamed>(new PlugRenamed("Lala"))
+            {
+                Timestamp = NewTimestamp(2017, 10, 10, 17.Hours(10.Minutes(5.Seconds())))
+            });
 
             var events = _timeLine.EventDescriptions;
             events.Should().Contain(x => x.EndsWith("Plugue renomeado para Lala"));
@@ -70,10 +76,10 @@ namespace SmartOutlet.Outlet.Tests.Unit
         [TestCase(CommandType.TurnOff, "Desligar")]
         public void describing_an_operation_scheduled(CommandType type, string descricaoEsperadaComando)
         {
-            var time = new DateTime(2017, 10, 10) + 17.Hours(10.Minutes(5.Seconds()));
-            var scheduling = new OperationScheduled(type, time, timeInFuture:15.Minutes());
-
-            _timeLine.Apply(scheduling);
+            _timeLine.Apply(new Event<OperationScheduled>(new OperationScheduled(type, timeInFuture:15.Minutes()))
+            {
+                Timestamp = NewTimestamp(2017, 10, 10, 17.Hours(10.Minutes(5.Seconds())))
+            });
 
             var events = _timeLine.EventDescriptions;
             events.First().Should().EndWith($"{descricaoEsperadaComando} em 900s (2017/10/10 17:25:05)");

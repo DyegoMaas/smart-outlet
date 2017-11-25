@@ -4,7 +4,6 @@ namespace SmartOutlet.Outlet
 {
     public class ScheduleCommand
     {
-        public DateTime IssuedAt { get; }
         public DateTime EstimatedExecutionTime { get; }
         public CommandType Type { get; }
         public TimeSpan TimeInFuture { get; }
@@ -13,9 +12,8 @@ namespace SmartOutlet.Outlet
         public ScheduleCommand(CommandType type, TimeSpan timeInFuture)
         {
             Type = type;
-            IssuedAt = DateTime.Now;
             TimeInFuture = timeInFuture;
-            EstimatedExecutionTime = IssuedAt + timeInFuture;
+            EstimatedExecutionTime = DateTime.Now + timeInFuture;
         }
     }
 }

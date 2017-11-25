@@ -93,7 +93,6 @@
     <Compile Include="Mqtt\IPublisher.cs" />
     <Compile Include="Mqtt\ITopicGuest.cs" />
     <Compile Include="Mqtt\Messaging.cs" />
-    <Compile Include="PlugIds.cs" />
     <Compile Include="PlugState.cs" />
     <Compile Include="ScheduleCommand.cs" />
     <Compile Include="SmartPlug.cs" />

@@ -82,7 +82,7 @@ namespace SmartOutlet.Service.Modules
                 
                 var scheduleCommand = new ScheduleCommand(CommandType.TurnOn, TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
                 _smartPlug.ScheduleTurnOn(scheduleCommand, plugId);
-                return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
+                return GetEstimatedActionTimeResponse(scheduleCommand.Description);
             });
             
             Post("/{plugId:guid}/scheduling/turn-off", _ =>
@@ -92,7 +92,7 @@ namespace SmartOutlet.Service.Modules
 
                 var scheduleCommand = new ScheduleCommand(CommandType.TurnOff, TimeSpan.FromSeconds(scheduleRequest.SecondsInFuture));
                 _smartPlug.ScheduleTurnOff(scheduleCommand, plugId);
-                return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
+                return GetEstimatedActionTimeResponse(scheduleCommand.Description);
             });
 
             Get("/{plugId:guid}/reports/consumption", _ =>
@@ -135,11 +135,11 @@ namespace SmartOutlet.Service.Modules
             });
         }
 
-        private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(ScheduleRequest scheduleRequest, DateTime future)
+        private static EstimatedActionTimeResponse GetEstimatedActionTimeResponse(string futureDescription)
         {
             return new EstimatedActionTimeResponse
             {
-                EstimatedActionTime = future.ToString("MM/dd/yyyy HH:mm:ss")
+                EstimatedActionTime = futureDescription
             };
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Marten;
+using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing
@@ -15,7 +16,12 @@ namespace SmartOutlet.Outlet.EventSourcing
 
         public void PlugActivated(Guid plugId, string name)
         {
-            AppendEvent(plugId, new PlugActivated(plugId, name));
+            using (var session = _documentStore.OpenSession())
+            {
+                var @event = new PlugActivated(plugId, name);
+                session.Events.StartStream<Plug>(plugId, @event);
+                session.SaveChanges();
+            }
         }
 
         public void ActionScheduled(ScheduleCommand command, Guid plugId)

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using FluentAssertions;
 using Marten;
+using Marten.Events.Projections;
 using NUnit.Framework;
+using Remotion.Linq.Clauses.ResultOperators;
 using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
@@ -17,7 +20,12 @@ namespace SmartOutlet.Outlet.Tests.Integration
         [SetUp]
         public void SetUp()
         {
-            _documentStore = DocumentStoreForTests.NewEventSource<Plug>(
+            _documentStore = NewEventSource();
+        }
+
+        private static DocumentStore NewEventSource()
+        {
+            return DocumentStoreForTests.NewEventSource(
                 typeof(PlugActivated),
                 typeof(PlugRenamed),
                 typeof(PlugTurnedOn),
@@ -83,7 +91,7 @@ namespace SmartOutlet.Outlet.Tests.Integration
             }
         }
         
-        [Test, Ignore("integration")]
+        [Test]
         public void reporting_a_plugs_consumption()
         {
             var pinheiro = new PlugActivated(Guid.NewGuid(), "Pinheiro de Natal");

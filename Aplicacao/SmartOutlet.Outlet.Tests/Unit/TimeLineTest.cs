@@ -24,7 +24,9 @@ namespace SmartOutlet.Outlet.Tests.Unit
 
             _timeLine.Apply(activation);
 
-            var events = _timeLine.GetEvents();
+            _timeLine.Id.Should().Be(activation.PlugId);
+
+            var events = _timeLine.EventDescriptions;
             events.Should().Contain(x => x.EndsWith("Plugue ativado"));
         }
         
@@ -36,7 +38,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
 
             _timeLine.Apply(plugTurnedOn);
 
-            var events = _timeLine.GetEvents();
+            var events = _timeLine.EventDescriptions;
             events.Should().Contain("2017/10/10 17:10:05 - Plugue ligado");
         }
         
@@ -48,7 +50,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
 
             _timeLine.Apply(plugTurnedOff);
 
-            var events = _timeLine.GetEvents();
+            var events = _timeLine.EventDescriptions;
             events.Should().Contain("2017/10/10 17:10:05 - Plugue desligado");
         }
         
@@ -60,7 +62,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
 
             _timeLine.Apply(plugRenamed);
 
-            var events = _timeLine.GetEvents();
+            var events = _timeLine.EventDescriptions;
             events.Should().Contain(x => x.EndsWith("Plugue renomeado para Lala"));
         }
         
@@ -73,7 +75,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
 
             _timeLine.Apply(scheduling);
 
-            var events = _timeLine.GetEvents();
+            var events = _timeLine.EventDescriptions;
             events.First().Should().EndWith($"{descricaoEsperadaComando} em 900s (2017/10/10 17:25:05)");
         }
     }

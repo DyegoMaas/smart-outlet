@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Marten;
+using Marten.Events;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
@@ -19,9 +20,17 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
         {
             using (var session = _documentStore.LightweightSession())
             {
+//                var consumption = session.Events
+//                    .QueryRawEventDataOnly<Event<ConsumptionInTime>>()
+//                    .Where(e => e.StreamId == plugId)
+//                    .Select(e => new ConsumptionInTime(e.Data.ConsumptionInWatts, e.Timestamp));
+//                return consumption;
+                
                 var consumption = session.Events
                     .FetchStream(plugId, timestamp:startTime)
-                    .Where(e => e.Data.GetType() == typeof(ConsumptionReadingReceived))
+                    .Where(e => 
+                        e.StreamId == plugId &&
+                        e.Data.GetType() == typeof(ConsumptionReadingReceived))
                     .Select(e =>
                     {
                         var reading = (ConsumptionReadingReceived) e.Data;

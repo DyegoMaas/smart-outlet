@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Marten;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -36,31 +39,39 @@ namespace SmartOutlet.Service
 
             ConfigureAggregatingRoots(container);
 
-            var messaging = new Messaging();
-            container.Register<IPublisher>(messaging);
-            container.Register<ITopicGuest>(messaging);
-
+            var messaging = ConfigureMQTTMessagingSystem(container);
             RegisterSubscribers(messaging, container);
         }
 
         private static void ConfigureAggregatingRoots(TinyIoCContainer container)
         {
-            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<Plug>(
-                typeof(PlugActivated),
-                typeof(PlugTurnedOn),
-                typeof(PlugTurnedOff),
-                typeof(PlugRenamed),
-                typeof(OperationScheduled),
-                typeof(ConsumptionReadingReceived)
-            ));
+            container.Register<IDocumentStore>(DocumentStore.For(_ =>
+            {
+                _.Connection(GetConnectionString());
+                
+                _.Events.AddEventTypes(new []
+                {
+                    typeof(PlugActivated),
+                    typeof(PlugTurnedOn),
+                    typeof(PlugTurnedOff),
+                    typeof(PlugRenamed),
+                    typeof(OperationScheduled),
+                    typeof(ConsumptionReadingReceived)
+                });
+                
+                _.Events.InlineProjections.AggregateStreamsWith<Plug>();
+                _.Events.InlineProjections.AggregateStreamsWith<TimeLine>();
+            }));
 
-            container.Register<IDocumentStore>(DocumentStorageFactory.NewEventSource<TimeLine>(
-                typeof(PlugActivated),
-                typeof(PlugTurnedOn),
-                typeof(PlugTurnedOff),
-                typeof(PlugRenamed),
-                typeof(OperationScheduled)
-            ));
+            string GetConnectionString() => ConfigurationManager.ConnectionStrings["Production"].ConnectionString;
+        }
+
+        private static Messaging ConfigureMQTTMessagingSystem(TinyIoCContainer container)
+        {
+            var messaging = new Messaging();
+            container.Register<IPublisher>(messaging);
+            container.Register<ITopicGuest>(messaging);
+            return messaging;
         }
 
         private void RegisterSubscribers(Messaging messaging, TinyIoCContainer container)

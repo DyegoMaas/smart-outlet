@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.AggregatingRoots
 {
     public class TimeLine
     {
-        private readonly List<string> _eventDescriptions = new List<string>();
+        public List<string> EventDescriptions = new List<string>();
+        public Guid Id { get; set; }
 
         public void Apply(PlugActivated activation)
         {
+            Id = activation.PlugId;
             InserirDescricaoDeEvento(activation.GetDescription());
         }
 
@@ -34,12 +37,7 @@ namespace SmartOutlet.Outlet.EventSourcing.AggregatingRoots
 
         private void InserirDescricaoDeEvento(string descricao)
         {
-            _eventDescriptions.Insert(0, descricao);
-        }
-
-        public IEnumerable<string> GetEvents()
-        {
-            return _eventDescriptions;
+            EventDescriptions.Insert(0, descricao);
         }
     }
 }

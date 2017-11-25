@@ -70,8 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandType.cs" />
-    <Compile Include="EventSourcing\AggregatingRoots\Plug.cs" />
-    <Compile Include="EventSourcing\AggregatingRoots\Timeline.cs" />
+    <Compile Include="EventSourcing\ProjectionViews\Plug.cs" />
+    <Compile Include="EventSourcing\ProjectionViews\Timeline.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />
     <Compile Include="EventSourcing\Events\IPlugEvent.cs" />
     <Compile Include="EventSourcing\Events\OperationScheduled.cs" />

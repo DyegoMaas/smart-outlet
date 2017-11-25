@@ -3,8 +3,8 @@ using System.Linq;
 using FluentAssertions;
 using Marten.Events;
 using NUnit.Framework;
-using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
+using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
 
 namespace SmartOutlet.Outlet.Tests.Unit
 {

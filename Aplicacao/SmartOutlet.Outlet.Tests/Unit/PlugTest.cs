@@ -2,8 +2,8 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing;
-using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
 using SmartOutlet.Outlet.EventSourcing.Events;
+using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
 
 namespace SmartOutlet.Outlet.Tests.Unit
 {

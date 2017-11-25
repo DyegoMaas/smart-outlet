@@ -1,6 +1,6 @@
 ﻿using System;
 using Marten;
-using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
+using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {

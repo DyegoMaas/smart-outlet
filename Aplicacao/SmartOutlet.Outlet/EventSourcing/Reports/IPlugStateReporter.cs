@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SmartOutlet.Outlet.EventSourcing.AggregatingRoots;
+using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {

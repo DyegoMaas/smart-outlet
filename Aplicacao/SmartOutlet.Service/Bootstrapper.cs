@@ -101,13 +101,23 @@ namespace SmartOutlet.Service
                     return;
                 
                 var payload = ExtractPayload(message);
-                var consumptionInWatts = Convert.ToDouble(payload.Content, CultureInfo.InvariantCulture);
+                var reading = DecomposePayload(payload);
 
                 var plugEventEmitter = container.Resolve<IPlugEventSequencer>();
-                plugEventEmitter.NewConsumption(payload.PlugId, consumptionInWatts);
+                plugEventEmitter.NewConsumption(payload.PlugId, reading.amps, reading.voltage, reading.power);
+
+                (double amps, double voltage, double power) DecomposePayload(Payload payloadToDecompose)
+                {
+                    var strings = payloadToDecompose.Content.Split('|');
+                    return (
+                        Convert.ToDouble(strings[0], CultureInfo.InvariantCulture), 
+                        Convert.ToDouble(strings[1], CultureInfo.InvariantCulture), 
+                        Convert.ToDouble(strings[2], CultureInfo.InvariantCulture)
+                    );
+                }
             });
         }
-
+        
         private bool IsValidMessageWithId(string message)
         {
             if (!message.Contains("|"))

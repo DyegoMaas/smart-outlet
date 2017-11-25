@@ -44,9 +44,9 @@ namespace SmartOutlet.Outlet.EventSourcing
             AppendEvent(plugId, new PlugTurnedOff(DateTime.Now));
         }
 
-        public void NewConsumption(Guid plugId, double consumptionInWatts)
+        public void NewConsumption(Guid plugId, double current, double voltage, double consumptionInWatts)
         {
-            AppendEvent(plugId, new ConsumptionReadingReceived(consumptionInWatts));
+            AppendEvent(plugId, new ConsumptionReadingReceived(current, voltage, consumptionInWatts));
         }
 
         private void AppendEvent<T>(Guid plugId, T @event)

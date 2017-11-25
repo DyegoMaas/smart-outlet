@@ -91,34 +91,41 @@ namespace SmartOutlet.Service.Modules
                 _smartPlug.ScheduleTurnOff(scheduleCommand, plugId);
                 return GetEstimatedActionTimeResponse(scheduleRequest, scheduleCommand.EstimatedExecutionTime);
             });
-            
-            Get("/{plugId:guid}/consumption-report", _ =>
-            {
-                Guid plugId = _.plugId;
-                return GetComsuptionReport(plugId);
-            });
 
             Get("/{plugId:guid}/reports/consumption", _ =>
             {
                 Guid plugId = _.plugId;
+                var report = GetComsuptionReport(plugId).ToList();
+                if (!report.Any())
+                    return new {data = new string[0]};
+
+                var firstReading = report.First().TimeStamp;
                 return new
                 {
-                    first = DateTime.Today.AddHours(12),
-                    data = new[]
+                    data = report.Select(x => new
                     {
-                        new {Power = 10, Time = 0},
-                        new {Power = 12, Time = 5},
-                        new {Power = 13, Time = 10},
-                        new {Power = 13, Time = 15},
-                        new {Power = 13, Time = 20},
-                        new {Power = 12, Time = 25},
-                        new {Power = 11, Time = 30},
-                        new {Power = 11, Time = 35},
-                        new {Power = 11, Time = 40},
-                        new {Power = 11, Time = 45},
-                        new {Power = 11, Time = 50}
-                    }
+                        Power = x.ConsumptionInWatts,
+                        Time = (int)(x.TimeStamp - firstReading).TotalSeconds
+                    })
                 };
+//                return new
+//                {
+////                    first = DateTime.Today.AddHours(12),
+//                    data = new[]
+//                    {
+//                        new {Power = 10, Time = 0},
+//                        new {Power = 12, Time = 5},
+//                        new {Power = 13, Time = 10},
+//                        new {Power = 13, Time = 15},
+//                        new {Power = 13, Time = 20},
+//                        new {Power = 12, Time = 25},
+//                        new {Power = 11, Time = 30},
+//                        new {Power = 11, Time = 35},
+//                        new {Power = 11, Time = 40},
+//                        new {Power = 11, Time = 45},
+//                        new {Power = 11, Time = 50}
+//                    }
+//                };
             });
         }
 
@@ -154,11 +161,9 @@ namespace SmartOutlet.Service.Modules
                 .ToList();
         }
 
-        private IList<ConsumptionInTime> GetComsuptionReport(Guid plugId)
+        private IEnumerable<ConsumptionInTime> GetComsuptionReport(Guid plugId)
         {
-            return _consumptionReporter
-                .GetConsumptionReport(plugId)
-                .ToList();
+            return _consumptionReporter.GetConsumptionReport(plugId);
         }
     }
 }

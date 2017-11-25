@@ -55,20 +55,20 @@ namespace SmartOutlet.Outlet.Tests.Integration
                 session.Events.Append(pinheiro.PlugId, 
                     new PlugRenamed("New Name"),
                     new PlugTurnedOn(DateTime.Now),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(22),
-                    new ConsumptionReadingReceived(23),
-                    new ConsumptionReadingReceived(24),
-                    new ConsumptionReadingReceived(20),
+                    new ConsumptionReadingReceived(2.2, 220, 20),
+                    new ConsumptionReadingReceived(2.2, 220, 20),
+                    new ConsumptionReadingReceived(2.2, 220, 22),
+                    new ConsumptionReadingReceived(2.2, 220, 23),
+                    new ConsumptionReadingReceived(2.2, 220, 24),
+                    new ConsumptionReadingReceived(2.2, 220, 20),
                     new OperationScheduled(CommandType.TurnOff, DateTime.Now, 30.Minutes()),
-                    new ConsumptionReadingReceived(21),
-                    new ConsumptionReadingReceived(22),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(21),
+                    new ConsumptionReadingReceived(2.3, 220, 21),
+                    new ConsumptionReadingReceived(2.3, 220, 22),
+                    new ConsumptionReadingReceived(2.3, 220, 20),
+                    new ConsumptionReadingReceived(2.3, 220, 21),
                     new PlugTurnedOff(DateTime.Now), 
                     new PlugTurnedOn(DateTime.Now),
-                    new ConsumptionReadingReceived(21)
+                    new ConsumptionReadingReceived(2.3, 220, 21)
                 );
                 
                 session.Events.Append(tv.PlugId, 
@@ -106,19 +106,19 @@ namespace SmartOutlet.Outlet.Tests.Integration
             {
                 session.Events.Append(pinheiro.PlugId, 
                     new PlugTurnedOn(DateTime.Now),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(22),
-                    new ConsumptionReadingReceived(23),
-                    new ConsumptionReadingReceived(24),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(21),
-                    new ConsumptionReadingReceived(22),
-                    new ConsumptionReadingReceived(20),
-                    new ConsumptionReadingReceived(21),
+                    new ConsumptionReadingReceived(2.3, 220, 20),
+                    new ConsumptionReadingReceived(2.3, 220, 20),
+                    new ConsumptionReadingReceived(2.3, 220, 22),
+                    new ConsumptionReadingReceived(2.3, 220, 23),
+                    new ConsumptionReadingReceived(2.3, 220, 24),
+                    new ConsumptionReadingReceived(2.3, 220, 20),
+                    new ConsumptionReadingReceived(2.3, 220, 21),
+                    new ConsumptionReadingReceived(2.3, 220, 22),
+                    new ConsumptionReadingReceived(2.3, 220, 20),
+                    new ConsumptionReadingReceived(2.3, 220, 21),
                     new PlugTurnedOff(DateTime.Now), 
                     new PlugTurnedOn(DateTime.Now),
-                    new ConsumptionReadingReceived(21)
+                    new ConsumptionReadingReceived(2.2, 220, 21)
                 );
                 session.SaveChanges();
             }

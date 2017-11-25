@@ -2,15 +2,17 @@
 
 namespace SmartOutlet.Outlet.EventSourcing.Events
 {
-    public class ConsumptionReadingReceived : IPlugEvent
+    public class ConsumptionReadingReceived
     {
+        public double Current { get; set; }
+        public double Voltage { get; set; }
         public double ConsumptionInWatts { get; set; }
-        public DateTime IssuedAt { get; set; }
 
-        public ConsumptionReadingReceived(double consumptionInWatts)
+        public ConsumptionReadingReceived(double current, double voltage, double consumptionInWatts)
         {
+            Current = current;
+            Voltage = voltage;
             ConsumptionInWatts = consumptionInWatts;
-            IssuedAt = DateTime.Now;
         }
 
         protected ConsumptionReadingReceived()

@@ -14,16 +14,19 @@ namespace SmartOutlet.Service.Modules
     {
         private readonly IConsumptionReporter _consumptionReporter;
         private readonly IPlugStateReporter _plugStateReporter;
+        private readonly ITimelineReporter _timelineReporter;
         private readonly ISmartPlug _smartPlug;
 
         public SmartPlugModule(ISmartPlug plug, 
             IConsumptionReporter consumptionReporter,
-            IPlugStateReporter plugStateReporter
+            IPlugStateReporter plugStateReporter,
+            ITimelineReporter timelineReporter
         ) : base("plugs")
         {
             _smartPlug = plug;
             _consumptionReporter = consumptionReporter;
             _plugStateReporter = plugStateReporter;
+            _timelineReporter = timelineReporter;
 
             Post("/activate", _ =>
             {
@@ -95,7 +98,7 @@ namespace SmartOutlet.Service.Modules
             Get("/{plugId:guid}/reports/consumption", _ =>
             {
                 Guid plugId = _.plugId;
-                var report = GetComsuptionReport(plugId).ToList();
+                var report = _consumptionReporter.GetConsumptionReport(plugId).ToList();
                 if (!report.Any())
                     return new {data = new string[0]};
 
@@ -108,24 +111,13 @@ namespace SmartOutlet.Service.Modules
                         Time = (int)(x.TimeStamp - firstReading).TotalSeconds
                     })
                 };
-//                return new
-//                {
-////                    first = DateTime.Today.AddHours(12),
-//                    data = new[]
-//                    {
-//                        new {Power = 10, Time = 0},
-//                        new {Power = 12, Time = 5},
-//                        new {Power = 13, Time = 10},
-//                        new {Power = 13, Time = 15},
-//                        new {Power = 13, Time = 20},
-//                        new {Power = 12, Time = 25},
-//                        new {Power = 11, Time = 30},
-//                        new {Power = 11, Time = 35},
-//                        new {Power = 11, Time = 40},
-//                        new {Power = 11, Time = 45},
-//                        new {Power = 11, Time = 50}
-//                    }
-//                };
+            });
+            
+            Get("/{plugId:guid}/reports/timeline", _ =>
+            {
+                Guid plugId = _.plugId;
+                var timeline = _timelineReporter.LoadTimeLine(plugId);
+                return timeline.EventDescriptions;
             });
         }
 
@@ -159,11 +151,6 @@ namespace SmartOutlet.Service.Modules
                     LastConsumption = x.LastConsumptionInWatts
                 })
                 .ToList();
-        }
-
-        private IEnumerable<ConsumptionInTime> GetComsuptionReport(Guid plugId)
-        {
-            return _consumptionReporter.GetConsumptionReport(plugId);
         }
     }
 }

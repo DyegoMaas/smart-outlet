@@ -36,6 +36,7 @@ namespace SmartOutlet.Service
             container.Register<IPlugEventSequencer, PlugEventSequencer>();
             container.Register<IPlugStateReporter, PlugStateReporter>();
             container.Register<IConsumptionReporter, ConsumptionReporter>();
+            container.Register<ITimelineReporter, TimelineReporter>();
 
             ConfigureAggregatingRoots(container);
 

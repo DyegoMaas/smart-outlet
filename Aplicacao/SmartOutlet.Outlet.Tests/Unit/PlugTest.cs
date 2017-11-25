@@ -45,7 +45,7 @@ namespace SmartOutlet.Outlet.Tests.Unit
         [Test]
         public void reading_consumption()
         {
-            var consumptionReadingReceived = new ConsumptionReadingReceived(20.5d);
+            var consumptionReadingReceived = new ConsumptionReadingReceived(5.2, 220, 20.5d);
             
             _plug.Apply(consumptionReadingReceived);
 

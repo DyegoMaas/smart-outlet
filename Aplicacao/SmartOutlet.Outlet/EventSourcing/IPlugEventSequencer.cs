@@ -10,5 +10,6 @@ namespace SmartOutlet.Outlet.EventSourcing
         void PlugRenamed(string newName, Guid plugId);
         void PlugActivated(Guid plugId, string name);
         void ActionScheduled(ScheduleCommand command, Guid plugId);
+        void PlugDeactivated(Guid plugId);
     }
 }

@@ -31,12 +31,19 @@ namespace SmartOutlet.Service.Modules
             Post("/activate", _ =>
             {
                 var request = this.Bind<ActivatePlugRequest>();
-                var plugId = _smartPlug.CreatePlug(request.Name);
+                var plugId = _smartPlug.Activate(request.Name);
                 return new
                 {
                     Name = request.Name,
                     PlugId = plugId
                 };
+            });
+            
+            Post("/{plugId:guid}/desactivate", _ =>
+            {
+                Guid plugId = _.plugId;
+                _smartPlug.Desactivate(plugId);
+                return new OkResponse();
             });
             
             Post("/credentials/reset", _ =>
@@ -125,11 +132,7 @@ namespace SmartOutlet.Service.Modules
                 var timeline = _timelineReporter.LoadTimeLine(plugId);
                 var response = new TimelineResponse
                 {
-                    Events = timeline.EventDescriptions
-                        .Select(x => new EventResponse
-                        {
-                            Description = x
-                        }).ToArray()
+                    Events = timeline?.EventDescriptions?.Select(x => new EventResponse { Description = x }).ToArray() ?? new EventResponse[0]
                 };
                 return response;
             });

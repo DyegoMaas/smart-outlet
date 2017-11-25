@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandType.cs" />
+    <Compile Include="EventSourcing\Events\PlugDeactivated.cs" />
     <Compile Include="EventSourcing\ProjectionViews\Plug.cs" />
     <Compile Include="EventSourcing\ProjectionViews\Timeline.cs" />
     <Compile Include="EventSourcing\Events\ConsumptionReadingReceived.cs" />

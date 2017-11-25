@@ -110,6 +110,9 @@ namespace SmartOutlet.Service
                 (double amps, double voltage, double power) DecomposePayload(Payload payloadToDecompose)
                 {
                     var strings = payloadToDecompose.Content.Split('|');
+                    if (strings.Length < 3)
+                        return (0, 0, 0);
+                    
                     return (
                         Convert.ToDouble(strings[0], CultureInfo.InvariantCulture), 
                         Convert.ToDouble(strings[1], CultureInfo.InvariantCulture), 

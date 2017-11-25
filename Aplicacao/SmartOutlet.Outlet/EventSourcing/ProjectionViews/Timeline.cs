@@ -35,6 +35,11 @@ namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
         {
             InserirDescricaoDeEvento(plugRenamed.GetDescription());
         }
+        
+        public void Apply(Event<PlugDeactivated> deactivation)
+        {
+            InserirDescricaoDeEvento(deactivation.GetDescription());
+        }
 
         private void InserirDescricaoDeEvento(string descricao)
         {

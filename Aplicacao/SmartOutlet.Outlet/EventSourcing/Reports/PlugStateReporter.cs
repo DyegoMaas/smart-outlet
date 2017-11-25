@@ -16,18 +16,22 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
             _documentStore = documentStore;
         }
 
-        public IEnumerable<Plug> GetStateReport(params Guid[] plugIds)
+        public IEnumerable<Plug> GetStateReport(Guid[] plugIds)
         {
             using (var session = _documentStore.OpenSession())
             {
-                if (!plugIds.Any())
-                {
-                    plugIds = session.Events.QueryRawEventDataOnly<PlugActivated>()
-                        .Select(x => x.PlugId)
-                        .ToArray();
-                }
-                return session.LoadMany<Plug>(plugIds);
+                return session.Query<Plug>()
+                    .Where(x => x.Active)
+                    .ToArray()
+                    .Where(x => FilterPlugs(x, plugIds));
             }
+        }
+
+        private bool FilterPlugs(Plug plug, Guid[] plugIds)
+        {
+            if (plugIds.Any())
+                return plugIds.Contains(plug.Id);
+            return true;
         }
     }
 }

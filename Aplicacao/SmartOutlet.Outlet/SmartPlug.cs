@@ -15,7 +15,7 @@ namespace SmartOutlet.Outlet
             _plugEventSequencer = plugEventSequencer;
         }
 
-        public Guid CreatePlug(string name)
+        public Guid Activate(string name)
         {
             var plugId = Guid.NewGuid();
             _plugEventSequencer.PlugActivated(plugId, name);
@@ -24,6 +24,11 @@ namespace SmartOutlet.Outlet
             _publisher.Publish("/smart-things/plug/activate", payload);
             
             return plugId;
+        }
+
+        public void Desactivate(Guid plugId)
+        {
+            _plugEventSequencer.PlugDeactivated(plugId);
         }
 
         public void ResetCredentials()

@@ -17,6 +17,8 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
             {
                 case PlugActivated _:
                     return "Plugue ativado";
+                case PlugDeactivated _:
+                    return "Plugue desativado";
                 case PlugRenamed _:
                     return "Plugue renomeado para " + ((PlugRenamed) @event).NewName;
                 case PlugTurnedOn _:

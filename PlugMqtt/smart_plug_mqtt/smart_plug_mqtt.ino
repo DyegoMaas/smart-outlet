@@ -6,8 +6,8 @@
 using namespace SensoresCorrente;
 #include "Scheduler.h"
 
-const char* SSID = "Dyego"; 
-const char* PASSWORD = "estreladamorte"; 
+const char* SSID = "Connectify-me"; 
+const char* PASSWORD = "wytaxyx8"; 
 
 const char* BROKER_MQTT = "iot.eclipse.org"; 
 int BROKER_PORT = 1883; 

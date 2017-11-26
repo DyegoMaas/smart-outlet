@@ -159,21 +159,25 @@
           console.log('rendering report for ' + plugData.plugId);
 
           _renderTemplate("consumption-chart-template", "reports", plugData);
-          var chart = $("#flot-line-chart_" + plugData.plugId);
+          var consumptionChart = $("#consumption_chart_" + plugData.plugId);
+          var currentChart = $("#currentChart_" + plugData.plugId);
 
           var url = BACKEND_URL + "/" + plugData.plugId + "/reports/consumption";
-          _get(url, function (reportData){
-            
-            var data = [];
+          _get(url, function (reportData){            
+            var consumptionData = [];
+            var currentData = [];
+
             reportData.data.forEach(reading => {
-              data.push([reading.time, reading.power]);
+              consumptionData.push([reading.time, reading.power]);
+              currentData.push([reading.time, reading.current]);
             });
 
-            _plot(data, plugData, chart);
+            _plot(consumptionData, plugData, consumptionChart, "%y.2W em %xs");
+            _plot(currentData, plugData, currentChart, "%y.2A em %xs");
           });
         }
 
-        function _plot(data, plugData, chart) {
+        function _plot(data, plugData, chart, content) {
           var options = {
               series: {
                   lines: {
@@ -192,7 +196,7 @@
               },
               tooltip: true,
               tooltipOpts: {
-                  content: "%y.2W em %xs",//"'%s' of %x.1 is %y.4",
+                  content: content,//"'%s' of %x.1 is %y.4",
                   shifts: {
                       x: -45,
                       y: 25
@@ -216,13 +220,16 @@
 
     <script id="consumption-chart-template" type="text/html">
       <div class="panel panel-default">
-          <div class="panel-heading">
+          <div class="panel-heading">   
               Consumo - {{name}}
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">
               <div class="flot-chart">
-                  <div class="flot-chart-content" id="flot-line-chart_{{plugId}}"></div>
+                  <div class="flot-chart-content" id="consumption_chart_{{plugId}}"></div>
+              </div>
+              <div class="flot-chart">
+                <div class="flot-chart-content" id="current_chart_{{plugId}}"></div>
               </div>
           </div>
           <!-- /.panel-body -->

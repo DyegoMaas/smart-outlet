@@ -6,12 +6,14 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
     {
         public DateTimeOffset TimeStamp { get;  }
         public double ConsumptionInWatts { get; }
+        public double Current { get; set; }
 
-        
-        public ConsumptionInTime(double consumptionInWatts, DateTimeOffset timeStamp)
+
+        public ConsumptionInTime(double consumptionInWatts, double current, DateTimeOffset timeStamp)
         {
             TimeStamp = timeStamp;
             ConsumptionInWatts = consumptionInWatts;
+            Current = current;
         }
     }
 }

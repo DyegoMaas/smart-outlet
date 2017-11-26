@@ -123,6 +123,7 @@ namespace SmartOutlet.Service.Modules
                     Data = report
                         .Select(x => new ConsumptionResponse
                         {
+                            Current = x.Current,
                             Power = x.ConsumptionInWatts,
                             Time = (int)(x.TimeStamp - firstReading).TotalSeconds
                         }).ToArray()

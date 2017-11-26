@@ -4,34 +4,36 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
 {
     public static class PlugEventExtensions
     {
-        public static string GetDescription<T>(this Event<T> @event) 
+        public static EventDescription GetDescription<T>(this Event<T> @event) 
             where T : IPlugEvent
         {
-            return $"{@event.Timestamp:yyyy/MM/dd HH:mm:ss} - {DescribeEvent(@event, @event.Data)}";
+            return DescribeEvent(@event, @event.Data);
         }
 
-        private static string DescribeEvent<T>(Event<T> martenEvent, IPlugEvent @event)
-            where T : IPlugEvent 
+        private static EventDescription DescribeEvent<T>(Event<T> martenEvent, IPlugEvent @event)
+            where T : IPlugEvent
         {
+            var timestampDescription = $"{martenEvent.Timestamp:yyyy/MM/dd HH:mm:ss}";
             switch (@event)
             {
                 case PlugActivated _:
-                    return "Plugue ativado";
+                    return new EventDescription(martenEvent.Sequence, "Plugue ativado", timestampDescription, string.Empty);
                 case PlugDeactivated _:
-                    return "Plugue desativado";
+                    return new EventDescription(martenEvent.Sequence, "Plugue desativado", timestampDescription, string.Empty);
                 case PlugRenamed _:
-                    return "Plugue renomeado para " + ((PlugRenamed) @event).NewName;
+                    return new EventDescription(martenEvent.Sequence, "Plugue renomeado", timestampDescription, "Novo nome: " + ((PlugRenamed) @event).NewName);
                 case PlugTurnedOn _:
-                    return "Plugue ligado";
+                    return new EventDescription(martenEvent.Sequence, "Plugue ligado", timestampDescription, string.Empty);
                 case PlugTurnedOff _:
-                    return "Plugue desligado";
+                    return new EventDescription(martenEvent.Sequence, "Plugue desligado", timestampDescription, string.Empty);
                 case OperationScheduled agendamento:
-                    return agendamento.Type == CommandType.TurnOn
+                    var description = agendamento.Type == CommandType.TurnOn
                         ? $"Ligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"
-                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})";
+                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"; 
+                    return new EventDescription(martenEvent.Sequence, "Ação agendada", timestampDescription, description);
             }
 
-            return string.Empty;
+            return null;
         }
     }
 }

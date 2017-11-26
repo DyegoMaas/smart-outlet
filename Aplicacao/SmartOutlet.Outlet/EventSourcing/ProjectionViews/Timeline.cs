@@ -7,7 +7,7 @@ namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
 {
     public class TimeLine
     {
-        public List<string> EventDescriptions = new List<string>();
+        public List<EventDescription> EventDescriptions = new List<EventDescription>();
         public Guid Id { get; set; }
 
         public void Apply(Event<PlugActivated> activation)
@@ -41,7 +41,7 @@ namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
             InserirDescricaoDeEvento(deactivation.GetDescription());
         }
 
-        private void InserirDescricaoDeEvento(string descricao)
+        private void InserirDescricaoDeEvento(EventDescription descricao)
         {
             EventDescriptions.Insert(0, descricao);
         }

@@ -136,7 +136,14 @@ namespace SmartOutlet.Service.Modules
                 var timeline = _timelineReporter.LoadTimeLine(plugId);
                 var response = new TimelineResponse
                 {
-                    Events = timeline?.EventDescriptions?.Select(x => new EventResponse { Description = x }).ToArray() ?? new EventResponse[0]
+                    Events = timeline?.EventDescriptions?
+                         .OrderByDescending(x => x.Sequence)
+                         .Select(x => new EventResponse
+                         {
+                             Title = x.Title,
+                             Description = x.Description,
+                             TimeStamp = x.TimeStamp
+                         }).ToArray() ?? new EventResponse[0]
                 };
                 return response;
             });

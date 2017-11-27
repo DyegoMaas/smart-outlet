@@ -161,10 +161,17 @@
           _renderTemplate("timeline-template", "reports", plugData);
           var timeline = $("#timeline_" + plugData.plugId);
 
+          var inverted = false;
           var url = BACKEND_URL + "/" + plugData.plugId + "/reports/timeline";
           _get(url, function (timelineData){            
             timelineData.events.forEach(eventDescription => {
-                _renderTemplate("timeline-item-template", "timeline_" + plugData.plugId, eventDescription);
+                _renderTemplate("timeline-event-template", "timeline_" + plugData.plugId, {
+                    title: eventDescription.title,
+                    description: eventDescription.description,
+                    timeStamp: eventDescription.timeStamp,
+                    inverted: inverted
+                });                
+                inverted = !inverted;
             });
           });
         }
@@ -210,8 +217,8 @@
 
     </script>
 
-    <div id="timeline-event-teplate" type="text/html">
-        <li>
+    <div id="timeline-event-template" type="text/html">
+        <li class="{{#inverted}}timeline-inverted{{/inverted}}">
             <div class="timeline-badge"><i class="fa fa-check"></i>
             </div>
             <div class="timeline-panel">

@@ -77,8 +77,8 @@ namespace SmartOutlet.Service.Modules
             Post("/{plugId:guid}/rename", _ =>
             {
                 Guid plugId = _.plugId;
-                string newName = _.newName;
-                _smartPlug.Rename(newName, plugId);
+                var request = this.Bind<RenameRequest>();
+                _smartPlug.Rename(request.NewName, plugId);
                 return new OkResponse();
             });
             

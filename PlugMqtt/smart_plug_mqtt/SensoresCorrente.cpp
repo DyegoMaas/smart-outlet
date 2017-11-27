@@ -89,7 +89,7 @@ namespace SensoresCorrente{
       // int auxValue = rawValue - 510; //seria assim num arduino
       int auxValue = rawValue - 453; //seria assim num arduino
       // auxValue = map(auxValue, 0, 1024, 4, 910);
-      auxValue = map(auxValue, 4, 910, 0, 1024); //ajustando para a escala do arduino
+    //   auxValue = map(auxValue, 4, 910, 0, 1024); //ajustando para a escala do arduino
       
       // somam os quadrados das leituras.
       sensorValue += pow(auxValue, 2);
@@ -97,11 +97,11 @@ namespace SensoresCorrente{
     }
    
     // finaliza o calculo da média quadratica e ajusta o valor lido para volts
-    // auto voltsporUnidade = 0.002737;
-    auto voltsporUnidade = 0.0048828125;// 5%1024;
-    sensorValue = (sqrt(sensorValue/ numeroLeituras)) * voltsporUnidade;
-    // calcula a corrente considerando a sensibilidade do sernsor (185 mV por amper)
-    auto amps = (sensorValue/mVperAmp);
+    auto voltsporUnidade = 0.002737;
+    // auto voltsporUnidade = 0.0048828125;// 5%1024;
+    sensorValue = (sqrt(sensorValue / numeroLeituras)) * voltsporUnidade;
+	auto sensibility = map(mVperAmp, 0, 1024, 4, 910);
+    auto amps = (sensorValue/sensibility);
    
     //tratamento para possivel ruido
     //O ACS712 para 30 Amperes é projetado para fazer leitura

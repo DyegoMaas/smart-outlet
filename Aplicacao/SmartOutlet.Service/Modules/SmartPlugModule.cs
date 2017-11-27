@@ -116,10 +116,20 @@ namespace SmartOutlet.Service.Modules
                         Data = new ConsumptionResponse[0]
                     };
                 }
-                
+
+                var consumptionReadings = report
+                    .Where(x => x.ConsumptionInWatts > 0)
+                    .Select(x => x.ConsumptionInWatts)
+                    .ToList();
+                var hours = consumptionReadings.Count / 720d; //every 5 seconds in 1 hour
+                var kWh = consumptionReadings.Any() 
+                    ? consumptionReadings.Average() / 1000 * hours
+                    : 0;
+
                 var firstReading = report.First().TimeStamp;
                 return new ConsumptionReportResponse
                 {
+                    kWh = kWh,
                     Data = report
                         .Select(x => new ConsumptionResponse
                         {

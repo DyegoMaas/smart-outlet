@@ -163,7 +163,9 @@
           var currentChart = $("#current_chart_" + plugData.plugId);
 
           var url = BACKEND_URL + "/" + plugData.plugId + "/reports/consumption";
-          _get(url, function (reportData){            
+          _get(url, function (reportData){   
+            $("#plug-consumption_" + plugData.plugId).text(reportData.kWh);  
+
             var consumptionData = [];
             var currentData = [];
 
@@ -221,7 +223,7 @@
     <script id="consumption-chart-template" type="text/html">
       <div class="panel panel-default">
           <div class="panel-heading">   
-              Consumo - {{name}}
+              {{name}} - Consumo médio: <span id="plug-consumption_{{plugId}}"></span> kWh
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">

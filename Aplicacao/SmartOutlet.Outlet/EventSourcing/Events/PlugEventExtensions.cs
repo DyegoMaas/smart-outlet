@@ -1,4 +1,6 @@
-﻿using Marten.Events;
+﻿using System;
+using System.Globalization;
+using Marten.Events;
 
 namespace SmartOutlet.Outlet.EventSourcing.Events
 {
@@ -13,7 +15,8 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
         private static EventDescription DescribeEvent<T>(Event<T> martenEvent, IPlugEvent @event)
             where T : IPlugEvent
         {
-            var timestampDescription = $"{martenEvent.Timestamp:yyyy/MM/dd HH:mm:ss}";
+//            var timestampDescription = martenEvent.Timestamp.ToString("yyyy/MM/dd HH:mm:ss", new CultureInfo("pt-BR"));
+            var timestampDescription = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss", new CultureInfo("pt-BR"));
             switch (@event)
             {
                 case PlugActivated _:
@@ -28,8 +31,10 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
                     return new EventDescription(martenEvent.Sequence, "Plugue desligado", timestampDescription, string.Empty);
                 case OperationScheduled agendamento:
                     var description = agendamento.Type == CommandType.TurnOn
-                        ? $"Ligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"
-                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"; 
+                        ? $"Ligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({DateTime.Now + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"
+                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({DateTime.Now + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})";
+//                        ? $"Ligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"
+//                        : $"Desligar em {(int) agendamento.TimeInFuture.TotalSeconds}s ({martenEvent.Timestamp + agendamento.TimeInFuture:yyyy/MM/dd HH:mm:ss})"; 
                     return new EventDescription(martenEvent.Sequence, "Ação agendada", timestampDescription, description);
             }
 

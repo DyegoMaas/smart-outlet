@@ -100,6 +100,7 @@
     <Compile Include="Modules\EstimatedActionTimeResponse.cs" />
     <Compile Include="Modules\EventResponse.cs" />
     <Compile Include="Modules\OkResponse.cs" />
+    <Compile Include="Modules\RenameRequest.cs" />
     <Compile Include="Modules\ScheduleRequest.cs" />
     <Compile Include="Modules\SmartPlugModule.cs" />
     <Compile Include="Modules\SmartPlugResponse.cs" />

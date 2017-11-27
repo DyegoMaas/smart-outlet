@@ -160,7 +160,7 @@
 
           _renderTemplate("consumption-chart-template", "reports", plugData);
           var consumptionChart = $("#consumption_chart_" + plugData.plugId);
-          var currentChart = $("#currentChart_" + plugData.plugId);
+          var currentChart = $("#current_chart_" + plugData.plugId);
 
           var url = BACKEND_URL + "/" + plugData.plugId + "/reports/consumption";
           _get(url, function (reportData){            
@@ -172,12 +172,12 @@
               currentData.push([reading.time, reading.current]);
             });
 
-            _plot(consumptionData, plugData, consumptionChart, "%y.2W em %xs");
-            _plot(currentData, plugData, currentChart, "%y.2A em %xs");
+            _plot(consumptionData, plugData, consumptionChart, 'Potência', "%y.2W em %xs");
+            _plot(currentData, plugData, currentChart, 'Corrente', "%y.2A em %xs");
           });
         }
 
-        function _plot(data, plugData, chart, content) {
+        function _plot(data, plugData, chart, label, content) {
           var options = {
               series: {
                   lines: {
@@ -206,7 +206,7 @@
 
           var plotObj = $.plot(chart, [{
               data: data,
-              label: plugData.name
+              label: label
           }],
           options);
         }

@@ -1,6 +1,6 @@
 ﻿namespace SmartOutlet.Outlet.EventSourcing.Events
 {
-    public class PlugDeactivated : IPlugEvent
+    public class PlugReactivated : IPlugEvent
     {
     }
 }

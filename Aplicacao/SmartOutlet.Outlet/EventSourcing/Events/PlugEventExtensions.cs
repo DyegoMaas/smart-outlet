@@ -23,6 +23,8 @@ namespace SmartOutlet.Outlet.EventSourcing.Events
                     return new EventDescription(martenEvent.Sequence, "Plugue ativado", timestampDescription, string.Empty);
                 case PlugDeactivated _:
                     return new EventDescription(martenEvent.Sequence, "Plugue desativado", timestampDescription, string.Empty);
+                case PlugReactivated _:
+                    return new EventDescription(martenEvent.Sequence, "Plugue reativado", timestampDescription, string.Empty);
                 case PlugRenamed _:
                     return new EventDescription(martenEvent.Sequence, "Plugue renomeado", timestampDescription, "Novo nome: " + ((PlugRenamed) @event).NewName);
                 case PlugTurnedOn _:

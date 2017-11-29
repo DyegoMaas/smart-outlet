@@ -31,6 +31,11 @@ namespace SmartOutlet.Outlet
             _plugEventSequencer.PlugDeactivated(plugId);
         }
 
+        public void Reactivate(Guid plugId)
+        {
+            _plugEventSequencer.PlugReactivated(plugId);
+        }
+
         public void ResetCredentials()
         {
             _publisher.Publish("/smart-things/plug/clean-identity", string.Empty);

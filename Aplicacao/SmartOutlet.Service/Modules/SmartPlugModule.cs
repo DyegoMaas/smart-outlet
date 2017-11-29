@@ -46,6 +46,13 @@ namespace SmartOutlet.Service.Modules
                 return new OkResponse();
             });
             
+            Post("/{plugId:guid}/reactivate", _ =>
+            {
+                Guid plugId = _.plugId;
+                _smartPlug.Reactivate(plugId);
+                return new OkResponse();
+            });
+            
             Post("/credentials/reset", _ =>
             {
                 _smartPlug.ResetCredentials();

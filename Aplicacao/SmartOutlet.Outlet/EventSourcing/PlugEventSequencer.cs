@@ -29,6 +29,11 @@ namespace SmartOutlet.Outlet.EventSourcing
             AppendEvent(plugId, new PlugDeactivated());
         }
 
+        public void PlugReactivated(Guid plugId)
+        {
+            AppendEvent(plugId, new PlugReactivated());
+        }
+
         public void ActionScheduled(ScheduleCommand command, Guid plugId)
         {
             AppendEvent(plugId, new OperationScheduled(command.Type, command.TimeInFuture));

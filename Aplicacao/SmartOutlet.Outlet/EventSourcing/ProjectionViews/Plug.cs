@@ -24,6 +24,11 @@ namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
             Active = false;
         }
         
+        public void Apply(PlugReactivated reactivation)
+        {
+            Active = true;
+        }
+        
         public void Apply(PlugTurnedOn plugTurnedOn)
         {
             CurrentState = PlugState.On;

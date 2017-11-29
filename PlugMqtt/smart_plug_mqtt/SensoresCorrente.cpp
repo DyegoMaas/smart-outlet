@@ -6,10 +6,10 @@ namespace SensoresCorrente{
   {
   	switch (moduleType)
   	{
-  		case _30A: mVperAmp = 66; break;
-  		case _20A: mVperAmp = 100; break;
+  		case _30A: mVperAmp = 0.066; break;
+  		case _20A: mVperAmp = 0.1; break;
   		case _5A:
-  		default: mVperAmp = 185; break;
+  		default: mVperAmp = 0.185; break;
   	}
   }
   
@@ -76,18 +76,26 @@ namespace SensoresCorrente{
     float result = (maxValue - minValue) * voltsPerUnit;
     return result;
   }
-  
+
+  int ACReadCount = 0;
+  int middleValue = 510;
   //ACSvoltage = 2800 //é o que está vindo
   //ACSoffset = 1400
   //mVperAmp = 66
   ACReading ACS712::readAC(int analogInPin) const
-  {  
-    auto sensorValue = 0.0;
-    int numeroLeituras = 1000;  
+  {      
+    double sensorValue = 0.0;
+    double calibrationValue = 0.0;
+    int numeroLeituras = 5000;  
     for (int i = 0; i < numeroLeituras; i++) {
       int rawValue = analogRead(analogInPin);
+      Serial.println(rawValue);
+      calibrationValue += rawValue;
+
       // int auxValue = rawValue - 510; //seria assim num arduino
-      int auxValue = rawValue - 453; //seria assim num arduino
+      int auxValue = rawValue - middleValue; //seria assim num arduino
+      //if (auxValue < 10)
+      //  auxValue = rawValue - 510;
       // auxValue = map(auxValue, 0, 1024, 4, 910);
     //   auxValue = map(auxValue, 4, 910, 0, 1024); //ajustando para a escala do arduino
       
@@ -95,13 +103,28 @@ namespace SensoresCorrente{
       sensorValue += pow(auxValue, 2);
       delay(1);
     }
-   
+    ACReadCount++;
+
+    if(ACReadCount == 2) {
+      middleValue = calibrationValue / numeroLeituras;
+    }
+
+    Serial.print("middle: ");
+    Serial.println(middleValue);
+    
+    Serial.print("somou: ");
+    Serial.println(sensorValue);
     // finaliza o calculo da média quadratica e ajusta o valor lido para volts
-    auto voltsporUnidade = 0.002737;
-    // auto voltsporUnidade = 0.0048828125;// 5%1024;
+    //double voltsporUnidade = 0.002737;
+    double voltsporUnidade = 0.0048875855;// 5%1023;
     sensorValue = (sqrt(sensorValue / numeroLeituras)) * voltsporUnidade;
-	auto sensibility = map(mVperAmp, 0, 1024, 4, 910);
-    auto amps = (sensorValue/sensibility);
+    Serial.print("calculou: ");
+    Serial.println(sensorValue);
+	  //double sensibility = 0.1178571428571429;
+    double sensibility = mVperAmp;
+    double amps = (sensorValue/sensibility);
+    Serial.print("amps: ");
+    Serial.println(amps);
    
     //tratamento para possivel ruido
     //O ACS712 para 30 Amperes é projetado para fazer leitura
@@ -128,8 +151,8 @@ namespace SensoresCorrente{
   	// Serial.println(scaledValue2); 
   	
   
-    Serial.print("Raw Value = " ); // shows pre-scaled value 
-    Serial.print(analogRead(analogInPin)); 
+  //  Serial.print("Raw Value = " ); // shows pre-scaled value 
+ //   Serial.print(analogRead(analogInPin)); 
     // Serial.print("\t mV (("); // shows the voltage measured 
     // Serial.print(voltage, 3); // the '3' after voltage allows you to display 3 digits after decimal point
     // Serial.print(")\t - ACOffset ("); // shows the voltage measured 
@@ -138,9 +161,9 @@ namespace SensoresCorrente{
     // Serial.print(mVperAmp, 3); // the '3' after voltage allows you to display 3 digits after decimal point
     
     // Serial.print(") = "); // shows the voltage measured 
-    Serial.print("\t"); // shows the voltage measured 
-    Serial.print(amps, 3); // the '3' after voltage allows you to display 3 digits after decimal point
-    Serial.println("A"); // shows the voltage measured 
+//    Serial.print("\t"); // shows the voltage measured 
+   // Serial.print(amps, 3); // the '3' after voltage allows you to display 3 digits after decimal point
+  //  Serial.println("A"); // shows the voltage measured 
    
   
   //  auto voltageAmplitude = getAmplitudeOverOneSecond(analogInPin);

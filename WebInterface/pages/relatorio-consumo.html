@@ -174,12 +174,13 @@
               currentData.push([reading.time, reading.current]);
             });
 
-            _plot(consumptionData, plugData, consumptionChart, 'Potência', "%y.2W em %xs");
-            _plot(currentData, plugData, currentChart, 'Corrente', "%y.2A em %xs");
+            //TODO ajustar a escala de consumo para 120%
+            _plot(consumptionData, plugData, consumptionChart, 'Potência', "%y.2W em %xs", 0, 300);
+            _plot(currentData, plugData, currentChart, 'Corrente', "%y.2A em %xs", 0, 30);
           });
         }
 
-        function _plot(data, plugData, chart, label, content) {
+        function _plot(data, plugData, chart, label, content, min, max) {
           var options = {
               series: {
                   lines: {
@@ -193,8 +194,8 @@
                   hoverable: true //IMPORTANT! this is needed for tooltip to work
               },
               yaxis: {
-                  min: 0,
-                  max: 30
+                  min: min,
+                  max: max
               },
               tooltip: true,
               tooltipOpts: {

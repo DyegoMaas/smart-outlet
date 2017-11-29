@@ -43,13 +43,6 @@ void reportConsumption() {
 
     char power[10];
     dtostrf(reading.power, 7, 2, power);
-    
-    Serial.print("lido ");
-    Serial.print(reading.power);
-    
-    Serial.print(" | publicando ");
-    Serial.println(power);
-
     char amps[10];
     dtostrf(reading.amps, 7, 2, amps);
     char voltage[10];
@@ -62,6 +55,10 @@ void reportConsumption() {
     payload += voltage;
     payload += '|';    
     payload += power;
+
+    
+    Serial.print("Payload medicao: ");
+    Serial.println(payload);
     
 
     MQTT.publish("/smart-things/plug/consumption", (char *)payload.c_str());

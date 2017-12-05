@@ -169,14 +169,18 @@
             var consumptionData = [];
             var currentData = [];
 
+            var greaterPower = 0;
             reportData.data.forEach(reading => {
               consumptionData.push([reading.time, reading.power]);
               currentData.push([reading.time, reading.current]);
+
+              if (reading.power > greaterPower)
+                greaterPower = reading.power;
             });
 
             //TODO ajustar a escala de consumo para 120%
-            _plot(consumptionData, plugData, consumptionChart, 'Potência', "%y.2W em %xs", 0, 300);
-            _plot(currentData, plugData, currentChart, 'Corrente', "%y.2A em %xs", 0, 30);
+            _plot(consumptionData, plugData, consumptionChart, 'Potência (W)', "%y.2W em %xs", 0, greaterPower * 1.2);
+            _plot(currentData, plugData, currentChart, 'Corrente (A)', "%y.2A em %xs", 0, 30);
           });
         }
 

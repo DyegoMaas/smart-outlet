@@ -291,8 +291,15 @@ void reconnectMQTT() {
 }
 
 void recconectWiFi() {
+  int reconnectCount = 0;
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(100);
 		Serial.print(".");
+
+    if (reconnectCount % 5 == 0)
+      digitalWrite(WIFI_LED, LOW);
+    else 
+      digitalWrite(WIFI_LED, HIGH);
+    reconnectCount++;
 	}
 }

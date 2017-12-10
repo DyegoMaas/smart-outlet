@@ -16,19 +16,20 @@ namespace SmartOutlet.Outlet.Mqtt
      */
     public class Messaging : IPublisher, ITopicGuest, IDisposable
     {
-        private const string BrokerHostName = "iot.eclipse.org";
         private const int BrokerPort = 1883;
         private const byte QosLevel = MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE;
         private static readonly Guid ClientId = Guid.NewGuid();
         
         private static readonly Dictionary<string, List<Action<string>>> CallbacksPerTopic = new Dictionary<string, List<Action<string>>>();
         private readonly MqttClient _mqttClient;
+        private readonly ConfiguracaoMqtt _configuracaoMqtt;
 
         public Messaging()
         {
+            _configuracaoMqtt = new ConfiguracaoMqtt();
             _mqttClient = new MqttClient(
-                brokerHostName:BrokerHostName,
-                brokerPort: BrokerPort,
+                _configuracaoMqtt.BrokerHostName ?? "iot.eclipse.org",
+                _configuracaoMqtt.BrokerPort,
                 secure: false,
                 sslProtocol: MqttSslProtocols.None,
                 userCertificateSelectionCallback: null,
@@ -94,7 +95,7 @@ namespace SmartOutlet.Outlet.Mqtt
                         return;
                     }
 
-                    var message = $"Not connected to MQTT broker '{BrokerHostName}' on port '{BrokerPort}'";
+                    var message = $"Not connected to MQTT broker '{_configuracaoMqtt.BrokerHostName}' on port '{BrokerPort}'";
                     throw new InvalidOperationException(message);
                 });
         }

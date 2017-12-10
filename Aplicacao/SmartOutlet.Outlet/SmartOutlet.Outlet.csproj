@@ -58,6 +58,7 @@
       <HintPath>..\packages\Remotion.Linq.2.1.1\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -93,6 +94,7 @@
     <Compile Include="EventSourcing\Reports\PlugStateReporter.cs" />
     <Compile Include="EventSourcing\Reports\TimelineReporter.cs" />
     <Compile Include="ISmartPlug.cs" />
+    <Compile Include="Mqtt\ConfiguracaoMqtt.cs" />
     <Compile Include="Mqtt\IPublisher.cs" />
     <Compile Include="Mqtt\ITopicGuest.cs" />
     <Compile Include="Mqtt\Messaging.cs" />

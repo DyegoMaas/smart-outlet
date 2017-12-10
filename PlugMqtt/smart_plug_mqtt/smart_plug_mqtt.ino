@@ -150,6 +150,9 @@ void turnOn() {
   Serial.println(id);
   relay.turnOn(RELAY_PIN);
   sendConfirmationOfRelayStateChange();
+
+  //TODO remover
+  recalibrateCurrentSensor();
 }
 
 void turnOff() {
@@ -157,6 +160,7 @@ void turnOff() {
   Serial.println(id);
   relay.turnOff(RELAY_PIN);
   sendConfirmationOfRelayStateChange();
+  
   recalibrateCurrentSensor();
 }
 

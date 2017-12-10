@@ -32,11 +32,14 @@ ACS712 currentSensor = ACS712(_30A);
 bool hasCredentials = false;
 String id = "";
 long lastMessageTime = 0;
-int scheduledActionId = 1;
 
-void reportConsumption() {  
-  if (!hasCredentials)
+void reportConsumption() {
+  if (!hasCredentials) {
+    // Serial.println("Nothing to report, because there I don't have credentials");
+    delay(200);
     return;
+  }
+  
   auto timeSinceLastConsumptionReport = millis() - lastMessageTime;  
   if (timeSinceLastConsumptionReport >= 5000) {
     auto reading = currentSensor.readAC(AC_SENSOR_PIN);

@@ -24,17 +24,27 @@ namespace SensoresCorrente{
 
   const int goodReadingsRequired = 3;
   int ACReadCount = 0;
-  double calibrationValue = 0.0;  
+  
+  
+  double calibrationValue = 0.0;
+  double tempCalibrationValue = 0.0;
   int middleValue = 510;
+
+  int goodReadings = 0;
+  
   ACReading ACS712::readAC(int analogInPin) const
   {
     double sensorValue = 0.0;
     int numeroLeituras = 5000;  
     int lastMiddleValue = 0;
+
+    if(goodReadings == goodReadingsRequired) 
+      middleValue = calibrationValue / (numeroLeituras * goodReadings);
+      
     for (int i = 0; i < numeroLeituras; i++) {
       int rawValue = analogRead(analogInPin);
-      Serial.println(rawValue);
-      calibrationValue += rawValue;
+      //Serial.println(rawValue);
+      tempCalibrationValue += rawValue;
 
       int auxValue = rawValue - middleValue;
 
@@ -42,12 +52,8 @@ namespace SensoresCorrente{
       sensorValue += pow(auxValue, 2);
       delay(1);
     }
-    ACReadCount++;
 
-    if(ACReadCount == goodReadingsRequired) 
-      middleValue = calibrationValue / numeroLeituras * ACReadCount;
-    else if(ACReadCount < goodReadingsRequired)
-      return ACReading(0, 220, 0);
+
 
     Serial.print("middle: ");
     Serial.println(middleValue);
@@ -71,8 +77,19 @@ namespace SensoresCorrente{
     // por isso é normal ocorrer ruidos de até 0.20A
     //por isso deve ser tratado
     if(amps <= 0.095){
-      consecutiveGoodReadings++;
+      if(goodReadings < goodReadingsRequired){
+        calibrationValue += tempCalibrationValue;
+        goodReadings++;
+        Serial.print(goodReadings);
+        Serial.println(" good readings so far");
+      }       
+      
       amps = 0;
+    }
+
+    if(goodReadings < goodReadingsRequired) {
+      Serial.println("not calibrated yet");
+      return ACReading(0, 220, 0);  
     }
 
     return ACReading(amps, 220, amps*220);

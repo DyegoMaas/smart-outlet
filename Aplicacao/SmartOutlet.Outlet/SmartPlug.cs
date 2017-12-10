@@ -36,6 +36,12 @@ namespace SmartOutlet.Outlet
             _plugEventSequencer.PlugReactivated(plugId);
         }
 
+        public void Calibrate(Guid plugId)
+        {
+            var payload = $"{plugId}|";
+            _publisher.Publish("/smart-things/plug/calibrate", payload);
+        }
+
         public void ResetCredentials()
         {
             _publisher.Publish("/smart-things/plug/clean-identity", string.Empty);

@@ -13,5 +13,6 @@ namespace SmartOutlet.Outlet
         void Deactivate(Guid plugId);
         void ResetCredentials();
         void Reactivate(Guid plugId);
+        void Calibrate(Guid plugId);
     }
 }

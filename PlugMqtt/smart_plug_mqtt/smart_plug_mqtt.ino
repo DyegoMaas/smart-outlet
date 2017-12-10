@@ -9,7 +9,7 @@ using namespace SensoresCorrente;
 const char* SSID = "Connectify-me"; 
 const char* PASSWORD = "wytaxyx8"; 
 
-const char* BROKER_MQTT = "192.168.137.1";//"10.0.0.7"; // "iot.eclipse.org"; 
+const char* BROKER_MQTT = "192.168.137.1"; //"10.0.0.7"; // "iot.eclipse.org"; 
 int BROKER_PORT = 1883; 
 
 void initPins();
@@ -35,7 +35,7 @@ long lastMessageTime = 0;
 
 void reportConsumption() {
   if (!hasCredentials) {
-    // Serial.println("Nothing to report, because there I don't have credentials");
+    // Serial.println("Nothing to report, because I don't have credentials");
     delay(200);
     return;
   }
@@ -141,6 +141,10 @@ void initMQTT() {
 	lastMessageTime = millis();
 }
 
+void recalibrateCurrentSensor() {
+  currentSensor.calibrate(AC_SENSOR_PIN);
+}
+
 void turnOn() {
   Serial.print("TURNING ON ");
   Serial.println(id);
@@ -153,6 +157,7 @@ void turnOff() {
   Serial.println(id);
   relay.turnOff(RELAY_PIN);
   sendConfirmationOfRelayStateChange();
+  recalibrateCurrentSensor();
 }
 
 void sendConfirmationOfRelayStateChange() {
@@ -223,8 +228,10 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.print("Message content is ");
   Serial.println(data);
-  
-  if (topicString == "/smart-things/plug/state") {
+
+  if (topicString == "/smart-things/plug/calibrate") {
+    recalibrateCurrentSensor();
+  } else if (topicString == "/smart-things/plug/state") {
 		if (data == "turn-on") {
 			turnOn();			
 		}
@@ -275,6 +282,10 @@ void reconnectMQTT() {
 
       Serial.println("subscribed to /smart-things/plug/activate");
       MQTT.subscribe("/smart-things/plug/activate");
+      MQTT.loop();
+
+      Serial.println("subscribed to /smart-things/plug/calibrate");
+      MQTT.subscribe("/smart-things/plug/calibrate");
       MQTT.loop();
 			
 			Serial.println("subscribed to /smart-things/plug/state");

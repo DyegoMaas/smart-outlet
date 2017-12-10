@@ -22,31 +22,44 @@ namespace SensoresCorrente{
   	return DCReading(amps, voltage, power);
   }
 
-  const int goodReadingsRequired = 3;
-  int ACReadCount = 0;
-  
-  
-  double calibrationValue = 0.0;
-  double tempCalibrationValue = 0.0;
+  int ACReadCount = 0;    
   int middleValue = 510;
 
-  int goodReadings = 0;
-  
-  ACReading ACS712::readAC(int analogInPin) const
-  {
-    double sensorValue = 0.0;
-    int numeroLeituras = 5000;  
-    int lastMiddleValue = 0;
+  //it assumes that nothing is connected yet
+  void ACS712::calibrate(int analogInPin) {   
+    Serial.println("Initializing calibration process"); 
+    auto middle = 510;
+    this->isCalibrated = false;    
+    while (!isCalibrated) {
+      int readings = 5000;  
+      int sum = 0;
+      for (int i = 0; i < readings; i++) {
+        int rawValue = analogRead(analogInPin);  
+        sum += rawValue;  
+        delay(1);
+      }
+      int average = sum / readings;
+      middle = average;
+      Serial.print("New middle:");
+      Serial.print(middle);
 
-    if(goodReadings == goodReadingsRequired) 
-      middleValue = calibrationValue / (numeroLeituras * goodReadings);
+      // TODO add validation
+      middleValue = middle;
+      this->isCalibrated = true;
+    }
+  }
+  
+  ACReading ACS712::readAC(int analogInPin)
+  {
+    if(!isCalibrated)
+      calibrate(analogInPin);
+      
+    double sensorValue = 0.0;
+    int numeroLeituras = 1000;  
       
     for (int i = 0; i < numeroLeituras; i++) {
       int rawValue = analogRead(analogInPin);
-      //Serial.println(rawValue);
-      tempCalibrationValue += rawValue;
-
-      int auxValue = rawValue - middleValue;
+         int auxValue = rawValue - middleValue;
 
       // somam os quadrados das leituras.
       sensorValue += pow(auxValue, 2);
@@ -76,18 +89,11 @@ namespace SensoresCorrente{
     // de valores alto acima de 0.25 Amperes até 30.
     // por isso é normal ocorrer ruidos de até 0.20A
     //por isso deve ser tratado
-    if(amps <= 0.095){
-      if(goodReadings < goodReadingsRequired){
-        calibrationValue += tempCalibrationValue;
-        goodReadings++;
-        Serial.print(goodReadings);
-        Serial.println(" good readings so far");
-      }       
-      
+    if(amps <= 0.095){     
       amps = 0;
     }
 
-    if(goodReadings < goodReadingsRequired) {
+    if (!isCalibrated) {
       Serial.println("not calibrated yet");
       return ACReading(0, 220, 0);  
     }

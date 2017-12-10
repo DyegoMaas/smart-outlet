@@ -53,6 +53,13 @@ namespace SmartOutlet.Service.Modules
                 return new OkResponse();
             });
             
+            Post("/{plugId:guid}/calibrate", _ =>
+            {
+                Guid plugId = _.plugId;
+                _smartPlug.Calibrate(plugId);
+                return new OkResponse();
+            });
+            
             Post("/credentials/reset", _ =>
             {
                 _smartPlug.ResetCredentials();

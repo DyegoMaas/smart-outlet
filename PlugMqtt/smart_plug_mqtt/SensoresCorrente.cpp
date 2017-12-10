@@ -31,7 +31,7 @@ namespace SensoresCorrente{
     auto middle = 510;
     this->isCalibrated = false;    
     while (!isCalibrated) {
-      int readings = 5000;  
+      int readings = 1500;  
       int sum = 0;
       for (int i = 0; i < readings; i++) {
         int rawValue = analogRead(analogInPin);  

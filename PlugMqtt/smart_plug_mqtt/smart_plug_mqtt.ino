@@ -255,8 +255,12 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 	Serial.flush();
 }
 
+bool isConnectedToWiFi() {
+  return WiFi.status() == WL_CONNECTED;
+}
+
 void reconnectMQTT() {
-	while (!MQTT.connected()) {
+	while (isConnectedToWiFi() && !MQTT.connected()) {
 		Serial.println("Tentando se conectar ao Broker MQTT: " + String(BROKER_MQTT));
     String clientId = id == "" ? "Unknown plug X" : id;
 		if (MQTT.connect((char *)clientId.c_str())) {
@@ -292,7 +296,7 @@ void reconnectMQTT() {
 
 void recconectWiFi() {
   int reconnectCount = 0;
-	while (WiFi.status() != WL_CONNECTED) {
+	while (!isConnectedToWiFi()) {
 		delay(100);
 		Serial.print(".");
 

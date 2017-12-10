@@ -40,7 +40,6 @@ namespace SensoresCorrente
 			explicit ACS712(ModuleType moduleType);
 			DCReading readDC(int analogInPin) const;
       ACReading readAC(int analogInPin) const;
-			ACReading readAC_Old(int analogInPin) const;
 
 		private:
 			float mVperAmp = 0.066; // use 100 for 20A Module and 185 for 5A Module

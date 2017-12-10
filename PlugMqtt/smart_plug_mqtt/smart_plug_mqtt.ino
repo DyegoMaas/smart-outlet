@@ -9,7 +9,7 @@ using namespace SensoresCorrente;
 const char* SSID = "Connectify-me"; 
 const char* PASSWORD = "wytaxyx8"; 
 
-const char* BROKER_MQTT = "iot.eclipse.org"; 
+const char* BROKER_MQTT = "192.168.137.1";//"10.0.0.7"; // "iot.eclipse.org"; 
 int BROKER_PORT = 1883; 
 
 void initPins();

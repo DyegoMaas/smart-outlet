@@ -1,7 +1,7 @@
 ﻿using System;
 using SmartOutlet.Outlet.EventSourcing.Events;
 
-namespace SmartOutlet.Outlet.EventSourcing.ProjectionViews
+namespace SmartOutlet.Outlet.EventSourcing.Projections
 {
     public class Plug
     {

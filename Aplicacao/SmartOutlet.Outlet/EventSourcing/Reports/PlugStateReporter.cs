@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Marten;
 using SmartOutlet.Outlet.EventSourcing.Events;
-using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
+using SmartOutlet.Outlet.EventSourcing.Projections;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {

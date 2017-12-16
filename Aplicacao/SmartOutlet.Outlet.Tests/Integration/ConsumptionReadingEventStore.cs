@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Remotion.Linq.Clauses.ResultOperators;
 using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
-using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
+using SmartOutlet.Outlet.EventSourcing.Projections;
 using SmartOutlet.Outlet.EventSourcing.Reports;
 
 namespace SmartOutlet.Outlet.Tests.Integration

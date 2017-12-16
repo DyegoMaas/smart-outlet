@@ -1,5 +1,5 @@
 ﻿using System;
-using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
+using SmartOutlet.Outlet.EventSourcing.Projections;
 
 namespace SmartOutlet.Outlet.EventSourcing.Reports
 {

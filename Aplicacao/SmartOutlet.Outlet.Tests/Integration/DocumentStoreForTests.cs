@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using Marten;
-using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
+using SmartOutlet.Outlet.EventSourcing.Projections;
 
 namespace SmartOutlet.Outlet.Tests.Integration
 {

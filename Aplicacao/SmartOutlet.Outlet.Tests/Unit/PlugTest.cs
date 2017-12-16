@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SmartOutlet.Outlet.EventSourcing;
 using SmartOutlet.Outlet.EventSourcing.Events;
-using SmartOutlet.Outlet.EventSourcing.ProjectionViews;
+using SmartOutlet.Outlet.EventSourcing.Projections;
 
 namespace SmartOutlet.Outlet.Tests.Unit
 {

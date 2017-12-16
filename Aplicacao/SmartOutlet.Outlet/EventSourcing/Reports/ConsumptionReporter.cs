@@ -29,10 +29,15 @@ namespace SmartOutlet.Outlet.EventSourcing.Reports
                     .Select(e =>
                     {
                         var reading = (ConsumptionReadingReceived) e.Data;
-                        return new ConsumptionInTime(reading.ConsumptionInWatts * 0.707, reading.Current, e.Timestamp); //TODO extrair esse cálculo
+                        return new ConsumptionInTime(ConvertToRMS(reading), reading.Current, e.Timestamp);
                     });
                 return consumption;
             }
+        }
+
+        private static double ConvertToRMS(ConsumptionReadingReceived reading)
+        {
+            return reading.ConsumptionInWatts * 0.707;
         }
     }
 }

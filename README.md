@@ -1,5 +1,8 @@
-# smart-outlet
+# Smart Outlet
+
 Projeto IoT para um plugue elétrico inteligente, capaz de ligar ou desligar aparelhos eletrodomésticos segundo agendamento na aplicação web.
+
+![Protótipo](docs/prototipo_smart-outlet.jpg)
 
 ## Sobre o TCC
 
